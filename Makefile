@@ -18,17 +18,17 @@ up: ## Start Docker containers
 	export COMPOSE_PROFILES=$(db) && cd $(workdir) && docker compose -f $(config) up -d
 
 down: ## Stop Docker containers
-	cd $(workdir) && docker compose -f $(config) down
+	export COMPOSE_PROFILES=$(db) && cd $(workdir) && docker compose -f $(config) down
 
 start: up ## Alias for 'up' command
 
 stop: down ## Alias for 'down' command
 
 restart: ## Restart Docker containers
-	cd $(workdir) && docker compose -f $(config) restart
+	export COMPOSE_PROFILES=$(db) && cd $(workdir) && docker compose -f $(config) restart
 
 prune: ## Remove all Docker containers, volumes, and networks
-	cd $(workdir) && docker compose -f $(config) down -v --remove-orphans --rmi all
+	export COMPOSE_PROFILES=$(db) && cd $(workdir) && docker compose -f $(config) down -v --remove-orphans --rmi all
 	cd $(workdir) && docker network remove $(network)
 
 enter: ## Enter PHP container shell
