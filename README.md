@@ -22,6 +22,13 @@ The project uses Docker for containerization with the following services:
   - Port: 9000
   - Configuration: `etc/containers/php/php.ini`
 
+- **PostgreSQL**
+  - Port: 5432
+  - Default Database: app
+  - Default User: app
+  - Configuration: `.env` file
+  - Persistence: Docker volume
+
 ## SSL/HTTPS Support
 
 The project includes HTTPS support with the following features:
@@ -89,6 +96,29 @@ The project includes several code quality and analysis tools:
 - Configuration: `tools/phpunit.xml.dist`
 - Automatically detects tests in `src/*/Tests` directories
 - Run: `make test`
+
+## Database Management
+
+The project uses PostgreSQL as its primary database with Doctrine ORM for database operations.
+
+### Database Commands
+
+The following Make commands are available for database management:
+
+```bash
+# Create a new migration after entity changes
+make migration-create
+
+# Run all pending migrations
+make migration-run
+```
+
+### Database Configuration
+
+The database connection is configured in the `.env` file:
+```
+DATABASE_URL="postgresql://app:password@postgres:5432/app?serverVersion=15&charset=utf8"
+```
 
 ## Project Structure
 

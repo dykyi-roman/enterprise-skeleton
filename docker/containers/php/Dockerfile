@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y \
         openssh-server \
         nano \
         git \
+        libpq-dev \
         $PHPIZE_DEPS \
     && rm -rf /var/lib/apt/lists/*
 
@@ -47,8 +48,8 @@ RUN docker-php-ext-install -j$(nproc) iconv \
         && docker-php-ext-enable zip \
         && docker-php-ext-install gd \
         && docker-php-ext-enable gd \
-        && docker-php-ext-install pdo_mysql \
-        && docker-php-ext-enable pdo_mysql \
+        && docker-php-ext-install pgsql pdo_pgsql \
+        && docker-php-ext-enable pgsql pdo_pgsql \
         && docker-php-ext-install bcmath \
         && docker-php-ext-enable bcmath
 

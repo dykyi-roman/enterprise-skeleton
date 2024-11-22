@@ -30,7 +30,25 @@ services:
             - ./containers/php/php.ini:/usr/local/etc/php/php.ini
         networks:
             - es-network
+    postgres:
+        image: postgres:${POSTGRES_VERSION:-15}-alpine
+        container_name: es-postgres
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB:-app}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
+            POSTGRES_USER: ${POSTGRES_USER:-app}
+        volumes:
+            - ./data/postgres_data:/var/lib/postgresql/data:rw
+            - ./containers/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+        ports:
+            - "${POSTGRES_PORT:-5432}:5432"
+        networks:
+            - es-network
+
 networks:
     es-network:
         external: true
         driver: bridge
+
+volumes:
+    database_data:

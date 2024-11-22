@@ -1,0 +1,3 @@
+imports:
+    - { resource: '../../src/Domain1/Resources/Config/doctrine.yaml' }
+    - { resource: '../../src/Domain2/Resources/Config/doctrine.yaml' }

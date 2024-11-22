@@ -47,4 +47,3 @@ parameters:
       - Domain1Interfaces # Can use other domain interfaces
     Domain1Interfaces: ~
     Domain2Interfaces: ~
-    Symfony: ~

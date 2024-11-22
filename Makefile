@@ -60,3 +60,11 @@ ci: ## Run all code quality checks
 	$(MAKE) psalm
 	$(MAKE) deptrac
 	$(MAKE) test-run
+
+## -- Database Migrations --
+
+migration-create: ## Create a new migration (usage: make migration-create)
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php bin/console doctrine:migrations:diff"
+
+migration-run: ## Run all pending migrations
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php bin/console doctrine:migrations:migrate --no-interaction"
