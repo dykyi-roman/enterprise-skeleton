@@ -1,0 +1,33 @@
+{
+  "token_hmac_secret_key": "my-secret-token",
+  "api_key": "my-api-key",
+  "engine": "memory",
+  "prometheus": true,
+  "admin": true,
+  "debug": true,
+  "admin_password": "admin",
+  "admin_secret": "admin",
+  "port": 8000,
+  "allowed_origins": ["*"],
+  "http_addr": "0.0.0.0",
+  "permissions": {
+    "subscribe_to": {
+      "chat": ["*"],
+      "private": ["0"]
+    }
+  },
+  "namespaces": [
+    {
+      "name": "public",
+      "anonymous": true,
+      "publish": true,
+      "join_leave": true,
+      "presence": true,
+      "presence_stats": true,
+      "history_size": 10,
+      "history_ttl": 3600,
+      "history_lifetime": 60,
+      "history_recover": true
+    }
+  ]
+}

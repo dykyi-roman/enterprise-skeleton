@@ -1,0 +1,6 @@
+parameters:
+    level: 9
+    paths:
+        - ../src
+    ignoreErrors:
+        - '#Method .*::jsonSerialize\(\) return type has no value type specified in iterable type array.#'

@@ -1,0 +1,35 @@
+services:
+    web:
+        build:
+            context: containers/nginx
+        container_name: es-web
+        ports:
+            - "${NGINX_HTTP_PORT}:80"
+            - "${NGINX_HTTPS_PORT}:443"
+        volumes:
+            - ../code:/var/www/html/code
+            - ./containers/nginx/site.conf:/etc/nginx/conf.d/default.conf
+            - ./containers/nginx/ssl:/etc/nginx/ssl
+        links:
+            - php
+        networks:
+            - es-network
+    php:
+        build:
+            context: containers/php
+            args:
+                UID: ${UID:-1000}
+                GID: ${GID:-1000}
+        image: es-php
+        container_name: es-php
+        ports:
+            - "${PHP_PORT}:9000"
+        volumes:
+            - ../code:/var/www/html/code
+            - ./containers/php/php.ini:/usr/local/etc/php/php.ini
+        networks:
+            - es-network
+networks:
+    es-network:
+        external: true
+        driver: bridge
