@@ -26,6 +26,7 @@ services:
             - "${PHP_PORT}:9000"
         volumes:
             - ../code:/var/www/html/code
+            - ../tools:/var/www/html/tools
             - ./containers/php/php.ini:/usr/local/etc/php/php.ini
         networks:
             - es-network

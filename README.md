@@ -57,6 +57,70 @@ docker compose up -d --build
 
 Note: When accessing via HTTPS, you'll see a browser warning about the self-signed certificate in development. This is normal and can be safely bypassed for development purposes.
 
+## Code Quality Tools
+
+The project includes several code quality and analysis tools:
+
+### PHP CS Fixer
+- Automatically fixes PHP coding standards
+- Configuration: `tools/php-cs-fixer.dist.php`
+- Run: `make cs-check` or `make cs-fix`
+
+### Deptrac
+- Enforces architectural boundaries and dependencies
+- Configuration: `tools/deptrac.yaml`
+- Run: `make deptrac`
+
+### PHPStan
+- Static analysis tool for finding code errors
+- Configuration: `tools/phpstan.neon`
+- Maximum level of strictness (level 8)
+- Run: `make phpstan`
+
+### Psalm
+- Advanced static analysis and type checking
+- Configuration: `tools/psalm.xml`
+- Highest error level (level 1)
+- Detects unused code and variables
+- Run: `make psalm`
+
+### PHPUnit
+- Testing framework with automatic test suite discovery
+- Configuration: `tools/phpunit.xml.dist`
+- Automatically detects tests in `src/*/Tests` directories
+- Run: `make test`
+
+## Project Structure
+
+### Modular Architecture
+The project follows a domain-driven modular architecture:
+- Each domain is a separate module in `src/`
+- Modules are independent and loosely coupled
+- Each module contains its own:
+  - Business logic
+  - Configuration
+  - Dependencies
+  - Tests
+
+### Independent Configuration
+- Configuration is modular and domain-specific
+- Each module can have its own configuration
+- Shared configuration is minimal and clearly separated
+- Environment-specific settings use `.env` files
+
+## Development Workflow
+
+1. Start the Docker environment
+2. Write your code following the modular structure
+3. Run code quality tools before committing:
+```bash
+make cs-fix        # Fix code style
+make phpstan       # Run static analysis
+make deptrac       # Check dependencies
+make psalm         # Run advanced static analysis
+make test          # Run tests
+```
+
 ## Production Deployment
 
 For production deployment:

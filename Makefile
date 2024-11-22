@@ -6,48 +6,57 @@ network = es-network
 help:
 	@grep -E '(^[a-zA-Z0-9_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
-install: ## install
+install: ## Install project dependencies and set up Docker environment
 	docker network inspect $(network) --format {{.Id}} 2>/dev/null || docker network create $(network)
 	cd $(workdir) && docker compose -f $(config) up -d
 	docker exec -it $(php) bash -c "composer install"
 
-up: ## up
+up: ## Start Docker containers
 	cd $(workdir) && docker compose -f $(config) up -d
 
-down: ## down
+down: ## Stop Docker containers
 	cd $(workdir) && docker compose -f $(config) down
 
-start: up ## start
+start: up ## Alias for 'up' command
 
-stop: down ## stop
+stop: down ## Alias for 'down' command
 
-restart: ## restart
+restart: ## Restart Docker containers
 	cd $(workdir) && docker compose -f $(config) restart
 
-prune: ## prune
+prune: ## Remove all Docker containers, volumes, and networks
 	cd $(workdir) && docker compose -f $(config) down -v --remove-orphans --rmi all
 	cd $(workdir) && docker network remove $(network)
 
-enter: ## enter to container
+enter: ## Enter PHP container shell
 	docker exec -it $(php) sh
 
-console: ## console command
+console: ## Execute Symfony console commands (usage: make console command="your:command")
 	docker exec -it $(php) bash -c "php bin/console $(filter-out $@,$(MAKECMDGOALS))"
 
-## --
+## -- Code Quality & Testing --
 
-phpcs: ## phpcs
-	docker exec -it $(php) bash -c "php vendor/bin/php-cs-fixer fix -v --using-cache=no --config=./config/.php-cs-fixer.php"
+phpcs: ## Run PHP CS Fixer to fix code style
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/php-cs-fixer fix -v --using-cache=no --config=../tools/.php-cs-fixer.php"
 	@echo "phpcs done"
 
-phpstan: ## phpstan
-	docker exec -it $(php) bash -c "php vendor/bin/phpstan analyse src --configuration=./config/phpstan.neon"
+phpstan: ## Run PHPStan for static code analysis
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/phpstan analyse src --configuration=../tools/phpstan.neon"
 
-test-run: ## tests
-	docker exec -it $(php) bash -c "php vendor/bin/codecept build -c ./config/codeception.yml && php vendor/bin/codecept run -c ./config/codeception.yml $(filter-out $@,$(MAKECMDGOALS))"
+test-run: ## Run PHPUnit tests
+	docker exec -it $(php) bash -c "cd /var/www/html/code && APP_ENV=test php vendor/bin/phpunit -c ../tools/phpunit.xml.dist"
 	@echo "Test done!"
 
-ci: ## CI
+deptrac: ## Check dependencies between domains (no cache)
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/deptrac analyse --config-file=../tools/deptrac-domain.yaml --no-cache --report-uncovered"
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/deptrac analyse --config-file=../tools/deptrac-layers.yaml --no-cache --report-uncovered"
+
+psalm: ## Run Psalm static analysis (no cache)
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/psalm --config=../tools/psalm.xml --no-cache"
+
+ci: ## Run all code quality checks
 	$(MAKE) phpcs
 	$(MAKE) phpstan
+	$(MAKE) psalm
+	$(MAKE) deptrac
 	$(MAKE) test-run

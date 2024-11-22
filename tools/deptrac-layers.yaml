@@ -1,0 +1,38 @@
+parameters:
+  paths:
+    - ../code/src
+  exclude_files:
+    - '#.*test.*#'
+  layers:
+    - name: Presentation
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/.*/Presentation/.*
+    - name: Application
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/.*/Application/.*
+    - name: DomainModel
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/.*/DomainModel/.*
+    - name: Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/.*/Infrastructure/.*
+  ruleset:
+    Presentation:
+      - Application
+      - DomainModel
+    Application:
+      - DomainModel
+    DomainModel: ~
+    Infrastructure: ~

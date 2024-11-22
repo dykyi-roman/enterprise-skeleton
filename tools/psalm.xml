@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<psalm
+    errorLevel="1"
+    xmlns="https://getpsalm.org/schema/config"
+    findUnusedCode="true"
+    findUnusedVariablesAndParams="true"
+>
+    <projectFiles>
+        <directory name="../code/src"/>
+        <ignoreFiles>
+            <directory name="../code/vendor"/>
+            <directory name="../code/src/*/Tests"/>
+            <file name="../code/src/Kernel.php"/>
+        </ignoreFiles>
+    </projectFiles>
+</psalm>

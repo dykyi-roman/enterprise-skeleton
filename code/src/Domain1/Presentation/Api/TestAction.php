@@ -7,6 +7,7 @@ namespace App\Domain1\Presentation\Api;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/** @psalm-suppress UnusedClass */
 final class TestAction
 {
     #[Route('/example', name: 'example')]

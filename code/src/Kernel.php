@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 class Kernel extends BaseKernel
 {
@@ -62,7 +62,7 @@ class Kernel extends BaseKernel
     protected function buildContainer(): ContainerBuilder
     {
         $container = parent::buildContainer();
-        
+
         // Load domain services
         $projectDir = $this->getProjectDir();
         $finder = new Finder();

@@ -1,0 +1,50 @@
+parameters:
+  paths:
+    - ../code/src
+  exclude_files: []
+  layers:
+    - name: Domain1Classes
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Domain1/.*
+          must_not:
+            - type: interface
+              value: .*Interface$
+    - name: Domain2Classes
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Domain2/.*
+          must_not:
+            - type: interface
+              value: .*Interface$
+    - name: Domain1Interfaces
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Domain1/.*
+            - type: interface
+              value: .*Interface$
+    - name: Domain2Interfaces
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Domain2/.*
+            - type: interface
+              value: .*Interface$
+
+  ruleset:
+    Domain1Classes:
+      - Domain1Interfaces # Can use/implement own domain interfaces
+      - Domain2Interfaces # Can use other domain interfaces
+    Domain2Classes:
+      - Domain2Interfaces # Can use/implement own domain interfaces
+      - Domain1Interfaces # Can use other domain interfaces
+    Domain1Interfaces: ~
+    Domain2Interfaces: ~
+    Symfony: ~
