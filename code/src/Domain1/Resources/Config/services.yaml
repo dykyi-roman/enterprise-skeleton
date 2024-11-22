@@ -1,0 +1,14 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    App\Domain1\:
+        resource: '../../'
+        exclude:
+            - '../../Resources/'
+            - '../../DomainModel/Model/'
+        tags: ['controller.service_arguments']
