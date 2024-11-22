@@ -2,12 +2,6 @@
 
 A modern enterprise-grade application skeleton with Docker support and HTTPS configuration.
 
-## Requirements
-
-- Docker
-- Docker Compose
-- Git
-
 ## Docker Configuration
 
 The project uses Docker for containerization with the following services:
@@ -18,16 +12,30 @@ The project uses Docker for containerization with the following services:
   - Configuration: `etc/containers/nginx/site.conf`
   - SSL Certificates: `etc/containers/nginx/ssl/`
 
-- **PHP-FPM**
+- **PHP-FPM** (Language)
   - Port: 9000
   - Configuration: `etc/containers/php/php.ini`
 
-- **PostgreSQL**
+- **PostgreSQL** (Data Storage)
   - Port: 5432
   - Default Database: app
   - Default User: app
   - Configuration: `.env` file
   - Persistence: Docker volume
+
+- **Redis** (Caching)
+  - Port: 6379
+  - Alpine-based image for lightweight footprint
+  - Persistent data storage in `data/redis/`
+  - Used for application caching to improve performance
+
+- **RabbitMQ** (Message Queue)
+  - AMQP Port: 5672
+  - Management Interface Port: 15672
+  - Default User: app
+  - Management UI: http://localhost:15672
+  - Used for asynchronous task processing and message queuing
+  - Persistent message storage in `data/rabbitmq/`
 
 ## SSL/HTTPS Support
 

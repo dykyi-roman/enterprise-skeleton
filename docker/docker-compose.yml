@@ -44,11 +44,30 @@ services:
             - "${POSTGRES_PORT:-5432}:5432"
         networks:
             - es-network
+    redis:
+        image: redis:alpine
+        container_name: es-redis
+        ports:
+            - "${REDIS_PORT:-6379}:6379"
+        volumes:
+            - ./data/redis:/data
+        networks:
+            - es-network
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
+        container_name: es-rabbitmq
+        ports:
+            - "${RABBITMQ_PORT:-5672}:5672"
+            - "${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+        environment:
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-app}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-!ChangeMe!}
+        volumes:
+            - ./data/rabbitmq:/var/lib/rabbitmq
+        networks:
+            - es-network
 
 networks:
     es-network:
         external: true
         driver: bridge
-
-volumes:
-    database_data:
