@@ -1,5 +1,5 @@
 {
-    "type": "project",
+    "type": "es-project",
     "license": "proprietary",
     "minimum-stability": "stable",
     "prefer-stable": true,
