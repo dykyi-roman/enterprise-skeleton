@@ -83,7 +83,8 @@ The project includes several code quality and analysis tools:
 
 ### Deptrac
 - Enforces architectural boundaries and dependencies
-- Configuration: `tools/deptrac.yaml`
+- `tools/deptrac-layers.yaml`: Checks dependencies between layers to maintain clean architecture
+- `tools/deptrac-domain.yaml`: Validates dependencies between different domains to prevent unwanted coupling
 - Run: `make deptrac`
 
 ### PHPStan
@@ -104,6 +105,44 @@ The project includes several code quality and analysis tools:
 - Configuration: `tools/phpunit.xml.dist`
 - Automatically detects tests in `src/*/Tests` directories
 - Run: `make test`
+
+## Service Selection
+
+The project supports multiple service options that can be configured in the Makefile:
+
+### Available Service Options
+
+```makefile
+# Cache Options
+cache = redis        # Choose between: redis, memcached
+
+# Database Options
+database = postgres  # Choose between: postgres, mysql, mongodb
+
+# Message Broker Options
+message = kafka      # Choose between: rabbitmq, kafka
+```
+
+### Using Different Services
+
+You can specify which services to use by setting these variables in the Makefile or when running make commands:
+
+```bash
+# Example: Run with Redis, PostgreSQL, and Kafka
+make up cache=redis database=postgres message=kafka
+
+# Example: Run with Memcached, MongoDB, and RabbitMQ
+make up cache=memcached database=mongodb message=rabbitmq
+```
+
+Each service combination is isolated and can be started independently, allowing you to use the exact infrastructure components needed for your specific use case.
+
+### Default Configuration
+
+The default configuration uses:
+- Redis for caching
+- PostgreSQL for database
+- Kafka for message broker
 
 ## Database Management
 
@@ -127,6 +166,17 @@ The database connection is configured in the `.env` file:
 ```
 DATABASE_URL="postgresql://app:password@postgres:5432/app?serverVersion=15&charset=utf8"
 ```
+
+## Error Monitoring (Sentry)
+
+The project has Sentry integration for error tracking. The following log routing is configured:
+
+- All logs are written to `stdout` for general monitoring
+- Logs of `error` and `critical` levels additionally:
+  - Are sent to stderr
+  - Automatically forwarded to Sentry
+
+This allows centralized tracking and quick response to critical errors through the Sentry dashboard.
 
 ## Project Structure
 

@@ -1,0 +1,48 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain1\Presentation\Console;
+
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+#[AsCommand(
+    name: 'app:test-log',
+    description: 'Test different types of logging'
+)]
+final class TestLogCommand extends Command
+{
+    public function __construct(
+        private readonly LoggerInterface $logger
+    ) {
+        parent::__construct();
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        // Обычный вывод в консоль
+        $output->writeln('This is console output');
+        
+        // Информационный лог
+        $this->logger->info('This is info log message');
+        
+        // Лог ошибки
+        $this->logger->error('This is error message');
+        
+        // Симуляция исключения
+        try {
+            throw new \Exception('Test exception');
+        } catch (\Exception $e) {
+            $this->logger->critical('Critical error occurred', [
+                'exception' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
+
+        return Command::SUCCESS;
+    }
+}
