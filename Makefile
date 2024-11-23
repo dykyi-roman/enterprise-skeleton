@@ -1,8 +1,9 @@
 #--- Configuration --
+server = apache       # {nginx, apache}
 cache = redis        # {redis, memcached}
 database = postgres  # {postgres, mysql, mongodb}
 message = rabbitmq   # {rabbitmq, kafka}
-error_tracking =     # {sentry}
+error = sentry       # {sentry}
 
 #-- Variables --
 workdir = ./infrastructure
@@ -13,30 +14,33 @@ network = es-network
 #-------------------------
 
 help:
-	@grep -E '(^[a-zA-Z0-9_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
+	@grep -E '(^[a-zA-Z0-9_-]+:.*?## .*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
 ## -- Docker Commands --
 
 install: ## Install project dependencies and set up Docker environment
 	docker network inspect $(network) --format {{.Id}} 2>/dev/null || docker network create $(network)
-	export COMPOSE_PROFILES="$(database),$(cache),$(message)" && cd $(workdir) && docker compose -f $(config) up -d
+	export COMPOSE_PROFILES="$(server),$(database),$(cache),$(message)" && cd $(workdir) && docker compose -f $(config) up -d
 	docker exec -it $(php) bash -c "composer install"
 
 up: ## Start Docker containers
-	export COMPOSE_PROFILES="$(database),$(cache),$(message)" && cd $(workdir) && docker compose -f $(config) up -d
+	export COMPOSE_PROFILES="$(server),$(database),$(cache),$(message)" && cd $(workdir) && docker compose -f $(config) up -d
 
 down: ## Stop Docker containers
-	export COMPOSE_PROFILES="$(database),$(cache),$(message)" && cd $(workdir) && docker compose -f $(config) down
+	export COMPOSE_PROFILES="$(server),$(database),$(cache),$(message)" && cd $(workdir) && docker compose -f $(config) down
 
 start: up ## Alias for 'up' command
 
 stop: down ## Alias for 'down' command
 
 restart: ## Restart Docker containers
-	export COMPOSE_PROFILES="$(database),$(cache),$(message)" && cd $(workdir) && docker compose -f $(config) restart
+	export COMPOSE_PROFILES="$(server),$(database),$(cache),$(message)" && cd $(workdir) && docker compose -f $(config) restart
+
+build: ## Build specific container (usage: make build php)
+	export COMPOSE_PROFILES="$(server),$(database),$(cache),$(message)" && cd $(workdir) && docker compose -f $(config) up -d --build $(filter-out $@,$(MAKECMDGOALS))
 
 prune: ## Remove all Docker containers, volumes, and networks
-	export COMPOSE_PROFILES="$(database),$(cache),$(message)" && cd $(workdir) && docker compose -f $(config) down -v --remove-orphans --rmi all
+	export COMPOSE_PROFILES="$(server),$(database),$(cache),$(message)" && cd $(workdir) && docker compose -f $(config) down -v --remove-orphans --rmi all
 	cd $(workdir) && docker network remove $(network)
 
 enter: ## Enter PHP container shell
@@ -81,3 +85,7 @@ migration-create: ## Create a new migration (usage: make migration-create)
 
 migration-run: ## Run all pending migrations
 	docker exec -it $(php) bash -c "cd /var/www/html/code && php bin/console doctrine:migrations:migrate --no-interaction"
+
+# This is required to handle arguments in make commands
+%:
+	@:

@@ -1,8 +1,9 @@
 services:
-    web:
+    nginx:
         build:
             context: containers/nginx
-        container_name: es-web
+        container_name: es-nginx
+        profiles: ["nginx"]
         ports:
             - "${NGINX_HTTP_PORT}:80"
             - "${NGINX_HTTPS_PORT}:443"
@@ -10,7 +11,22 @@ services:
             - ../code:/var/www/html/code
             - ./containers/nginx/site.conf:/etc/nginx/conf.d/default.conf
             - ./containers/nginx/ssl:/etc/nginx/ssl
-        links:
+        networks:
+            - es-network
+    apache:
+        build:
+            context: containers/apache
+        container_name: es-apache
+        profiles: ["apache"]
+        ports:
+            - "${APACHE_HTTP_PORT}:80"
+            - "${APACHE_HTTPS_PORT}:443"
+        volumes:
+            - ../code:/var/www/html/code
+            - ./containers/apache/apache.conf:/usr/local/apache2/conf/extra/vhost.conf
+            - ./containers/apache/apache2.conf:/usr/local/apache2/conf/httpd.conf
+            - ./containers/apache/ssl:/usr/local/apache2/ssl
+        depends_on:
             - php
         networks:
             - es-network

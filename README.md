@@ -6,11 +6,15 @@ A modern enterprise-grade application skeleton with Docker support and HTTPS con
 
 The project uses Docker for containerization with the following services:
 
-- **Nginx** (Web Server)
+- **Web Server** (Configurable: Apache or Nginx)
   - HTTP Port: 1000
   - HTTPS Port: 1001
-  - Configuration: `etc/containers/nginx/site.conf`
-  - SSL Certificates: `etc/containers/nginx/ssl/`
+  - Apache Configuration:
+    - Configuration: `infrastructure/containers/apache/apache.conf`
+    - SSL Certificates: `infrastructure/containers/apache/ssl/`
+  - Nginx Configuration:
+    - Configuration: `etc/containers/nginx/site.conf`
+    - SSL Certificates: `etc/containers/nginx/ssl/`
 
 - **PHP-FPM** (Language)
   - Port: 9000
@@ -62,8 +66,11 @@ cd enterprise-skeleton
 
 2. Start the Docker containers:
 ```bash
-cd etc
-docker compose up -d --build
+# Using Apache web server
+make install server=apache
+
+# Using Nginx web server
+make install server=nginx
 ```
 
 3. Access the application:
@@ -71,6 +78,27 @@ docker compose up -d --build
 - HTTPS: https://localhost:1001
 
 Note: When accessing via HTTPS, you'll see a browser warning about the self-signed certificate in development. This is normal and can be safely bypassed for development purposes.
+
+## Web Server Configuration
+
+The project supports both Apache and Nginx web servers. You can switch between them using the `server` variable in the Makefile:
+
+### Apache
+- Modern SSL configuration with TLS 1.2/1.3
+- PHP-FPM integration via mod_proxy_fcgi
+- Automatic HTTP to HTTPS redirection
+- Configuration files:
+  - Main config: `infrastructure/containers/apache/apache2.conf`
+  - Virtual hosts: `infrastructure/containers/apache/apache.conf`
+  - SSL certificates: `infrastructure/containers/apache/ssl/`
+
+### Nginx
+- Event-driven architecture
+- PHP-FPM integration
+- Modern SSL configuration
+- Configuration files:
+  - Site config: `etc/containers/nginx/site.conf`
+  - SSL certificates: `etc/containers/nginx/ssl/`
 
 ## Code Quality Tools
 
