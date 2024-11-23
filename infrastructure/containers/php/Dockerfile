@@ -9,35 +9,6 @@ WORKDIR /var/www/html/code
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    # ZIP support
-    libzip-dev \
-    # Cryptography
-    libmcrypt-dev \
-    libssl-dev \
-    openssl \
-    # HTTP and SSH
-    libcurl4-openssl-dev \
-    libssh-dev \
-    openssh-server \
-    # Character encoding and internationalization
-    libonig-dev \
-    libicu-dev \
-    # Event handling
-    libevent-dev \
-    # UUID generation
-    uuid-dev \
-    # Message queues
-    librabbitmq-dev \
-    librdkafka-dev \
-    # Caching
-    libmemcached-dev \
-    # XML and image processing
-    libxml2-dev \
-    libpng-dev \
-    # GeoIP support
-    libgeoip-dev \
-    # Database
-    libpq-dev \
     # Build tools
     autoconf \
     dpkg-dev \
@@ -55,9 +26,32 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-# Install and configure PHP extensions
-RUN docker-php-ext-configure intl \
-    # Install core extensions
+# Install core PHP extensions
+RUN apt-get update && apt-get install -y \
+    # ZIP support
+    libzip-dev \
+    # Cryptography
+    libmcrypt-dev \
+    libssl-dev \
+    openssl \
+    # HTTP and SSH
+    libcurl4-openssl-dev \
+    libssh-dev \
+    openssh-server \
+    # Character encoding and internationalization
+    libonig-dev \
+    libicu-dev \
+    # Event handling
+    libevent-dev \
+    # UUID generation
+    uuid-dev \
+    # XML and image processing
+    libxml2-dev \
+    libpng-dev \
+    # GeoIP support
+    libgeoip-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && docker-php-ext-configure intl \
     && docker-php-ext-install -j$(nproc) \
         bcmath \
         iconv \
@@ -66,24 +60,52 @@ RUN docker-php-ext-configure intl \
         opcache \
         pcntl \
         zip \
-    # Install GD with common image format support
     && docker-php-ext-configure gd \
-    && docker-php-ext-install -j$(nproc) gd \
-    # Install database extensions
+    && docker-php-ext-install -j$(nproc) gd
+
+# MySQL Extension
+#RUN apt-get update && apt-get install -y \
+#    && docker-php-ext-install -j$(nproc) \
+#        pdo_mysql
+
+# PostgreSQL Extension
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/* \
     && docker-php-ext-install -j$(nproc) \
-        pdo_mysql \
         pgsql \
         pdo_pgsql
 
-# Install PECL extensions
-RUN pecl install \
-        redis \
-        rdkafka \
-        memcached \
-    && docker-php-ext-enable \
-        redis \
-        rdkafka \
-        memcached
+# MongoDB Extension
+#RUN apt-get update && apt-get install -y libssl-dev \
+#    && rm -rf /var/lib/apt/lists/* \
+#    && pecl install mongodb-1.17.0 \
+#    && docker-php-ext-enable mongodb
+
+# Redis Extension
+RUN pecl install redis \
+    && docker-php-ext-enable redis
+
+# RdKafka Extension
+#RUN apt-get update && apt-get install -y \
+#    librdkafka-dev \
+#    && rm -rf /var/lib/apt/lists/* \
+#    && pecl install rdkafka \
+#    && docker-php-ext-enable rdkafka
+
+# Memcached Extension
+#RUN apt-get update && apt-get install -y \
+#    libmemcached-dev \
+#    && rm -rf /var/lib/apt/lists/* \
+#    && pecl install memcached \
+#    && docker-php-ext-enable memcached
+
+# RabbitMQ Extension
+RUN apt-get update && apt-get install -y \
+    librabbitmq-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && pecl install amqp \
+    && docker-php-ext-enable amqp
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer

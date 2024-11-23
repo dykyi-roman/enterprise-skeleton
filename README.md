@@ -163,14 +163,18 @@ make up cache=redis database=postgres message=kafka
 make up cache=memcached database=mongodb message=rabbitmq
 ```
 
-Each service combination is isolated and can be started independently, allowing you to use the exact infrastructure components needed for your specific use case.
+### Docker Configuration Optimization
 
-### Default Configuration
+For better build performance, the PHP container's Dockerfile has some service extensions commented out by default. When changing services in the Makefile, you'll need to:
 
-The default configuration uses:
-- Redis for caching
-- PostgreSQL for database
-- Kafka for message broker
+1. Edit `infrastructure/containers/php/Dockerfile`
+2. Uncomment the corresponding extension blocks for your chosen services
+3. Rebuild the PHP container:
+```bash
+make build php
+```
+
+This approach ensures faster container builds by only including the extensions you actually need.
 
 ## Database Management
 
