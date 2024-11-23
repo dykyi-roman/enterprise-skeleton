@@ -1,72 +1,105 @@
 FROM php:8.3-fpm
 
-ARG UID
-ARG GID
+# Arguments for user/group configuration
+ARG UID=1000
+ARG GID=1000
 
-ENV UID=${UID}
-ENV GID=${GID}
-
+# Set working directory
 WORKDIR /var/www/html/code
 
-# Install dependencies and PHP build dependencies in a single RUN layer
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-        libzip-dev \
-        libmcrypt-dev \
-        libcurl4-openssl-dev \
-        libssl-dev \
-        libonig-dev \
-        libicu-dev \
-        libevent-dev \
-        uuid-dev \
-        librabbitmq-dev \
-        libssh-dev \
-        libgeoip-dev \
-        libmemcached-dev \
-        librdkafka-dev \
-        libxml2-dev \
-        libpng-dev \
-        libxml2-dev \
-        openssl \
-        openssh-server \
-        nano \
-        git \
-        libpq-dev \
-        $PHPIZE_DEPS \
-    && rm -rf /var/lib/apt/lists/*
+    # ZIP support
+    libzip-dev \
+    # Cryptography
+    libmcrypt-dev \
+    libssl-dev \
+    openssl \
+    # HTTP and SSH
+    libcurl4-openssl-dev \
+    libssh-dev \
+    openssh-server \
+    # Character encoding and internationalization
+    libonig-dev \
+    libicu-dev \
+    # Event handling
+    libevent-dev \
+    # UUID generation
+    uuid-dev \
+    # Message queues
+    librabbitmq-dev \
+    librdkafka-dev \
+    # Caching
+    libmemcached-dev \
+    # XML and image processing
+    libxml2-dev \
+    libpng-dev \
+    # GeoIP support
+    libgeoip-dev \
+    # Database
+    libpq-dev \
+    # Build tools
+    autoconf \
+    dpkg-dev \
+    file \
+    g++ \
+    gcc \
+    libc-dev \
+    make \
+    pkg-config \
+    re2c \
+    # Development tools
+    git \
+    nano \
+    # Cleanup
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
-# Install PHP extensions
-RUN docker-php-ext-install -j$(nproc) iconv \
-        && docker-php-ext-install pcntl \
-        && docker-php-ext-configure intl \
-        && docker-php-ext-install intl \
-        && docker-php-ext-enable intl \
-        && docker-php-ext-install opcache \
-        && docker-php-ext-enable opcache \
-        && docker-php-ext-install mbstring \
-        && docker-php-ext-enable mbstring \
-        && docker-php-ext-install zip \
-        && docker-php-ext-enable zip \
-        && docker-php-ext-install gd \
-        && docker-php-ext-enable gd \
-        && docker-php-ext-install pdo_mysql \
-        && docker-php-ext-enable pdo_mysql \
-        && docker-php-ext-install pgsql pdo_pgsql \
-        && docker-php-ext-enable pgsql pdo_pgsql \
-        && docker-php-ext-install bcmath \
-        && docker-php-ext-enable bcmath
+# Install and configure PHP extensions
+RUN docker-php-ext-configure intl \
+    # Install core extensions
+    && docker-php-ext-install -j$(nproc) \
+        bcmath \
+        iconv \
+        intl \
+        mbstring \
+        opcache \
+        pcntl \
+        zip \
+    # Install GD with common image format support
+    && docker-php-ext-configure gd \
+    && docker-php-ext-install -j$(nproc) gd \
+    # Install database extensions
+    && docker-php-ext-install -j$(nproc) \
+        pdo_mysql \
+        pgsql \
+        pdo_pgsql
+
+# Install PECL extensions
+RUN pecl install \
+        redis \
+        rdkafka \
+        memcached \
+    && docker-php-ext-enable \
+        redis \
+        rdkafka \
+        memcached
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Install php-rdkafka via PECL
-RUN pecl install rdkafka && \
-    docker-php-ext-enable rdkafka
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Create user and configure PHP-FPM
 RUN groupadd --gid ${GID} es \
-    && useradd --gid ${GID} --uid ${UID} es \
+    && useradd --uid ${UID} --gid ${GID} --shell /bin/bash --create-home es \
     && sed -i "s/user = www-data/user = es/g" /usr/local/etc/php-fpm.d/www.conf \
     && sed -i "s/group = www-data/group = es/g" /usr/local/etc/php-fpm.d/www.conf
 
+# Set proper permissions
+RUN chown -R es:es /var/www/html
+
 # Switch to non-root user
 USER es
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+    CMD php-fpm -t || exit 1

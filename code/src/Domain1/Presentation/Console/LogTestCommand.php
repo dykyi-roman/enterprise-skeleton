@@ -11,10 +11,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
-    name: 'app:test-log',
+    name: 'app:log:test',
     description: 'Test different types of logging'
 )]
-final class TestLogCommand extends Command
+final class LogTestCommand extends Command
 {
     public function __construct(
         private readonly LoggerInterface $logger
@@ -36,7 +36,7 @@ final class TestLogCommand extends Command
         // Симуляция исключения
         try {
             throw new \Exception('Test exception');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->logger->critical('Critical error occurred', [
                 'exception' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
