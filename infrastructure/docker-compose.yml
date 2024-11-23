@@ -26,8 +26,6 @@ services:
             - ./containers/apache/apache.conf:/usr/local/apache2/conf/extra/vhost.conf
             - ./containers/apache/apache2.conf:/usr/local/apache2/conf/httpd.conf
             - ./containers/apache/ssl:/usr/local/apache2/ssl
-        depends_on:
-            - php
         networks:
             - es-network
     php:

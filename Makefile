@@ -1,7 +1,7 @@
 #--- Configuration --
 server = nginx       # {nginx, apache}
 cache = memcached    # {redis, memcached}
-database = mysql     # {postgres, mysql, mongodb}
+database = postgres  # {postgres, mysql, mongodb}
 message = rabbitmq   # {rabbitmq, kafka}
 error = sentry       # {sentry}
 
