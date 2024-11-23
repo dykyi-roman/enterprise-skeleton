@@ -2,11 +2,28 @@ parameters:
 
 services:
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        autowire: true
+        autoconfigure: true
 
     App\:
         resource: '../src/'
         exclude:
-            - '../src/*/Tests/'
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
             - '../src/Kernel.php'
+
+    # Sentry Configuration
+    sentry.client:
+        class: Sentry\Client
+        factory: ['Sentry\ClientBuilder', 'create']
+        arguments:
+            $options:
+                dsn: '%env(SENTRY_DSN)%'
+                environment: '%kernel.environment%'
+
+    sentry.hub:
+        class: Sentry\State\Hub
+        factory: ['Sentry\SentrySdk', 'getCurrentHub']
+
+    Sentry\State\HubInterface:
+        alias: sentry.hub

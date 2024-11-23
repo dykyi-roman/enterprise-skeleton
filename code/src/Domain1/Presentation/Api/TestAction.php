@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 final class TestAction
 {
     #[Route('/example', name: 'example')]
-    public function index(): Response
+    public function index(\Sentry\State\HubInterface $hub): Response
     {
         return new Response();
     }
