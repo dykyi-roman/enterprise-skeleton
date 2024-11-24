@@ -35,9 +35,8 @@ class SendSentryMessageCommand extends Command
 
         try {
             \Sentry\init([
-                'dsn' => 'http://2d76aa9d7c92418e8953ce2cf1052758@es-sentry-web:9000/1',
+                'dsn' => 'http://a7f0533e65d04d178eee48e9ea997f62@es-sentry-web:9000/1',
             ]);
-
             throw new \Exception($message);
         } catch (\Exception $exception) {
             \Sentry\configureScope(function (Scope $scope) use ($message): void {

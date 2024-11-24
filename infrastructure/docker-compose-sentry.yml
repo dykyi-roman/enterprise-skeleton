@@ -75,9 +75,10 @@ services:
       sentry-init:
         condition: service_completed_successfully
     ports:
-      - "${SENTRY_PORT}:9000"
+      - "9001:9000"
     volumes:
       - './sentry-data:/var/lib/sentry/files'
+      - './sentry/sentry.conf.py:/etc/sentry/sentry.conf.py'
     environment:
       SENTRY_SECRET_KEY: ${SENTRY_SECRET_KEY}
       SENTRY_POSTGRES_HOST: ${SENTRY_POSTGRES_HOST}
