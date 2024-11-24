@@ -13,6 +13,7 @@ final class TestAction
     #[Route('/example', name: 'example')]
     public function index(): Response
     {
+        throw new \RuntimeException('dddd');
         return new Response('Test');
     }
 }
