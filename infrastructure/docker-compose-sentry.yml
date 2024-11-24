@@ -1,6 +1,7 @@
 services:
   redis-sentry:
     image: redis:alpine
+    container_name: es-redis-sentry
     profiles: ["sentry"]
     command: redis-server --save 60 1 --loglevel warning
     healthcheck:
@@ -15,6 +16,7 @@ services:
 
   postgres-sentry:
     image: postgres:9.6-alpine
+    container_name: es-postgres-sentry
     profiles: ["sentry"]
     command: postgres -c 'max_connections=200'
     healthcheck:
@@ -34,6 +36,7 @@ services:
 
   sentry-init:
     image: sentry:${SENTRY_VERSION}
+    container_name: es-sentry-init
     platform: linux/amd64
     profiles: ["sentry"]
     depends_on:
@@ -61,6 +64,7 @@ services:
 
   sentry:
     image: sentry:${SENTRY_VERSION}
+    container_name: es-sentry-web
     platform: linux/amd64
     profiles: ["sentry"]
     depends_on:
@@ -91,6 +95,7 @@ services:
 
   sentry-cron:
     image: sentry:${SENTRY_VERSION}
+    container_name: es-sentry-cron
     platform: linux/amd64
     profiles: ["sentry"]
     depends_on:
@@ -115,6 +120,7 @@ services:
 
   sentry-worker:
     image: sentry:${SENTRY_VERSION}
+    container_name: es-sentry-worker
     platform: linux/amd64
     profiles: ["sentry"]
     depends_on:
