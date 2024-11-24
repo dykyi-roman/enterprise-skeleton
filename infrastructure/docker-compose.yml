@@ -14,6 +14,12 @@ services:
             - ./containers/nginx/ssl:/etc/nginx/ssl
         networks:
             - es-network
+        healthcheck:
+            test: ["CMD", "nginx", "-t"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
     apache:
         build:
             context: containers/apache
@@ -30,6 +36,13 @@ services:
             - ./containers/apache/ssl:/usr/local/apache2/ssl
         networks:
             - es-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:80/"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
+
     php:
         build:
             context: containers/php
@@ -47,6 +60,12 @@ services:
             - ./containers/php/php.ini:/usr/local/etc/php/php.ini
         networks:
             - es-network
+        healthcheck:
+            test: ["CMD-SHELL", "php-fpm -t || exit 1"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
     postgres:
         image: postgres:${POSTGRES_VERSION:-15}-alpine
         platform: ${PLATFORM:-linux/amd64}
@@ -63,6 +82,12 @@ services:
             - "${POSTGRES_PORT:-5432}:5432"
         networks:
             - es-network
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-app} -d ${POSTGRES_DB:-app}"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
     mysql:
         image: mysql:${MYSQL_VERSION:-8.0}
         platform: ${PLATFORM:-linux/amd64}
@@ -80,6 +105,11 @@ services:
             - "${MYSQL_PORT:-3306}:3306"
         networks:
             - es-network
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${MYSQL_USER:-app}", "-p${MYSQL_PASSWORD:-!ChangeMe!}"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
     mongodb:
         image: mongo:${MONGO_VERSION:-6.0}
@@ -96,6 +126,11 @@ services:
             - "${MONGO_PORT:-27017}:27017"
         networks:
             - es-network
+        healthcheck:
+            test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
     redis:
         image: redis:alpine
@@ -107,6 +142,12 @@ services:
             - ./data/redis:/data
         networks:
             - es-network
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
     rabbitmq:
         image: rabbitmq:3-management-alpine
         container_name: es-rabbitmq
@@ -121,6 +162,12 @@ services:
             - ./data/rabbitmq:/var/lib/rabbitmq
         networks:
             - es-network
+        healthcheck:
+            test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
     memcached:
         image: memcached:alpine
         container_name: es-memcached
@@ -129,6 +176,11 @@ services:
             - "${MEMCACHED_PORT:-11211}:11211"
         networks:
             - es-network
+        healthcheck:
+            test: ["CMD-SHELL", "echo stats | nc localhost 11211"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
     kafka:
         image: 'bitnami/kafka:3.3.1'
@@ -149,6 +201,13 @@ services:
             - 9192:9092
         networks:
             - es-network
+        healthcheck:
+            test: ["CMD-SHELL", "/opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
+
     kafka-ui:
         container_name: es-kafka-ui
         profiles: ["kafka"]
@@ -160,6 +219,13 @@ services:
             - KAFKA_CLUSTERS_0_NAME=r4zt_wrqTRuT7W2NJsB_GA
         networks:
             - es-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
+
 networks:
     es-network:
         external: true

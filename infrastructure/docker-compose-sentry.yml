@@ -90,6 +90,12 @@ services:
       SENTRY_MAIL_HOST: ${SENTRY_MAIL_HOST}
       SENTRY_SINGLE_ORGANIZATION: ${SENTRY_SINGLE_ORGANIZATION}
       SENTRY_FEATURES: ${SENTRY_FEATURES}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/api/0/internal/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     networks:
       - es-network
 
@@ -115,6 +121,12 @@ services:
       SENTRY_MAIL_HOST: ${SENTRY_MAIL_HOST}
       SENTRY_SINGLE_ORGANIZATION: ${SENTRY_SINGLE_ORGANIZATION}
       SENTRY_FEATURES: ${SENTRY_FEATURES}
+    healthcheck:
+      test: ["CMD", "pidof", "cron"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     networks:
       - es-network
 
@@ -140,6 +152,12 @@ services:
       SENTRY_MAIL_HOST: ${SENTRY_MAIL_HOST}
       SENTRY_SINGLE_ORGANIZATION: ${SENTRY_SINGLE_ORGANIZATION}
       SENTRY_FEATURES: ${SENTRY_FEATURES}
+    healthcheck:
+      test: ["CMD-SHELL", "pidof celery || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     networks:
       - es-network
 

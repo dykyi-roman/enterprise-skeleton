@@ -3,7 +3,8 @@ FROM httpd:2.4-alpine
 # Install required packages
 RUN apk update && apk add --no-cache \
     apache2-proxy \
-    apache2-ssl
+    apache2-ssl \
+    curl
 
 # Enable required modules
 RUN sed -i \
