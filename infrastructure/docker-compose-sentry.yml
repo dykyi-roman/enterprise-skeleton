@@ -41,34 +41,9 @@ services:
         condition: service_healthy
       postgres-sentry:
         condition: service_healthy
-    command: "sentry upgrade --noinput"
-    environment:
-      SENTRY_SECRET_KEY: ${SENTRY_SECRET_KEY}
-      SENTRY_POSTGRES_HOST: ${SENTRY_POSTGRES_HOST}
-      SENTRY_POSTGRES_PORT: ${SENTRY_POSTGRES_PORT}
-      SENTRY_DB_USER: ${SENTRY_DB_USER}
-      SENTRY_DB_PASSWORD: ${SENTRY_DB_PASSWORD}
-      SENTRY_DB_NAME: ${SENTRY_DB_NAME}
-      SENTRY_REDIS_HOST: ${SENTRY_REDIS_HOST}
-      SENTRY_REDIS_PORT: ${SENTRY_REDIS_PORT}
-      SENTRY_MAIL_HOST: ${SENTRY_MAIL_HOST}
-      SENTRY_SINGLE_ORGANIZATION: ${SENTRY_SINGLE_ORGANIZATION}
-      SENTRY_FEATURES: ${SENTRY_FEATURES}
-    networks:
-      - es-network
-
-  sentry-create-user:
-    image: sentry:${SENTRY_VERSION}
-    platform: linux/amd64
-    profiles: ["sentry"]
-    depends_on:
-      - sentry-init
     command: >
-      bash -c "sentry createuser
-      --email ${SENTRY_ADMIN_EMAIL}
-      --password ${SENTRY_ADMIN_PASSWORD}
-      --superuser
-      --no-input || true"
+      bash -c "sentry upgrade --noinput &&
+      sentry createuser --email ${SENTRY_ADMIN_EMAIL} --password ${SENTRY_ADMIN_PASSWORD} --superuser --no-input || true"
     environment:
       SENTRY_SECRET_KEY: ${SENTRY_SECRET_KEY}
       SENTRY_POSTGRES_HOST: ${SENTRY_POSTGRES_HOST}
@@ -94,8 +69,6 @@ services:
       postgres-sentry:
         condition: service_healthy
       sentry-init:
-        condition: service_completed_successfully
-      sentry-create-user:
         condition: service_completed_successfully
     ports:
       - "${SENTRY_PORT}:9000"
