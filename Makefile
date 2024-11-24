@@ -39,7 +39,7 @@ up: ## Start Docker containers
 	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) -f $(compose-sentry) up -d
 
 down: ## Stop Docker containers
-	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) -f $(compose-sentry) down
+	cd $(workdir) && COMPOSE_PROFILES="$(config)" docker compose down --remove-orphans
 
 start: up ## Alias for 'up' command
 

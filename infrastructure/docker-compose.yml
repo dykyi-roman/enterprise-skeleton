@@ -83,7 +83,6 @@ services:
 
     mongodb:
         image: mongo:${MONGO_VERSION:-6.0}
-        platform: ${PLATFORM:-linux/amd64}
         container_name: es-mongodb
         profiles: [ "mongodb" ]
         environment:
@@ -100,7 +99,6 @@ services:
 
     redis:
         image: redis:alpine
-        platform: ${PLATFORM:-linux/amd64}
         container_name: es-redis
         profiles: ["redis"]
         ports:
@@ -111,7 +109,6 @@ services:
             - es-network
     rabbitmq:
         image: rabbitmq:3-management-alpine
-        platform: ${PLATFORM:-linux/amd64}
         container_name: es-rabbitmq
         profiles: ["rabbitmq"]
         ports:
@@ -126,7 +123,6 @@ services:
             - es-network
     memcached:
         image: memcached:alpine
-        platform: ${PLATFORM:-linux/amd64}
         container_name: es-memcached
         profiles: ["memcached"]
         ports:
@@ -136,7 +132,6 @@ services:
 
     kafka:
         image: 'bitnami/kafka:3.3.1'
-        platform: ${PLATFORM:-linux/amd64}
         profiles: ["kafka"]
         container_name: es-kafka
         environment:

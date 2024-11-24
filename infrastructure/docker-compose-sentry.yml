@@ -2,7 +2,7 @@ services:
   redis-sentry:
     image: redis:alpine
     profiles: ["sentry"]
-    container_name: es-redis-sentry
+    container_name: es-sentry-redis
     command: redis-server --save 60 1 --loglevel warning
     volumes:
       - redis-sentry-data:/data
@@ -12,39 +12,65 @@ services:
   postgres-sentry:
     image: postgres:14-alpine
     profiles: ["sentry"]
-    container_name: es-postgres-sentry
+    container_name: es-sentry-postgres
     environment:
-      POSTGRES_USER: sentry
-      POSTGRES_PASSWORD: sentry
-      POSTGRES_DB: sentry
+      POSTGRES_USER: ${SENTRY_DB_USER}
+      POSTGRES_PASSWORD: ${SENTRY_DB_PASSWORD}
+      POSTGRES_DB: ${SENTRY_DB_NAME}
     volumes:
       - postgres-sentry-data:/var/lib/postgresql/data
     networks:
       - es-network
 
+  sentry-init:
+    image: sentry:latest
+    platform: linux/amd64
+    profiles: ["sentry"]
+    container_name: es-sentry-init
+    depends_on:
+      - redis-sentry
+      - postgres-sentry
+    command: "sentry upgrade --noinput"
+    environment:
+      SENTRY_SECRET_KEY: ${SENTRY_SECRET_KEY}
+      SENTRY_POSTGRES_HOST: ${SENTRY_POSTGRES_HOST}
+      SENTRY_POSTGRES_PORT: 5432
+      SENTRY_DB_USER: ${SENTRY_DB_USER}
+      SENTRY_DB_PASSWORD: ${SENTRY_DB_PASSWORD}
+      SENTRY_DB_NAME: ${SENTRY_DB_NAME}
+      SENTRY_REDIS_HOST: ${SENTRY_REDIS_HOST}
+      SENTRY_REDIS_PORT: 6379
+    networks:
+      - es-network
+
   sentry:
-    image: getsentry/sentry:latest
-    platform: ${PLATFORM:-linux/amd64}
+    image: sentry:latest
+    platform: linux/amd64
     profiles: ["sentry"]
     container_name: es-sentry
     depends_on:
       - redis-sentry
       - postgres-sentry
+      - sentry-init
     ports:
-      - "9000:9000"
-    env_file:
-      - .env.sentry
+      - "${SENTRY_PORT}:9000"
+    volumes:
+      - './sentry-data:/var/lib/sentry/files'
     environment:
-      SENTRY_POSTGRES_HOST: postgres-sentry
-      SENTRY_DB_USER: sentry
-      SENTRY_DB_PASSWORD: sentry
-      SENTRY_REDIS_HOST: redis-sentry
+      SENTRY_SECRET_KEY: ${SENTRY_SECRET_KEY}
+      SENTRY_POSTGRES_HOST: ${SENTRY_POSTGRES_HOST}
+      SENTRY_POSTGRES_PORT: 5432
+      SENTRY_DB_USER: ${SENTRY_DB_USER}
+      SENTRY_DB_PASSWORD: ${SENTRY_DB_PASSWORD}
+      SENTRY_DB_NAME: ${SENTRY_DB_NAME}
+      SENTRY_REDIS_HOST: ${SENTRY_REDIS_HOST}
+      SENTRY_REDIS_PORT: 6379
     networks:
       - es-network
 
   sentry-cron:
-    image: getsentry/sentry:latest
-    platform: ${PLATFORM:-linux/amd64}
+    image: sentry:latest
+    platform: linux/amd64
     profiles: ["sentry"]
     container_name: es-sentry-cron
     depends_on:
@@ -52,19 +78,23 @@ services:
       - postgres-sentry
       - sentry
     command: "sentry run cron"
-    env_file:
-      - .env.sentry
+    volumes:
+      - './sentry-data:/var/lib/sentry/files'
     environment:
-      SENTRY_POSTGRES_HOST: postgres-sentry
-      SENTRY_DB_USER: sentry
-      SENTRY_DB_PASSWORD: sentry
-      SENTRY_REDIS_HOST: redis-sentry
+      SENTRY_SECRET_KEY: ${SENTRY_SECRET_KEY}
+      SENTRY_POSTGRES_HOST: ${SENTRY_POSTGRES_HOST}
+      SENTRY_POSTGRES_PORT: 5432
+      SENTRY_DB_USER: ${SENTRY_DB_USER}
+      SENTRY_DB_PASSWORD: ${SENTRY_DB_PASSWORD}
+      SENTRY_DB_NAME: ${SENTRY_DB_NAME}
+      SENTRY_REDIS_HOST: ${SENTRY_REDIS_HOST}
+      SENTRY_REDIS_PORT: 6379
     networks:
       - es-network
 
   sentry-worker:
-    image: getsentry/sentry:latest
-    platform: ${PLATFORM:-linux/amd64}
+    image: sentry:latest
+    platform: linux/amd64
     profiles: ["sentry"]
     container_name: es-sentry-worker
     depends_on:
@@ -72,19 +102,24 @@ services:
       - postgres-sentry
       - sentry
     command: "sentry run worker"
-    env_file:
-      - .env.sentry
+    volumes:
+      - './sentry-data:/var/lib/sentry/files'
     environment:
-      SENTRY_POSTGRES_HOST: postgres-sentry
-      SENTRY_DB_USER: sentry
-      SENTRY_DB_PASSWORD: sentry
-      SENTRY_REDIS_HOST: redis-sentry
+      SENTRY_SECRET_KEY: ${SENTRY_SECRET_KEY}
+      SENTRY_POSTGRES_HOST: ${SENTRY_POSTGRES_HOST}
+      SENTRY_POSTGRES_PORT: 5432
+      SENTRY_DB_USER: ${SENTRY_DB_USER}
+      SENTRY_DB_PASSWORD: ${SENTRY_DB_PASSWORD}
+      SENTRY_DB_NAME: ${SENTRY_DB_NAME}
+      SENTRY_REDIS_HOST: ${SENTRY_REDIS_HOST}
+      SENTRY_REDIS_PORT: 6379
     networks:
       - es-network
 
 volumes:
   redis-sentry-data:
   postgres-sentry-data:
+  sentry-data:
 
 networks:
   es-network:

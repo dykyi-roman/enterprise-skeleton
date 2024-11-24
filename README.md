@@ -268,3 +268,64 @@ The project uses a Docker network named `rta-network` for service communication.
 3. Commit your changes
 4. Push to the branch
 5. Create a new Pull Request
+
+## Initial Setup
+
+1. Copy the configuration template:
+```bash
+make copy-config
+```
+
+2. Configure your environment:
+Edit `infrastructure/config/cs-config` to enable/disable services you need. Available services:
+```
+server=nginx     # Web server (nginx/apache)
+database=postgres  # Database (postgres/mysql/mongodb)
+cache=redis      # Cache service (redis/memcached)
+message=rabbitmq # Message broker (rabbitmq/kafka)
+error=sentry    # Error tracking (sentry)
+```
+
+3. Start the environment:
+```bash
+make install
+```
+
+## Available Services
+
+### Web Servers
+- Nginx
+- Apache
+
+### Databases
+- PostgreSQL
+- MySQL
+- MongoDB
+
+### Cache
+- Redis
+- Memcached
+
+### Message Brokers
+- RabbitMQ
+- Kafka
+
+### Error Tracking
+- Sentry
+
+## Debugging
+
+To view current configuration:
+```bash
+make debug-config
+```
+
+## Notes
+
+- Services are enabled/disabled through profiles in `infrastructure/config/cs-config`
+- Each service can be configured through environment variables in `.env`
+- For M1/M2 Macs, some services are configured to use platform-specific images
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
