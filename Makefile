@@ -1,11 +1,22 @@
-#--- Configuration --
-include infrastructure/config/cs-config
-
 #-- Variables --
 workdir = ./infrastructure
 compose-file = docker-compose.yml
+compose-sentry = docker-compose-sentry.yml
 php = es-php
 network = es-network
+
+# Get the config template and parse variables
+config_template = $(shell grep '^config=' $(workdir)/config/cs-config | cut -d'=' -f2)
+config = $(shell cd $(workdir) && echo "$$(grep '^config=' config/cs-config | cut -d'=' -f2)" | \
+	sed 's/$${//g; s/}//g' | \
+	tr ',' '\n' | \
+	while read var; do \
+		val=$$(grep "^$$var=" config/cs-config | cut -d'=' -f2); \
+		if [ ! -z "$$val" ]; then \
+			echo "$$val"; \
+		fi; \
+	done | \
+	tr '\n' ',' | sed 's/,$$//')
 
 help:
 	@grep -E '(^[a-zA-Z0-9_-]+:.*?## .*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
@@ -25,23 +36,23 @@ install: copy-config ## Install project dependencies and set up Docker environme
 	docker exec -it $(php) bash -c "composer install"
 
 up: ## Start Docker containers
-	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) up -d
+	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) -f $(compose-sentry) up -d
 
 down: ## Stop Docker containers
-	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) down
+	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) -f $(compose-sentry) down
 
 start: up ## Alias for 'up' command
 
 stop: down ## Alias for 'down' command
 
 restart: ## Restart Docker containers
-	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) restart
+	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) -f $(compose-sentry) restart
 
 build: ## Build specific container (usage: make build php)
-	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) up -d --build $(filter-out $@,$(MAKECMDGOALS))
+	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) -f $(compose-sentry) up -d --build $(filter-out $@,$(MAKECMDGOALS))
 
 prune: ## Remove all Docker containers, volumes, and networks
-	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) down -v --remove-orphans --rmi all
+	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) -f $(compose-sentry) down -v --remove-orphans --rmi all
 	cd $(workdir) && docker network remove $(network)
 
 enter: ## Enter PHP container shell

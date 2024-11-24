@@ -2,6 +2,7 @@ services:
     nginx:
         build:
             context: containers/nginx
+        platform: ${PLATFORM:-linux/amd64}
         container_name: es-nginx
         profiles: ["nginx"]
         ports:
@@ -16,6 +17,7 @@ services:
     apache:
         build:
             context: containers/apache
+        platform: ${PLATFORM:-linux/amd64}
         container_name: es-apache
         profiles: ["apache"]
         ports:
@@ -34,6 +36,7 @@ services:
             args:
                 UID: ${UID:-1000}
                 GID: ${GID:-1000}
+        platform: ${PLATFORM:-linux/amd64}
         image: es-php
         container_name: es-php
         ports:
@@ -46,6 +49,7 @@ services:
             - es-network
     postgres:
         image: postgres:${POSTGRES_VERSION:-15}-alpine
+        platform: ${PLATFORM:-linux/amd64}
         container_name: es-postgres
         profiles: ["postgres"]
         environment:
@@ -61,6 +65,7 @@ services:
             - es-network
     mysql:
         image: mysql:${MYSQL_VERSION:-8.0}
+        platform: ${PLATFORM:-linux/amd64}
         container_name: es-mysql
         profiles: ["mysql"]
         environment:
@@ -78,6 +83,7 @@ services:
 
     mongodb:
         image: mongo:${MONGO_VERSION:-6.0}
+        platform: ${PLATFORM:-linux/amd64}
         container_name: es-mongodb
         profiles: [ "mongodb" ]
         environment:
@@ -94,6 +100,7 @@ services:
 
     redis:
         image: redis:alpine
+        platform: ${PLATFORM:-linux/amd64}
         container_name: es-redis
         profiles: ["redis"]
         ports:
@@ -104,6 +111,7 @@ services:
             - es-network
     rabbitmq:
         image: rabbitmq:3-management-alpine
+        platform: ${PLATFORM:-linux/amd64}
         container_name: es-rabbitmq
         profiles: ["rabbitmq"]
         ports:
@@ -118,6 +126,7 @@ services:
             - es-network
     memcached:
         image: memcached:alpine
+        platform: ${PLATFORM:-linux/amd64}
         container_name: es-memcached
         profiles: ["memcached"]
         ports:
@@ -127,6 +136,7 @@ services:
 
     kafka:
         image: 'bitnami/kafka:3.3.1'
+        platform: ${PLATFORM:-linux/amd64}
         profiles: ["kafka"]
         container_name: es-kafka
         environment:

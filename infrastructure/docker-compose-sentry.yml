@@ -1,0 +1,91 @@
+services:
+  redis-sentry:
+    image: redis:alpine
+    profiles: ["sentry"]
+    container_name: es-redis-sentry
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis-sentry-data:/data
+    networks:
+      - es-network
+
+  postgres-sentry:
+    image: postgres:14-alpine
+    profiles: ["sentry"]
+    container_name: es-postgres-sentry
+    environment:
+      POSTGRES_USER: sentry
+      POSTGRES_PASSWORD: sentry
+      POSTGRES_DB: sentry
+    volumes:
+      - postgres-sentry-data:/var/lib/postgresql/data
+    networks:
+      - es-network
+
+  sentry:
+    image: getsentry/sentry:latest
+    platform: ${PLATFORM:-linux/amd64}
+    profiles: ["sentry"]
+    container_name: es-sentry
+    depends_on:
+      - redis-sentry
+      - postgres-sentry
+    ports:
+      - "9000:9000"
+    env_file:
+      - .env.sentry
+    environment:
+      SENTRY_POSTGRES_HOST: postgres-sentry
+      SENTRY_DB_USER: sentry
+      SENTRY_DB_PASSWORD: sentry
+      SENTRY_REDIS_HOST: redis-sentry
+    networks:
+      - es-network
+
+  sentry-cron:
+    image: getsentry/sentry:latest
+    platform: ${PLATFORM:-linux/amd64}
+    profiles: ["sentry"]
+    container_name: es-sentry-cron
+    depends_on:
+      - redis-sentry
+      - postgres-sentry
+      - sentry
+    command: "sentry run cron"
+    env_file:
+      - .env.sentry
+    environment:
+      SENTRY_POSTGRES_HOST: postgres-sentry
+      SENTRY_DB_USER: sentry
+      SENTRY_DB_PASSWORD: sentry
+      SENTRY_REDIS_HOST: redis-sentry
+    networks:
+      - es-network
+
+  sentry-worker:
+    image: getsentry/sentry:latest
+    platform: ${PLATFORM:-linux/amd64}
+    profiles: ["sentry"]
+    container_name: es-sentry-worker
+    depends_on:
+      - redis-sentry
+      - postgres-sentry
+      - sentry
+    command: "sentry run worker"
+    env_file:
+      - .env.sentry
+    environment:
+      SENTRY_POSTGRES_HOST: postgres-sentry
+      SENTRY_DB_USER: sentry
+      SENTRY_DB_PASSWORD: sentry
+      SENTRY_REDIS_HOST: redis-sentry
+    networks:
+      - es-network
+
+volumes:
+  redis-sentry-data:
+  postgres-sentry-data:
+
+networks:
+  es-network:
+    external: true
