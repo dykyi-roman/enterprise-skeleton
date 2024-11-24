@@ -2,7 +2,6 @@ services:
     nginx:
         build:
             context: containers/nginx
-        platform: ${PLATFORM:-linux/amd64}
         container_name: es-nginx
         profiles: ["nginx"]
         ports:
@@ -23,7 +22,6 @@ services:
     apache:
         build:
             context: containers/apache
-        platform: ${PLATFORM:-linux/amd64}
         container_name: es-apache
         profiles: ["apache"]
         ports:
@@ -49,7 +47,6 @@ services:
             args:
                 UID: ${UID:-1000}
                 GID: ${GID:-1000}
-        platform: ${PLATFORM:-linux/amd64}
         image: es-php
         container_name: es-php
         ports:
@@ -68,7 +65,6 @@ services:
 
     postgres:
         image: postgres:${POSTGRES_VERSION:-15}-alpine
-        platform: ${PLATFORM:-linux/amd64}
         container_name: es-postgres
         profiles: ["postgres"]
         environment:
@@ -90,7 +86,6 @@ services:
 
     mysql:
         image: mysql:${MYSQL_VERSION:-8.0}
-        platform: ${PLATFORM:-linux/amd64}
         container_name: es-mysql
         profiles: ["mysql"]
         environment:
