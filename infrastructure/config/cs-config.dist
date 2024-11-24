@@ -1,0 +1,8 @@
+server=nginx       # {nginx, apache}
+cache=redis        # {redis, memcached}
+database=postgres  # {postgres, mysql, mongodb}
+message=rabbitmq   # {rabbitmq, kafka}
+error=sentry       # {sentry}
+
+# We are forming a configuration term for Docker. !!! Do not change this next line!!!
+config=${server},${database},${cache},${message}
