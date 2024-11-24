@@ -41,6 +41,14 @@ The project uses Docker for containerization with the following services:
   - Used for asynchronous task processing and message queuing
   - Persistent message storage in `data/rabbitmq/`
 
+- **Sentry** (Error Tracking)
+  - Web Interface Port: 9001
+  - URL: http://127.0.0.1:9001
+  - Default Login: admin@example.com
+  - Default Password: admin123
+  - Used for real-time error tracking and monitoring
+  - Configuration: `infrastructure/docker-compose-sentry.yml`
+
 ## SSL/HTTPS Support
 
 The project includes HTTPS support with the following features:

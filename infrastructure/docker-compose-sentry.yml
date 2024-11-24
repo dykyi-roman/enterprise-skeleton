@@ -95,6 +95,8 @@ services:
         condition: service_healthy
       sentry-init:
         condition: service_completed_successfully
+      sentry-create-user:
+        condition: service_completed_successfully
     ports:
       - "9001:9000"
     volumes:
