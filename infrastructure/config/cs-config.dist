@@ -1,8 +1,25 @@
-server=nginx       # {nginx, apache}
-cache=redis        # {redis, memcached}
-database=postgres  # {postgres, mysql, mongodb}
-message=rabbitmq   # {rabbitmq, kafka}
-error=sentry       # {sentry}
+#------------------------------------------------------------------------------
+# Available services configuration.
+#------------------------------------------------------------------------------
 
-# We are forming a configuration term for Docker. !!! Do not change this next line!!!
+# Web Server: nginx, apache
+server=nginx
+
+# Cache Service: redis, memcached
+cache=redis
+
+# Database Service: postgres, mysql, mongodb
+database=postgres
+
+# Message Broker: rabbitmq, kafka
+message=rabbitmq
+
+# Error Tracking: sentry
+error=sentry
+
+#------------------------------------------------------------------------------
+# Service Management:
+#   Enable service:  config=${server},${database},${cache},${message}
+#   Disable service: config=${server},${database},${cache}  # message removed
+#------------------------------------------------------------------------------
 config=${server},${database},${cache},${message}
