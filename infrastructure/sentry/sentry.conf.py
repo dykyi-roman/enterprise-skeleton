@@ -46,10 +46,39 @@ SENTRY_WEB_OPTIONS = {
     'threads': 4,
 }
 
-# Disable CSRF completely for local development
-MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
-MIDDLEWARE_CLASSES = [m for m in MIDDLEWARE_CLASSES if 'csrf' not in m.lower()]
-MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES)
+# Ensure configuration is loaded from correct path
+CONF_ROOT = os.path.dirname(__file__)
+
+# Security settings
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = None
+SESSION_COOKIE_SECURE = False
+
+# Debug settings
+DEBUG = True
+TEMPLATE_DEBUG = True
+
+# Allow all hosts
+ALLOWED_HOSTS = ['*']
+
+# Middleware configuration
+MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'sentry.middleware.env.SentryEnvMiddleware',
+)
+
+# Set proper CSRF failure view
+CSRF_FAILURE_VIEW = 'django.views.csrf.csrf_failure'
+
+# Remove CSRF middleware completely
+MIDDLEWARE_CLASSES = tuple(
+    mw for mw in MIDDLEWARE_CLASSES
+    if not mw.endswith('CsrfViewMiddleware')
+)
 
 # Allow all origins for Sentry SDK
 CORS_ORIGIN_ALLOW_ALL = True
@@ -62,37 +91,7 @@ CORS_ALLOW_HEADERS = [
     'authorization',
 ]
 
-# Additional settings to ensure CSRF is completely disabled
-CSRF_COOKIE_SECURE = False
-CSRF_COOKIE_HTTPONLY = False
-CSRF_USE_SESSIONS = False
-CSRF_COOKIE_NAME = None
-CSRF_COOKIE_DOMAIN = None
-CSRF_COOKIE_PATH = None
-CSRF_COOKIE_SAMESITE = None
-CSRF_FAILURE_VIEW = None
-
-# Disable CSRF checking for specific endpoints
-CSRF_EXEMPT_ENDPOINTS = [
-    'api/1/envelope/',
-    'api/0/envelope/',
-    'api/0/store/',
-    'api/1/store/',
-]
-
-# Add custom middleware to exempt CSRF for envelope endpoints
-class CSRFExemptMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        if any(endpoint in request.path for endpoint in CSRF_EXEMPT_ENDPOINTS):
-            setattr(request, '_dont_enforce_csrf_checks', True)
-        return self.get_response(request)
-
-MIDDLEWARE_CLASSES = ('sentry.conf.server.CSRFExemptMiddleware',) + MIDDLEWARE_CLASSES
-
-# CSRF Configuration
+# CSRF Configuration for trusted origins
 CSRF_TRUSTED_ORIGINS = [
     # Internal container access (DNS names)
     "http://es-sentry-web:9000",
@@ -114,5 +113,3 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:1000",
     "http://127.0.0.1:1000"
 ]
-
-# Отключаем CSRF для envelope endpoint

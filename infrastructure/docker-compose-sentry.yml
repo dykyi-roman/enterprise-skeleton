@@ -3,14 +3,15 @@ services:
     image: redis:alpine
     container_name: es-redis-sentry
     profiles: ["sentry"]
-    command: redis-server --save 60 1 --loglevel warning --protected-mode no
+    command: redis-server /usr/local/etc/redis/redis.conf --replica-read-only no
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 3
     volumes:
-      - redis-sentry-data:/data
+      - ./data/redis-sentry:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     networks:
       - es-network
 
@@ -30,7 +31,7 @@ services:
       POSTGRES_DB: ${SENTRY_DB_NAME}
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
-      - postgres-sentry-data:/var/lib/postgresql/data
+      - ./data/postgres-sentry:/var/lib/postgresql/data
     networks:
       - es-network
 
@@ -59,6 +60,18 @@ services:
       SENTRY_MAIL_HOST: ${SENTRY_MAIL_HOST}
       SENTRY_SINGLE_ORGANIZATION: ${SENTRY_SINGLE_ORGANIZATION}
       SENTRY_FEATURES: ${SENTRY_FEATURES}
+      # Disable CSRF and security settings
+      SENTRY_ALLOW_ORIGIN: "*"
+      SENTRY_ALLOW_PROJECT_CREATION: "true"
+      SENTRY_BEACON: "false"
+      SENTRY_PUBLIC: "true"
+      SENTRY_DISABLE_REGISTRATION: "false"
+      # Debug settings
+      SENTRY_DEBUG: "true"
+      SENTRY_ENABLE_DEV_FEATURES: "true"
+      # Security settings
+      SENTRY_SECURITY_MIDDLEWARE_ENABLED: "false"
+      SENTRY_DISABLE_CSRF_MIDDLEWARE: "true"
     networks:
       - es-network
 
@@ -77,8 +90,8 @@ services:
     ports:
       - "9001:9000"
     volumes:
-      - './sentry-data:/var/lib/sentry/files'
-      - './sentry/sentry.conf.py:/etc/sentry/sentry.conf.py'
+      - ./data/sentry-data:/var/lib/sentry/files
+      - ./sentry/sentry.conf.py:/etc/sentry/sentry.conf.py
     environment:
       SENTRY_SECRET_KEY: ${SENTRY_SECRET_KEY}
       SENTRY_POSTGRES_HOST: ${SENTRY_POSTGRES_HOST}
@@ -91,6 +104,18 @@ services:
       SENTRY_MAIL_HOST: ${SENTRY_MAIL_HOST}
       SENTRY_SINGLE_ORGANIZATION: ${SENTRY_SINGLE_ORGANIZATION}
       SENTRY_FEATURES: ${SENTRY_FEATURES}
+      # Disable CSRF and security settings
+      SENTRY_ALLOW_ORIGIN: "*"
+      SENTRY_ALLOW_PROJECT_CREATION: "true"
+      SENTRY_BEACON: "false"
+      SENTRY_PUBLIC: "true"
+      SENTRY_DISABLE_REGISTRATION: "false"
+      # Debug settings
+      SENTRY_DEBUG: "true"
+      SENTRY_ENABLE_DEV_FEATURES: "true"
+      # Security settings
+      SENTRY_SECURITY_MIDDLEWARE_ENABLED: "false"
+      SENTRY_DISABLE_CSRF_MIDDLEWARE: "true"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/api/0/internal/health/"]
       interval: 30s
@@ -109,7 +134,7 @@ services:
       - sentry
     command: "sentry run cron"
     volumes:
-      - './sentry-data:/var/lib/sentry/files'
+      - ./data/sentry-data:/var/lib/sentry/files
     environment:
       SENTRY_SECRET_KEY: ${SENTRY_SECRET_KEY}
       SENTRY_POSTGRES_HOST: ${SENTRY_POSTGRES_HOST}
@@ -122,6 +147,18 @@ services:
       SENTRY_MAIL_HOST: ${SENTRY_MAIL_HOST}
       SENTRY_SINGLE_ORGANIZATION: ${SENTRY_SINGLE_ORGANIZATION}
       SENTRY_FEATURES: ${SENTRY_FEATURES}
+      # Disable CSRF and security settings
+      SENTRY_ALLOW_ORIGIN: "*"
+      SENTRY_ALLOW_PROJECT_CREATION: "true"
+      SENTRY_BEACON: "false"
+      SENTRY_PUBLIC: "true"
+      SENTRY_DISABLE_REGISTRATION: "false"
+      # Debug settings
+      SENTRY_DEBUG: "true"
+      SENTRY_ENABLE_DEV_FEATURES: "true"
+      # Security settings
+      SENTRY_SECURITY_MIDDLEWARE_ENABLED: "false"
+      SENTRY_DISABLE_CSRF_MIDDLEWARE: "true"
     healthcheck:
       test: ["CMD", "pidof", "cron"]
       interval: 30s
@@ -140,7 +177,7 @@ services:
       - sentry
     command: "sentry run worker"
     volumes:
-      - './sentry-data:/var/lib/sentry/files'
+      - ./data/sentry-data:/var/lib/sentry/files
     environment:
       SENTRY_SECRET_KEY: ${SENTRY_SECRET_KEY}
       SENTRY_POSTGRES_HOST: ${SENTRY_POSTGRES_HOST}
@@ -153,6 +190,18 @@ services:
       SENTRY_MAIL_HOST: ${SENTRY_MAIL_HOST}
       SENTRY_SINGLE_ORGANIZATION: ${SENTRY_SINGLE_ORGANIZATION}
       SENTRY_FEATURES: ${SENTRY_FEATURES}
+      # Disable CSRF and security settings
+      SENTRY_ALLOW_ORIGIN: "*"
+      SENTRY_ALLOW_PROJECT_CREATION: "true"
+      SENTRY_BEACON: "false"
+      SENTRY_PUBLIC: "true"
+      SENTRY_DISABLE_REGISTRATION: "false"
+      # Debug settings
+      SENTRY_DEBUG: "true"
+      SENTRY_ENABLE_DEV_FEATURES: "true"
+      # Security settings
+      SENTRY_SECURITY_MIDDLEWARE_ENABLED: "false"
+      SENTRY_DISABLE_CSRF_MIDDLEWARE: "true"
     healthcheck:
       test: ["CMD-SHELL", "pidof celery || exit 1"]
       interval: 30s
@@ -161,11 +210,6 @@ services:
       start_period: 30s
     networks:
       - es-network
-
-volumes:
-  redis-sentry-data:
-  postgres-sentry-data:
-  sentry-data:
 
 networks:
   es-network:
