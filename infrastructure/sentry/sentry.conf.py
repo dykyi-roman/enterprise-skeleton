@@ -46,6 +46,24 @@ SENTRY_WEB_OPTIONS = {
     'threads': 4,
 }
 
+# Disable CSRF completely for local development
+MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
+MIDDLEWARE_CLASSES = [m for m in MIDDLEWARE_CLASSES if 'csrf' not in m.lower()]
+MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES)
+
+# Allow all origins for Sentry SDK
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_METHODS = ['POST', 'GET', 'OPTIONS']
+
+# Additional settings to ensure CSRF is completely disabled
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_NAME = None
+CSRF_COOKIE_DOMAIN = None
+CSRF_COOKIE_PATH = None
+CSRF_COOKIE_SAMESITE = None
+
 # CSRF Configuration
 CSRF_TRUSTED_ORIGINS = [
     # Internal container access (DNS names)
@@ -76,23 +94,3 @@ CSRF_EXEMPT_ENDPOINTS = [
     'api/0/store/',
     'api/1/store/',
 ]
-
-# Disable CSRF for Sentry SDK endpoints
-MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
-MIDDLEWARE_CLASSES = [m for m in MIDDLEWARE_CLASSES if 'csrf' not in m.lower()]
-MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES)
-
-# Allow all origins for Sentry SDK
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_METHODS = ['POST', 'OPTIONS']
-
-# Ensure CSRF protection is enabled
-# MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
-# if 'django.middleware.csrf.CsrfViewMiddleware' not in MIDDLEWARE_CLASSES:
-#     MIDDLEWARE_CLASSES.insert(0, 'django.middleware.csrf.CsrfViewMiddleware')
-# MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES)
-
-# Additional CSRF settings
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = True
-CSRF_USE_SESSIONS = True

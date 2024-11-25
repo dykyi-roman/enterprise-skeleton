@@ -28,23 +28,23 @@ class SendSentryMessageCommand extends Command
                 'Test message from console command'
             );
     }
-
+//http://6b0da15ce55e4096ac78bc1dc06f89db@127.0.0.1:9001/1
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $message = $input->getOption('message');
 
         try {
             \Sentry\init([
-                'dsn' => 'http://a7f0533e65d04d178eee48e9ea997f62@es-sentry-web:9000/1',
+                'dsn' => 'http://6b0da15ce55e4096ac78bc1dc06f89db@es-sentry-web:9000/1',
             ]);
             throw new \Exception($message);
         } catch (\Exception $exception) {
-            \Sentry\configureScope(function (Scope $scope) use ($message): void {
+             \Sentry\configureScope(function (Scope $scope) use ($message): void {
                 $scope->setExtra('custom_message', $message);
             });
-            
-            \Sentry\captureException($exception);
-            $output->writeln("<info>Exception sent to Sentry: {$exception->getMessage()}</info>");
+
+            $id = \Sentry\captureException($exception);
+            $output->writeln((string) $id);
             
             // Ensure the event is sent before the script ends
             if ($client = \Sentry\SentrySdk::getCurrentHub()->getClient()) {
