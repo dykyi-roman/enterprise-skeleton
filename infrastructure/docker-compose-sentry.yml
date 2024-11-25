@@ -3,7 +3,7 @@ services:
     image: redis:alpine
     container_name: es-redis-sentry
     profiles: ["sentry"]
-    command: redis-server --save 60 1 --loglevel warning
+    command: redis-server --save 60 1 --loglevel warning --protected-mode no
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s

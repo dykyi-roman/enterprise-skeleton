@@ -54,6 +54,13 @@ MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES)
 # Allow all origins for Sentry SDK
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_METHODS = ['POST', 'GET', 'OPTIONS']
+CORS_ALLOW_HEADERS = [
+    'x-sentry-auth',
+    'content-type',
+    'origin',
+    'accept',
+    'authorization',
+]
 
 # Additional settings to ensure CSRF is completely disabled
 CSRF_COOKIE_SECURE = False
@@ -63,6 +70,27 @@ CSRF_COOKIE_NAME = None
 CSRF_COOKIE_DOMAIN = None
 CSRF_COOKIE_PATH = None
 CSRF_COOKIE_SAMESITE = None
+CSRF_FAILURE_VIEW = None
+
+# Disable CSRF checking for specific endpoints
+CSRF_EXEMPT_ENDPOINTS = [
+    'api/1/envelope/',
+    'api/0/envelope/',
+    'api/0/store/',
+    'api/1/store/',
+]
+
+# Add custom middleware to exempt CSRF for envelope endpoints
+class CSRFExemptMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if any(endpoint in request.path for endpoint in CSRF_EXEMPT_ENDPOINTS):
+            setattr(request, '_dont_enforce_csrf_checks', True)
+        return self.get_response(request)
+
+MIDDLEWARE_CLASSES = ('sentry.conf.server.CSRFExemptMiddleware',) + MIDDLEWARE_CLASSES
 
 # CSRF Configuration
 CSRF_TRUSTED_ORIGINS = [
@@ -88,9 +116,3 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # Отключаем CSRF для envelope endpoint
-CSRF_EXEMPT_ENDPOINTS = [
-    'api/1/envelope/',
-    'api/0/envelope/',
-    'api/0/store/',
-    'api/1/store/',
-]
