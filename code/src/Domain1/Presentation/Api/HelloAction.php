@@ -9,10 +9,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[OA\Server(
-    url: "/",
-    description: "API Server"
-)]
 final class HelloAction extends AbstractApiAction
 {
     #[OA\Get(
