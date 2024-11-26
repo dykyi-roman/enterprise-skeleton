@@ -89,6 +89,11 @@ ci: ## Run all code quality checks
 	$(MAKE) deptrac
 	$(MAKE) test-run
 
+## -- Documentation --
+
+swagger-generate: ## Generate OpenAPI documentation
+	docker exec -it $(php) bash -c "cd /var/www/html && ./code/vendor/bin/openapi code/src -o infrastructure/swagger/swagger.json"
+
 ## -- Database Migrations --
 
 migration-create: ## Create a new migration (usage: make migration-create)

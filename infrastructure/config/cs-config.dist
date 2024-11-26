@@ -14,9 +14,12 @@ database=postgres
 # Message Broker: rabbitmq, kafka
 message=rabbitmq
 
+# API Documentation: swagger
+docs=swagger
+
 #------------------------------------------------------------------------------
 # Service Management:
 #   Enable service:  config=${server},${database},${cache},${message}
-#   Disable service: config=${server},${database},${cache}  # message removed
+#   Disable service: config=${server},${database},${cache}             # message removed
 #------------------------------------------------------------------------------
-config=${server},${database},${cache},${message}
+config=${server},${database},${cache},${message},${docs}

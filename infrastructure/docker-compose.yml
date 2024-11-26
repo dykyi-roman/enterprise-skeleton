@@ -75,7 +75,7 @@ services:
             - ./data/postgres_data:/var/lib/postgresql/data:rw
             - ./containers/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
         ports:
-            - "${POSTGRES_PORT:-5432}:5432"
+            - "${POSTGRES_PORT}:5432"
         networks:
             - es-network
         healthcheck:
@@ -97,7 +97,7 @@ services:
             - ./data/mysql_data:/var/lib/mysql:rw
             - ./containers/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
         ports:
-            - "${MYSQL_PORT:-3306}:3306"
+            - "${MYSQL_PORT}:3306"
         networks:
             - es-network
         healthcheck:
@@ -118,7 +118,7 @@ services:
             - ./data/mongodb:/data/db:rw
             - ./containers/mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
         ports:
-            - "${MONGO_PORT:-27017}:27017"
+            - "${MONGO_PORT}:27017"
         networks:
             - es-network
         healthcheck:
@@ -132,7 +132,7 @@ services:
         container_name: es-redis
         profiles: ["redis"]
         ports:
-            - "${REDIS_PORT:-6379}:6379"
+            - "${REDIS_PORT}:6379"
         volumes:
             - ./data/redis:/data
         networks:
@@ -148,8 +148,8 @@ services:
         container_name: es-rabbitmq
         profiles: ["rabbitmq"]
         ports:
-            - "${RABBITMQ_PORT:-5672}:5672"
-            - "${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+            - "${RABBITMQ_PORT}:5672"
+            - "${RABBITMQ_MANAGEMENT_PORT}:15672"
         environment:
             RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-app}
             RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-!ChangeMe!}
@@ -168,7 +168,7 @@ services:
         container_name: es-memcached
         profiles: ["memcached"]
         ports:
-            - "${MEMCACHED_PORT:-11211}:11211"
+            - "${MEMCACHED_PORT}:11211"
         networks:
             - es-network
         healthcheck:
@@ -178,7 +178,7 @@ services:
             retries: 5
 
     kafka:
-        image: 'bitnami/kafka:3.3.1'
+        image: 'bitnami/kafka:${KAFKA_VERSION}'
         profiles: ["kafka"]
         container_name: es-kafka
         environment:
@@ -191,9 +191,9 @@ services:
             - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@es-kafka:9094
             - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://es-kafka:9092
             - ALLOW_PLAINTEXT_LISTENER=yes
-            - KAFKA_KRAFT_CLUSTER_ID=r4zt_wrqTRuT7W2NJsB_GA
+            - KAFKA_KRAFT_CLUSTER_ID=${KAFKA_CLUSTER_ID}
         ports:
-            - 9192:9092
+            - "${KAFKA_PORT}:9092"
         networks:
             - es-network
         healthcheck:
@@ -204,22 +204,44 @@ services:
             start_period: 30s
 
     kafka-ui:
+        image: provectuslabs/kafka-ui:latest
         container_name: es-kafka-ui
         profiles: ["kafka"]
-        image: 'provectuslabs/kafka-ui:latest'
         ports:
-            - "8080:8080"
+            - "${KAFKA_UI_PORT}:8080"
         environment:
-            - KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS=es-kafka:9092
-            - KAFKA_CLUSTERS_0_NAME=r4zt_wrqTRuT7W2NJsB_GA
+            - KAFKA_CLUSTERS_0_NAME=local
+            - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=es-kafka:9092
+        networks:
+            - es-network
+        depends_on:
+            - kafka
+        healthcheck:
+            test: ["CMD", "wget", "--spider", "http://localhost:8080"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+
+    swagger-ui:
+        image: swaggerapi/swagger-ui
+        container_name: es-swagger-ui
+        profiles: ["swagger"]
+        environment:
+            - SWAGGER_JSON=/swagger/openapi.json
+            - BASE_URL=/api/docs
+        volumes:
+            - type: bind
+              source: ./data/swagger
+              target: /swagger
+        ports:
+            - "${SWAGGER_UI_PORT}:8080"
         networks:
             - es-network
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8080/"]
-            interval: 30s
-            timeout: 10s
+            test: ["CMD", "wget", "--spider", "http://localhost:8080"]
+            interval: 10s
+            timeout: 5s
             retries: 3
-            start_period: 30s
 
 networks:
     es-network:

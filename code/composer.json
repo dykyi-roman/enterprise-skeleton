@@ -18,7 +18,8 @@
         "symfony/messenger": "7.0.*",
         "symfony/monolog-bundle": "^3.10",
         "symfony/runtime": "7.0.*",
-        "symfony/yaml": "7.0.*"
+        "symfony/yaml": "7.0.*",
+        "zircote/swagger-php": "^4.11"
     },
     "config": {
         "allow-plugins": {

@@ -41,14 +41,6 @@ The project uses Docker for containerization with the following services:
   - Used for asynchronous task processing and message queuing
   - Persistent message storage in `data/rabbitmq/`
 
-- **Sentry** (Error Tracking)
-  - Web Interface Port: 9001
-  - URL: http://127.0.0.1:9001
-  - Default Login: admin@example.com
-  - Default Password: admin123
-  - Used for real-time error tracking and monitoring
-  - Configuration: `infrastructure/docker-compose-sentry.yml`
-
 ## SSL/HTTPS Support
 
 The project includes HTTPS support with the following features:
@@ -142,6 +134,40 @@ The project includes several code quality and analysis tools:
 - Automatically detects tests in `src/*/Tests` directories
 - Run: `make test`
 
+## API Documentation
+
+The project includes Swagger UI for API documentation:
+
+- **Swagger UI** (API Documentation)
+  - Port: 8080 (configurable via SWAGGER_UI_PORT)
+  - Access URL: http://localhost:8080/api/docs
+  - OpenAPI Specification: Generated from PHP attributes in the code
+  - Configuration: Available in `docker-compose.yml` under the `swagger-ui` service
+  - Profile: Can be enabled/disabled using the "swagger" profile
+
+### Using Swagger UI
+
+1. Enable Swagger UI in your configuration:
+```bash
+# Enable in cs-config.dist or when running make commands
+docs=swagger
+```
+
+2. Access the documentation:
+- Visit http://localhost:8080/api/docs
+- All API endpoints are automatically documented using PHP attributes
+- Interactive testing of endpoints directly from the UI
+
+### OpenAPI Documentation
+
+The API documentation is generated from PHP attributes in your code:
+
+```php
+#[OA\Info(version: "1.0.0", title: "API")]  // API information
+#[OA\Get(path: "/hello")]                   // Endpoint definition
+#[OA\Response(response: 200)]               // Response specification
+```
+
 ## Service Selection
 
 The project supports multiple service options that can be configured in the Makefile:
@@ -206,17 +232,6 @@ The database connection is configured in the `.env` file:
 ```
 DATABASE_URL="postgresql://app:password@postgres:5432/app?serverVersion=15&charset=utf8"
 ```
-
-## Error Monitoring (Sentry)
-
-The project has Sentry integration for error tracking. The following log routing is configured:
-
-- All logs are written to `stdout` for general monitoring
-- Logs of `error` and `critical` levels additionally:
-  - Are sent to stderr
-  - Automatically forwarded to Sentry
-
-This allows centralized tracking and quick response to critical errors through the Sentry dashboard.
 
 ## Project Structure
 
@@ -291,7 +306,6 @@ server=nginx     # Web server (nginx/apache)
 database=postgres  # Database (postgres/mysql/mongodb)
 cache=redis      # Cache service (redis/memcached)
 message=rabbitmq # Message broker (rabbitmq/kafka)
-error=sentry    # Error tracking (sentry)
 ```
 
 3. Start the environment:
@@ -317,9 +331,6 @@ make install
 ### Message Brokers
 - RabbitMQ
 - Kafka
-
-### Error Tracking
-- Sentry
 
 ## Debugging
 
