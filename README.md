@@ -158,16 +158,6 @@ docs=swagger
 - All API endpoints are automatically documented using PHP attributes
 - Interactive testing of endpoints directly from the UI
 
-### OpenAPI Documentation
-
-The API documentation is generated from PHP attributes in your code:
-
-```php
-#[OA\Info(version: "1.0.0", title: "API")]  // API information
-#[OA\Get(path: "/hello")]                   // Endpoint definition
-#[OA\Response(response: 200)]               // Response specification
-```
-
 ## Service Selection
 
 The project supports multiple service options that can be configured in the Makefile:

@@ -91,16 +91,17 @@ ci: ## Run all code quality checks
 
 ## -- Documentation --
 
-swagger-generate: ## Generate OpenAPI documentation
-	docker exec -it $(php) bash -c "cd /var/www/html && ./code/vendor/bin/openapi code/src -o infrastructure/swagger/swagger.json"
+swagger-generate: ## Generate OpenAPI/Swagger documentation
+	docker exec -it $(php) bash -c "php vendor/bin/openapi src --output docs/api/openapi.yaml --format yaml"
+	@echo "OpenAPI documentation generated in code/docs/api/openapi.yaml"
 
 ## -- Database Migrations --
 
 migration-create: ## Create a new migration (usage: make migration-create)
-	docker exec -it $(php) bash -c "cd /var/www/html/code && php bin/console doctrine:migrations:diff"
+	docker exec -it $(php) bash -c "php bin/console doctrine:migrations:diff"
 
 migration-run: ## Run all pending migrations
-	docker exec -it $(php) bash -c "cd /var/www/html/code && php bin/console doctrine:migrations:migrate --no-interaction"
+	docker exec -it $(php) bash -c "php bin/console doctrine:migrations:migrate --no-interaction"
 
 # This is required to handle arguments in make commands
 %:

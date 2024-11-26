@@ -227,14 +227,12 @@ services:
         container_name: es-swagger-ui
         profiles: ["swagger"]
         environment:
-            - SWAGGER_JSON=/swagger/openapi.json
+            - SWAGGER_JSON=/api/openapi.yaml
             - BASE_URL=/api/docs
         volumes:
-            - type: bind
-              source: ./data/swagger
-              target: /swagger
+            - ../code/docs/api:/api
         ports:
-            - "${SWAGGER_UI_PORT}:8080"
+            - "${SWAGGER_UI_PORT:-8080}:8080"
         networks:
             - es-network
         healthcheck:
