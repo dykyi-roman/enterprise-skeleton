@@ -3,12 +3,12 @@ info:
   title: 'Enterprise Skeleton API'
   version: 1.0.0
 paths:
-  /test:
+  /api/test:
     get:
       tags:
         - Test
       summary: 'Test route message'
-      operationId: ed7b2b6d3f2e18e13f38d593599323d6
+      operationId: 16498ca3e9817be324bb26ee12ed22c0
       responses:
         '200':
           description: Success

@@ -22,4 +22,4 @@ docs=swagger
 #   Enable service:  config=${server},${database},${cache},${message}
 #   Disable service: config=${server},${database},${cache}             # message removed
 #------------------------------------------------------------------------------
-config=${server},${database},${cache},${message},${docs}
+config=${server},${database},${cache},${message}

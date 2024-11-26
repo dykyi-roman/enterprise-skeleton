@@ -24,16 +24,10 @@ final class LogTestCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // Обычный вывод в консоль
         $output->writeln('This is console output');
-        
-        // Информационный лог
         $this->logger->info('This is info log message');
-        
-        // Лог ошибки
         $this->logger->error('This is error message');
         
-        // Симуляция исключения
         try {
             throw new \Exception('Test exception');
         } catch (\Throwable $e) {
