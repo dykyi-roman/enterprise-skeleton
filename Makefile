@@ -1,7 +1,6 @@
 #-- Variables --
 workdir = ./infrastructure
 compose-file = docker-compose.yml
-compose-sentry = docker-compose-sentry.yml
 php = es-php
 network = es-network
 
@@ -36,7 +35,7 @@ install: copy-config ## Install project dependencies and set up Docker environme
 	docker exec -it $(php) bash -c "composer install"
 
 up: ## Start Docker containers
-	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) -f $(compose-sentry) up -d
+	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) up -d
 
 down: ## Stop Docker containers
 	cd $(workdir) && COMPOSE_PROFILES="$(config)" docker compose down --remove-orphans
@@ -46,13 +45,13 @@ start: up ## Alias for 'up' command
 stop: down ## Alias for 'down' command
 
 restart: ## Restart Docker containers
-	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) -f $(compose-sentry) restart
+	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) restart
 
 build: ## Build specific container (usage: make build php)
-	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) -f $(compose-sentry) up -d --build $(filter-out $@,$(MAKECMDGOALS))
+	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) up -d --build $(filter-out $@,$(MAKECMDGOALS))
 
 prune: ## Remove all Docker containers, volumes, and networks
-	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) -f $(compose-sentry) down -v --remove-orphans --rmi all
+	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) down -v --remove-orphans --rmi all
 	cd $(workdir) && docker network remove $(network)
 
 enter: ## Enter PHP container shell

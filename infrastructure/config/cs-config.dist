@@ -14,9 +14,6 @@ database=postgres
 # Message Broker: rabbitmq, kafka
 message=rabbitmq
 
-# Error Tracking: sentry
-error=sentry
-
 #------------------------------------------------------------------------------
 # Service Management:
 #   Enable service:  config=${server},${database},${cache},${message}
