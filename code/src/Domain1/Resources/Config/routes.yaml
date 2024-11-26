@@ -9,3 +9,4 @@ api_routes:
         path: ../../Presentation/Api
         namespace: App\Domain1\Presentation\Api
     type: attribute
+    prefix: '/api'

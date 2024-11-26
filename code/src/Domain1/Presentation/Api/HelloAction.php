@@ -12,14 +12,14 @@ use Symfony\Component\Routing\Annotation\Route;
 final class HelloAction extends AbstractApiAction
 {
     #[OA\Get(
-        path: "/api/test",
-        summary: "Test route message",
-        tags: ["Test"]
+        path: '/api/test',
+        summary: 'Test route message',
+        tags: ['Test']
     )]
     #[OA\Response(
         response: 200,
-        description: "Success",
-        content: new OA\JsonContent(type: "string", example: "Test")
+        description: 'Success',
+        content: new OA\JsonContent(type: 'string', example: 'Test')
     )]
     #[Route('/test', name: 'api_test', methods: ['GET'])]
     public function __invoke(): Response

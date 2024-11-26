@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class LogTestCommand extends Command
 {
     public function __construct(
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct();
     }
@@ -27,13 +27,13 @@ final class LogTestCommand extends Command
         $output->writeln('This is console output');
         $this->logger->info('This is info log message');
         $this->logger->error('This is error message');
-        
+
         try {
             throw new \Exception('Test exception');
         } catch (\Throwable $e) {
             $this->logger->critical('Critical error occurred', [
                 'exception' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
         }
 

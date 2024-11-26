@@ -13,4 +13,12 @@
             <file name="../code/src/Kernel.php"/>
         </ignoreFiles>
     </projectFiles>
+
+    <issueHandlers>
+        <UnusedClass>
+            <errorLevel type="suppress">
+                <directory name="../code/src/*/Presentation/"/>
+            </errorLevel>
+        </UnusedClass>
+    </issueHandlers>
 </psalm>

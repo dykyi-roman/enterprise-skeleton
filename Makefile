@@ -84,6 +84,7 @@ psalm: ## Run Psalm static analysis (no cache)
 
 ci: ## Run all code quality checks
 	$(MAKE) phpcs
+	$(MAKE) swagger-generate
 	$(MAKE) phpstan
 	$(MAKE) psalm
 	$(MAKE) deptrac
