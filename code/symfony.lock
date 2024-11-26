@@ -1,4 +1,7 @@
 {
+    "chrisguitarguy/request-id-bundle": {
+        "version": "v6.0.0"
+    },
     "doctrine/doctrine-bundle": {
         "version": "2.13",
         "recipe": {

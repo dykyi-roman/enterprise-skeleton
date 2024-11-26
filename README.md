@@ -158,6 +158,25 @@ docs=swagger
 - All API endpoints are automatically documented using PHP attributes
 - Interactive testing of endpoints directly from the UI
 
+## Request-ID Tracking
+
+The application implements request tracking using Request-IDs with the following features:
+
+- **Automatic Request-ID Generation**: 
+  - Inspects incoming requests for the `Request-Id` header
+  - If no request ID is found, automatically generates a version 4 UUID
+  - Ensures every request has a unique identifier for tracking
+
+- **Logging Integration**:
+  - Includes Request-ID in Monolog records via a custom processor
+  - Can be disabled by setting `enable_monolog: false` in configuration
+  - Helps correlate logs across different services and components
+
+- **Debugging and Tracing**:
+  - Makes it easier to trace requests through the system
+  - Useful for debugging and monitoring in distributed systems
+  - Helps with request correlation in log aggregation systems
+
 ## Service Selection
 
 The project supports multiple service options that can be configured in the Makefile:
