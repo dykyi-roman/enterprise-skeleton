@@ -1,28 +1,11 @@
 #------------------------------------------------------------------------------
 # Available services configuration.
+# To enable a service, uncomment the corresponding line below.
 #------------------------------------------------------------------------------
 
-# Web Server: nginx, apache
-server=nginx
-
-# Cache Service: redis, memcached
-cache=redis
-
-# Database Service: postgres, mysql, mongodb
-database=postgres
-
-# Message Broker: rabbitmq, kafka
-message=rabbitmq
-
-# API Documentation: swagger
-docs=swagger
-
-# Mail Sandbox: mailhog, papercut
-mailer=mailhog
-
-#------------------------------------------------------------------------------
-# Service Management:
-#   Enable service:  config=${server},${database},${cache},${message}
-#   Disable service: config=${server},${database},${cache}             # message removed
-#------------------------------------------------------------------------------
-config=${server},${database},${cache},${message}
+server=nginx           # Web Server: nginx, apache
+# database=postgres    # Database Service: postgres, mysql, mongodb
+# cache=redis          # Cache Service: redis, memcached
+# message=rabbitmq     # Message Broker: rabbitmq, kafka
+# docs=swagger         # API Documentation: swagger
+# mailer=mailhog       # Mail Sandbox: mailhog, papercut

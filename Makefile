@@ -4,18 +4,11 @@ compose-file = docker-compose.yml
 php = es-php
 network = es-network
 
-# Get the config template and parse variables
-config_template = $(shell grep '^config=' $(workdir)/config/cs-config | cut -d'=' -f2)
-config = $(shell cd $(workdir) && echo "$$(grep '^config=' config/cs-config | cut -d'=' -f2)" | \
-	sed 's/$${//g; s/}//g' | \
-	tr ',' '\n' | \
-	while read var; do \
-		val=$$(grep "^$$var=" config/cs-config | cut -d'=' -f2); \
-		if [ ! -z "$$val" ]; then \
-			echo "$$val"; \
-		fi; \
-	done | \
-	tr '\n' ',' | sed 's/,$$//')
+# Get the config values
+define get_config
+	cd $(workdir) && sed -n 's/^\([^#]*=\)\([^#]*\).*/\2/p' config/cs-config | tr -d ' ' | tr '\n' ',' | sed 's/,$$//'
+endef
+config = $(shell $(get_config))
 
 help:
 	@grep -E '(^[a-zA-Z0-9_-]+:.*?## .*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
@@ -25,6 +18,9 @@ help:
 copy-config: ## Copy cs-config.dist to cs-config file
 	@cp infrastructure/config/cs-config.dist infrastructure/config/cs-config
 	@echo "Configuration file copied successfully"
+
+show-config: ## Display current configuration
+	@echo "Current configuration: $(config)"
 
 ## -- Docker Commands --
 
