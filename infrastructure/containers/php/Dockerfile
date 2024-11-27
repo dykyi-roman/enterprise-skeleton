@@ -27,6 +27,21 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
+# Install mail support and configure msmtp
+RUN apt-get update && apt-get install -y \
+    msmtp \
+    msmtp-mta \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+COPY msmtprc /etc/msmtprc
+RUN chmod 0644 /etc/msmtprc && \
+    chown root:root /etc/msmtprc && \
+    ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
+    ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
+    touch /var/log/msmtp.log && \
+    chmod 666 /var/log/msmtp.log
+
 # Install core PHP extensions
 RUN apt-get update && apt-get install -y \
     # ZIP support
@@ -115,7 +130,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN groupadd --gid ${GID} es \
     && useradd --uid ${UID} --gid ${GID} --shell /bin/bash --create-home es \
     && sed -i "s/user = www-data/user = es/g" /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i "s/group = www-data/group = es/g" /usr/local/etc/php-fpm.d/www.conf
+    && sed -i "s/group = www-data/group = es/g" /usr/local/etc/php-fpm.d/www.conf \
+    && usermod -aG mail es
 
 # Set proper permissions
 RUN chown -R es:es /var/www/html

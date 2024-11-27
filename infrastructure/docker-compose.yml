@@ -208,6 +208,20 @@ services:
             retries: 3
             start_period: 30s
 
+    mailhog:
+        image: mailhog/mailhog:latest
+        container_name: es-mailhog
+        ports:
+            - "1025:1025"
+            - "8025:8025"
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD", "nc", "-z", "localhost", "1025"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
     kafka-ui:
         image: provectuslabs/kafka-ui:latest
         container_name: es-kafka-ui
@@ -245,15 +259,6 @@ services:
             interval: 10s
             timeout: 5s
             retries: 3
-
-    mailer-ui:
-        image: mailhog/mailhog
-        profiles: ["mailer"]
-        container_name: es-mailer-ui
-        ports:
-            - "8025:8025"
-        networks:
-            - es-network
 
 networks:
     es-network:
