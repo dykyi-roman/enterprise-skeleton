@@ -219,6 +219,29 @@ make build php
 
 This approach ensures faster container builds by only including the extensions you actually need.
 
+## Local Mail Testing
+
+The project supports local mail testing through either MailHog or Papercut:
+
+### MailHog
+- SMTP Port: 1025
+- Web Interface Port: 8025
+- Web UI: http://localhost:8025
+- Captures all outgoing emails for testing and development
+- Provides a web interface to view email content, headers, and attachments
+
+### Papercut
+- SMTP Port: 25
+- Web Interface Port: 37408
+- Web UI: http://localhost:37408
+- Simple SMTP server for testing email functionality
+- Visual interface for inspecting sent emails
+
+To use either service:
+1. Configure your application's mailer settings to use the appropriate SMTP port
+2. Send emails through your application as normal
+3. View the captured emails in the respective web interface
+
 ## Database Management
 
 The project uses PostgreSQL as its primary database with Doctrine ORM for database operations.
@@ -311,10 +334,12 @@ make copy-config
 2. Configure your environment:
 Edit `infrastructure/config/cs-config` to enable/disable services you need. Available services:
 ```
-server=nginx     # Web server (nginx/apache)
+server=nginx       # Web server (nginx/apache)
 database=postgres  # Database (postgres/mysql/mongodb)
-cache=redis      # Cache service (redis/memcached)
-message=rabbitmq # Message broker (rabbitmq/kafka)
+cache=redis        # Cache service (redis/memcached)
+message=rabbitmq   # Message broker (rabbitmq/kafka)
+mailer=mailhog     # Mail Sandbox: mailhog, papercut
+docs=swagger       # API Documentation
 ```
 
 3. Start the environment:

@@ -69,7 +69,7 @@ phpcs: ## Run PHP CS Fixer to fix code style
 phpstan: ## Run PHPStan for static code analysis
 	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/phpstan analyse src --configuration=../tools/phpstan.neon"
 
-test-run: ## Run PHPUnit tests
+test: ## Run PHPUnit tests
 	docker exec -it $(php) bash -c "cd /var/www/html/code && APP_ENV=test php vendor/bin/phpunit -c ../tools/phpunit.xml.dist"
 	@echo "Test done!"
 

@@ -28,20 +28,20 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean
 
 # Install mail support and configure msmtp
-RUN apt-get update && apt-get install -y \
-    msmtp \
-    msmtp-mta \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
-
-COPY msmtprc /etc/msmtprc
-RUN chmod 0644 /etc/msmtprc && \
-    chown root:root /etc/msmtprc && \
-    ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
-    ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
-    touch /var/log/msmtp.log && \
-    chown www-data:www-data /var/log/msmtp.log && \
-    chmod 666 /var/log/msmtp.log
+#RUN apt-get update && apt-get install -y \
+#    msmtp \
+#    msmtp-mta \
+#    && rm -rf /var/lib/apt/lists/* \
+#    && apt-get clean
+#
+#COPY msmtprc /etc/msmtprc
+#RUN chmod 0644 /etc/msmtprc && \
+#    chown root:root /etc/msmtprc && \
+#    ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
+#    ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
+#    touch /var/log/msmtp.log && \
+#    chown www-data:www-data /var/log/msmtp.log && \
+#    chmod 666 /var/log/msmtp.log
 
 # Install core PHP extensions
 RUN apt-get update && apt-get install -y \
