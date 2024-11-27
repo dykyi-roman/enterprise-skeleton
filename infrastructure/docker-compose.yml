@@ -276,6 +276,28 @@ services:
             timeout: 5s
             retries: 3
 
+    elasticsearch:
+        image: elasticsearch:${ELASTICSEARCH_VERSION}
+        container_name: es-elasticsearch
+        profiles: ["elasticsearch"]
+        environment:
+            - discovery.type=single-node
+            - xpack.security.enabled=false
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ports:
+            - "${ELASTICSEARCH_PORT}:9200"
+            - "${ELASTICSEARCH_INTERNAL_PORT}:9300"
+        volumes:
+            - ./data/elasticsearch:/usr/share/elasticsearch/data
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:9200"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+
 networks:
     es-network:
         external: true

@@ -4,6 +4,7 @@
 #------------------------------------------------------------------------------
 
 server=nginx           # Web Server: nginx, apache
+search=elasticsearch   # Search: elasticsearch
 # database=postgres    # Database Service: postgres, mysql, mongodb
 # cache=redis          # Cache Service: redis, memcached
 # message=rabbitmq     # Message Broker: rabbitmq, kafka
