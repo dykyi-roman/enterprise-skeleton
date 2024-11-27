@@ -1,6 +1,7 @@
-FROM php:8.3-fpm
+# Arguments defined in docker-compose.yml
+ARG PHP_VERSION
+FROM php:${PHP_VERSION}-fpm
 
-# Arguments for user/group configuration
 ARG UID=1000
 ARG GID=1000
 

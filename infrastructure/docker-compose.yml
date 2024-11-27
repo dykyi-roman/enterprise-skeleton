@@ -2,6 +2,8 @@ services:
     nginx:
         build:
             context: containers/nginx
+            args:
+                NGINX_VERSION: ${NGINX_VERSION}
         container_name: es-nginx
         profiles: ["nginx"]
         ports:
@@ -22,6 +24,8 @@ services:
     apache:
         build:
             context: containers/apache
+            args:
+                APACHE_VERSION: ${APACHE_VERSION}
         container_name: es-apache
         profiles: ["apache"]
         ports:
@@ -45,6 +49,7 @@ services:
         build:
             context: containers/php
             args:
+                PHP_VERSION: ${PHP_VERSION}
                 UID: ${UID:-1000}
                 GID: ${GID:-1000}
         image: es-php
@@ -128,7 +133,7 @@ services:
             retries: 5
 
     redis:
-        image: redis:alpine
+        image: redis:${REDIS_VERSION}
         container_name: es-redis
         profiles: ["redis"]
         ports:
@@ -144,7 +149,7 @@ services:
             retries: 5
 
     rabbitmq:
-        image: rabbitmq:3-management-alpine
+        image: rabbitmq:${RABBITMQ_VERSION}
         container_name: es-rabbitmq
         profiles: ["rabbitmq"]
         ports:
@@ -164,7 +169,7 @@ services:
             retries: 5
 
     memcached:
-        image: memcached:alpine
+        image: memcached:${MEMCACHED_VERSION}
         container_name: es-memcached
         profiles: ["memcached"]
         ports:
@@ -240,6 +245,15 @@ services:
             interval: 10s
             timeout: 5s
             retries: 3
+
+    mailer-ui:
+        image: mailhog/mailhog
+        profiles: ["mailer"]
+        container_name: es-mailer-ui
+        ports:
+            - "8025:8025"
+        networks:
+            - es-network
 
 networks:
     es-network:

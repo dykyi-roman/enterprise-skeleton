@@ -8,6 +8,7 @@ use App\Domain1\Presentation\Web\TestAction;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
+#[CoversClass(TestAction::class)]
 final class TestActionTest extends TestCase
 {
     private TestAction $action;

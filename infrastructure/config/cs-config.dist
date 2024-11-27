@@ -17,6 +17,9 @@ message=rabbitmq
 # API Documentation: swagger
 docs=swagger
 
+# Mail Sandbox: mailhog
+mailer=mailhog
+
 #------------------------------------------------------------------------------
 # Service Management:
 #   Enable service:  config=${server},${database},${cache},${message}

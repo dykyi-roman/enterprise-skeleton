@@ -1,4 +1,6 @@
-FROM nginx:stable-alpine
+# Arguments defined in docker-compose.yml
+ARG NGINX_VERSION
+FROM nginx:${NGINX_VERSION}
 
 RUN apk upgrade --update-cache --available && \
     apk add openssl && \

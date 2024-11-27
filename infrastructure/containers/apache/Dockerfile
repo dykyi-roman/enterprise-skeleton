@@ -1,4 +1,6 @@
-FROM httpd:2.4-alpine
+# Arguments defined in docker-compose.yml
+ARG APACHE_VERSION
+FROM httpd:${APACHE_VERSION}-alpine
 
 # Install required packages
 RUN apk update && apk add --no-cache \
