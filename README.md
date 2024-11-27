@@ -19,6 +19,7 @@ search=elasticsearch   # Search: elasticsearch, solr
 message=rabbitmq       # Message Broker: rabbitmq, kafka
 docs=swagger           # API Documentation: swagger
 mailer=mailhog         # Mail Sandbox: mailhog, papercut
+monitoring=zabbix      # Monitoring: zabbix, grafana
 ```
 
 3. Start the environment:

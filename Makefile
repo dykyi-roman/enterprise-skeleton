@@ -25,7 +25,6 @@ show-config: ## Display current configuration
 ## -- Docker Commands --
 
 install: copy-config ## Install project dependencies and set up Docker environment
-	$(MAKE) copy-config
 	docker network inspect $(network) --format {{.Id}} 2>/dev/null || docker network create $(network)
 	$(MAKE) up
 	docker exec -it $(php) bash -c "composer install"
