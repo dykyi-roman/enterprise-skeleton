@@ -211,13 +211,29 @@ services:
     mailhog:
         image: mailhog/mailhog:latest
         container_name: es-mailhog
+        profiles: ["mailhog"]
         ports:
-            - "1025:1025"
-            - "8025:8025"
+            - "${MAILHOG_SMTP_PORT}:1025"
+            - "${MAILHOG_UI_PORT}:8025"
         networks:
             - es-network
         healthcheck:
             test: ["CMD", "nc", "-z", "localhost", "1025"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    papercut:
+        image: jijiechen/papercut:latest
+        container_name: es-papercut
+        profiles: ["papercut"]
+        ports:
+            - "${PAPERCUT_SMTP_PORT}:25"
+            - "${PAPERCUT_UI_PORT}:37408"
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:37408"]
             interval: 10s
             timeout: 5s
             retries: 5

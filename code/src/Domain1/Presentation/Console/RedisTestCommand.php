@@ -20,23 +20,25 @@ final class RedisTestCommand extends Command
         try {
             $redis = new \Redis();
             $redis->connect('es-redis', 6379, 2.0);
-            
+
             // Test SET operation
             $redis->set('test_key', 'Hello from Redis!');
             $output->writeln('<info>Successfully set test key</info>');
-            
+
             // Test GET operation
             $value = $redis->get('test_key');
             $output->writeln(sprintf('<info>Retrieved value: %s</info>', $value));
-            
+
             // Test DELETE operation
             $redis->del('test_key');
             $output->writeln('<info>Successfully deleted test key</info>');
-            
+
             $output->writeln('<info>Redis connection test completed successfully!</info>');
+
             return Command::SUCCESS;
         } catch (\Exception $e) {
             $output->writeln(sprintf('<error>Redis test failed: %s</error>', $e->getMessage()));
+
             return Command::FAILURE;
         }
     }

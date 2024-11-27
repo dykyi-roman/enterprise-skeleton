@@ -28,14 +28,14 @@ final class AmqpTestCommand extends Command
                 'port' => 5672,
                 'vhost' => '/',
                 'login' => 'app',
-                'password' => 'password'
+                'password' => 'password',
             ]);
             $connection->connect();
             $output->writeln('<info>Successfully connected to RabbitMQ</info>');
 
             // Create channel
             $channel = new \AMQPChannel($connection);
-            
+
             // Declare exchange
             $exchange = new \AMQPExchange($channel);
             $exchange->setName(self::EXCHANGE_NAME);
@@ -57,14 +57,14 @@ final class AmqpTestCommand extends Command
                 'timestamp' => time(),
                 'message' => 'Hello from AMQP test command!',
             ];
-            
+
             $exchange->publish(
                 json_encode($message),
                 self::ROUTING_KEY,
                 AMQP_NOPARAM,
                 [
                     'content_type' => 'application/json',
-                    'delivery_mode' => 2 // Persistent message
+                    'delivery_mode' => 2, // Persistent message
                 ]
             );
             $output->writeln('<info>Message published</info>');
@@ -74,7 +74,7 @@ final class AmqpTestCommand extends Command
             if ($message) {
                 $output->writeln('<info>Retrieved message:</info>');
                 $output->writeln(sprintf('<info>%s</info>', $message->getBody()));
-                
+
                 // Message properties
                 $output->writeln('<info>Message properties:</info>');
                 $output->writeln(sprintf('<info>- Content Type: %s</info>', $message->getContentType()));
@@ -84,10 +84,11 @@ final class AmqpTestCommand extends Command
 
             $connection->disconnect();
             $output->writeln('<info>AMQP test completed successfully!</info>');
-            
+
             return Command::SUCCESS;
         } catch (\AMQPException $e) {
             $output->writeln(sprintf('<error>AMQP test failed: %s</error>', $e->getMessage()));
+
             return Command::FAILURE;
         }
     }

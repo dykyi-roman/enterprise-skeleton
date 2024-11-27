@@ -40,6 +40,7 @@ RUN chmod 0644 /etc/msmtprc && \
     ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
     ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
     touch /var/log/msmtp.log && \
+    chown www-data:www-data /var/log/msmtp.log && \
     chmod 666 /var/log/msmtp.log
 
 # Install core PHP extensions

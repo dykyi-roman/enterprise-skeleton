@@ -17,8 +17,8 @@ message=rabbitmq
 # API Documentation: swagger
 docs=swagger
 
-# Mail Sandbox: mailhog
-mailer=mailhog
+# Mail Sandbox: mailhog, papercut
+mailer=papercut
 
 #------------------------------------------------------------------------------
 # Service Management:
