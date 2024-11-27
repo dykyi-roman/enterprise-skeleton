@@ -1,0 +1,11 @@
+web_routes:
+    resource:
+        path: ../../Presentation/Web
+        namespace: App\Healthcheck\Presentation\Web
+    type: attribute
+
+api_routes:
+    resource:
+        path: ../../Presentation/Api
+        namespace: App\Healthcheck\Presentation\Api
+    type: attribute

@@ -1,0 +1,52 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Application Metrics",
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Test Counter",
+        "type": "gauge",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "targets": [
+          {
+            "expr": "test_counter",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Test Gauge",
+        "type": "gauge",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "targets": [
+          {
+            "expr": "test_gauge",
+            "refId": "A"
+          }
+        ]
+      }
+    ]
+  },
+  "overwrite": true
+}

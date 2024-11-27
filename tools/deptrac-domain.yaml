@@ -3,47 +3,47 @@ parameters:
     - ../code/src
   exclude_files: []
   layers:
-    - name: Domain1Classes
+    - name: HealthcheckClasses
       collectors:
         - type: bool
           must:
             - type: directory
-              value: src/Domain1/.*
+              value: src/Healthcheck/.*
           must_not:
             - type: interface
               value: .*Interface$
-    - name: Domain2Classes
+    - name: YourDomainClasses
       collectors:
         - type: bool
           must:
             - type: directory
-              value: src/Domain2/.*
+              value: src/YourDomain/.*
           must_not:
             - type: interface
               value: .*Interface$
-    - name: Domain1Interfaces
+    - name: HealthcheckInterfaces
       collectors:
         - type: bool
           must:
             - type: directory
-              value: src/Domain1/.*
+              value: src/Healthcheck/.*
             - type: interface
               value: .*Interface$
-    - name: Domain2Interfaces
+    - name: YourDomainInterfaces
       collectors:
         - type: bool
           must:
             - type: directory
-              value: src/Domain2/.*
+              value: src/YourDomain/.*
             - type: interface
               value: .*Interface$
 
   ruleset:
-    Domain1Classes:
-      - Domain1Interfaces # Can use/implement own domain interfaces
-      - Domain2Interfaces # Can use other domain interfaces
-    Domain2Classes:
-      - Domain2Interfaces # Can use/implement own domain interfaces
-      - Domain1Interfaces # Can use other domain interfaces
-    Domain1Interfaces: ~
-    Domain2Interfaces: ~
+    HealthcheckClasses:
+      - HealthcheckInterfaces # Can use/implement own domain interfaces
+      - YourDomainInterfaces  # Can use other domain interfaces
+    YourDomainClasses:
+      - YourDomainInterfaces  # Can use/implement own domain interfaces
+      - HealthcheckInterfaces # Can use other domain interfaces
+    HealthcheckInterfaces: ~
+    YourDomainInterfaces: ~

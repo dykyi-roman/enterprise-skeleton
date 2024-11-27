@@ -2,6 +2,30 @@
 
 A modern enterprise-grade application skeleton with Docker support and HTTPS configuration.
 
+# Initial Setup
+
+1. Copy the configuration template:
+```bash
+make copy-config
+```
+
+2. Configure your environment:
+   Edit `infrastructure/config/cs-config` to enable/disable services. Available services:
+```
+server=nginx           # Web Server: nginx, apache
+database=postgres      # Database Service: postgres, mysql, mongodb
+cache=redis            # Cache Service: redis, memcached
+search=elasticsearch   # Search: elasticsearch, solr
+message=rabbitmq       # Message Broker: rabbitmq, kafka
+docs=swagger           # API Documentation: swagger
+mailer=mailhog         # Mail Sandbox: mailhog, papercut
+```
+
+3. Start the environment:
+```bash
+make install
+```
+
 ## Docker Configuration
 
 The project uses Docker for containerization with the following services:
@@ -69,57 +93,12 @@ For development, self-signed certificates are used. For production, replace the 
 - `nginx-selfsigned.crt`: SSL certificate
 - `nginx-selfsigned.key`: Private key
 
-## Getting Started
-
-1. Clone the repository:
-```bash
-git clone [repository-url]
-cd enterprise-skeleton
-```
-
-2. Start the Docker containers:
-```bash
-# Using Apache web server
-make install server=apache
-
-# Using Nginx web server
-make install server=nginx
-```
-
-3. Access the application:
-- HTTP: http://localhost:1000 (redirects to HTTPS)
-- HTTPS: https://localhost:1001
-
-Note: When accessing via HTTPS, you'll see a browser warning about the self-signed certificate in development. This is normal and can be safely bypassed for development purposes.
-
-## Web Server Configuration
-
-The project supports both Apache and Nginx web servers. You can switch between them using the `server` variable in the Makefile:
-
-### Apache
-- Modern SSL configuration with TLS 1.2/1.3
-- PHP-FPM integration via mod_proxy_fcgi
-- Automatic HTTP to HTTPS redirection
-- Configuration files:
-  - Main config: `infrastructure/containers/apache/apache2.conf`
-  - Virtual hosts: `infrastructure/containers/apache/apache.conf`
-  - SSL certificates: `infrastructure/containers/apache/ssl/`
-
-### Nginx
-- Event-driven architecture
-- PHP-FPM integration
-- Modern SSL configuration
-- Configuration files:
-  - Site config: `etc/containers/nginx/site.conf`
-  - SSL certificates: `etc/containers/nginx/ssl/`
-
-## Code Quality Tools
+# Code Quality Tools
 
 The project includes several code quality and analysis tools:
 
 ### PHP CS Fixer
 - Automatically fixes PHP coding standards
-- Configuration: `tools/php-cs-fixer.dist.php`
 - Run: `make cs-check` or `make cs-fix`
 
 ### Deptrac
@@ -130,21 +109,14 @@ The project includes several code quality and analysis tools:
 
 ### PHPStan
 - Static analysis tool for finding code errors
-- Configuration: `tools/phpstan.neon`
-- Maximum level of strictness (level 8)
 - Run: `make phpstan`
 
 ### Psalm
 - Advanced static analysis and type checking
-- Configuration: `tools/psalm.xml`
-- Highest error level (level 1)
-- Detects unused code and variables
 - Run: `make psalm`
 
 ### PHPUnit
 - Testing framework with automatic test suite discovery
-- Configuration: `tools/phpunit.xml.dist`
-- Automatically detects tests in `src/*/Tests` directories
 - Run: `make test`
 
 ## API Documentation
@@ -190,93 +162,13 @@ The application implements request tracking using Request-IDs with the following
   - Useful for debugging and monitoring in distributed systems
   - Helps with request correlation in log aggregation systems
 
-## Service Selection
-
-The project supports multiple service options that can be configured in the Makefile:
-
-### Available Service Options
-
-```makefile
-# Cache Options
-cache = redis        # Choose between: redis, memcached
-
-# Database Options
-database = postgres  # Choose between: postgres, mysql, mongodb
-
-# Message Broker Options
-message = kafka      # Choose between: rabbitmq, kafka
-```
-
-### Using Different Services
-
-You can specify which services to use by setting these variables in the Makefile or when running make commands:
-
-```bash
-# Example: Run with Redis, PostgreSQL, and Kafka
-make up cache=redis database=postgres message=kafka
-
-# Example: Run with Memcached, MongoDB, and RabbitMQ
-make up cache=memcached database=mongodb message=rabbitmq
-```
-
-### Docker Configuration Optimization
-
-For better build performance, the PHP container's Dockerfile has some service extensions commented out by default. When changing services in the Makefile, you'll need to:
-
-1. Edit `infrastructure/containers/php/Dockerfile`
-2. Uncomment the corresponding extension blocks for your chosen services
-3. Rebuild the PHP container:
-```bash
-make build php
-```
-
-This approach ensures faster container builds by only including the extensions you actually need.
-
 ## Local Mail Testing
 
 The project supports local mail testing through either MailHog or Papercut:
 
-### MailHog
-- SMTP Port: 1025
-- Web Interface Port: 8025
-- Web UI: http://localhost:8025
-- Captures all outgoing emails for testing and development
-- Provides a web interface to view email content, headers, and attachments
-
-### Papercut
-- SMTP Port: 25
-- Web Interface Port: 37408
-- Web UI: http://localhost:37408
-- Simple SMTP server for testing email functionality
-- Visual interface for inspecting sent emails
-
-To use either service:
-1. Configure your application's mailer settings to use the appropriate SMTP port
-2. Send emails through your application as normal
-3. View the captured emails in the respective web interface
-
 ## Database Management
 
 The project uses PostgreSQL as its primary database with Doctrine ORM for database operations.
-
-### Database Commands
-
-The following Make commands are available for database management:
-
-```bash
-# Create a new migration after entity changes
-make migration-create
-
-# Run all pending migrations
-make migration-run
-```
-
-### Database Configuration
-
-The database connection is configured in the `.env` file:
-```
-DATABASE_URL="postgresql://app:password@postgres:5432/app?serverVersion=15&charset=utf8"
-```
 
 ## Project Structure
 
@@ -317,6 +209,25 @@ For production deployment:
 2. Update the SSL configuration in `etc/containers/nginx/site.conf` if needed
 3. Consider using Let's Encrypt for free, trusted SSL certificates
 
+# Contributing
+
+We welcome contributions to the Enterprise Skeleton project! If you'd like to join the development effort, you can contribute by creating Pull Requests (PRs).
+
+### Current Development Priorities
+
+We are currently looking for contributions in the following areas:
+
+- **Sentry Integration**: We need help implementing Sentry for error tracking and monitoring. If you have experience with Sentry integration in Symfony applications, we'd love your contribution!
+
+### How to Submit a Pull Request
+
+1. Fork the repository
+2. Create a new branch for your feature or fix
+3. Make your changes following our coding standards
+4. Write or update tests if necessary
+5. Submit a Pull Request with a clear description of the changes
+6. Ensure all checks pass (PHPStan, Psalm, CS-Fixer, etc.)
+
 ## Security Considerations
 
 - Self-signed certificates are for development only
@@ -324,42 +235,6 @@ For production deployment:
 - SSL private keys should never be committed to version control
 - Regular certificate rotation is recommended
 - Keep Docker images and dependencies up to date
-
-## Network Configuration
-
-The project uses a Docker network named `rta-network` for service communication. The network is configured as external and uses the bridge driver.
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a new Pull Request
-
-## Initial Setup
-
-1. Copy the configuration template:
-```bash
-make copy-config
-```
-
-2. Configure your environment:
-Edit `infrastructure/config/cs-config` to enable/disable services. Available services:
-```
-server=nginx           # Web Server: nginx, apache
-database=postgres      # Database Service: postgres, mysql, mongodb
-cache=redis            # Cache Service: redis, memcached
-search=elasticsearch   # Search: elasticsearch, solr
-message=rabbitmq       # Message Broker: rabbitmq, kafka
-docs=swagger           # API Documentation: swagger
-mailer=mailhog         # Mail Sandbox: mailhog, papercut
-```
-
-3. Start the environment:
-```bash
-make install
-```
 
 ## Available Services
 
@@ -380,12 +255,46 @@ make install
 - RabbitMQ
 - Kafka
 
-## Debugging
+## Monitoring Stack
 
-To view current configuration:
-```bash
-make debug-config
-```
+The project includes a comprehensive monitoring setup with Prometheus, Pushgateway, Grafana, and Zabbix:
+
+### Components
+
+- **Prometheus** (Metrics Collection)
+  - UI: http://localhost:9090
+  - Used for collecting and storing metrics
+
+- **Pushgateway** (Metrics Ingestion)
+  - UI: http://localhost:9091
+  - Used for pushing metrics from batch jobs and CLI commands
+
+- **Grafana** (Visualization)
+  - UI: http://localhost:3000
+  - Default credentials: admin/admin
+  - Used for creating dashboards and visualizing metrics
+
+- **Zabbix** (Monitoring and Alerting)
+  - Web UI: http://localhost:8080
+  - Default credentials: Admin/zabbix
+  - Server Port: 10051
+  - Features:
+    - Dedicated PostgreSQL database
+    - Built-in web interface with Nginx
+    - PHP integration via custom healthcheck command
+    - Real-time monitoring and alerting
+    - Custom metrics support
+
+3. Access monitoring interfaces:
+   - Zabbix: http://localhost:8080
+   - Prometheus: http://localhost:9090
+   - Grafana: http://localhost:3000
+
+### Integration
+
+- PHP applications can send metrics directly to Zabbix using the built-in healthcheck command
+- Prometheus metrics can be visualized in Grafana dashboards
+- Zabbix provides its own visualization and alerting capabilities
 
 ## Notes
 

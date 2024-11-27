@@ -1,6 +1,5 @@
 #------------------------------------------------------------------------------
-# Available services configuration.
-# To enable a service, uncomment the corresponding line below.
+# Available services configuration. To enable a service, uncomment the corresponding line below.
 #------------------------------------------------------------------------------
 
 server=nginx             # Web Server: nginx, apache
@@ -10,3 +9,4 @@ server=nginx             # Web Server: nginx, apache
 # message=rabbitmq       # Message Broker: rabbitmq, kafka
 # docs=swagger           # API Documentation: swagger
 # mailer=mailhog         # Mail Sandbox: mailhog, papercut
+# monitoring=zabbix      # Monitoring: zabbix, grafana

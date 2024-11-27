@@ -1,0 +1,9 @@
+doctrine:
+    orm:
+        mappings:
+            YourDomain:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/YourDomain/DomainModel/Model'
+                prefix: 'App\YourDomain\DomainModel\Model'
+                alias: YourDomain

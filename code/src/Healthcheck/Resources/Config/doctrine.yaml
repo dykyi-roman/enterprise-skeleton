@@ -1,0 +1,9 @@
+doctrine:
+    orm:
+        mappings:
+            Healthcheck:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Healthcheck/DomainModel/Model'
+                prefix: 'App\Healthcheck\DomainModel\Model'
+                alias: Healthcheck

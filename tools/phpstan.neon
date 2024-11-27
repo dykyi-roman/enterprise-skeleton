@@ -3,4 +3,4 @@ parameters:
     paths:
         - ../code/src
     excludePaths:
-        - '../code/src/*/Presentation/Console/Healthcheck/*'
+        - '../code/src/Healthcheck/Presentation/Console/*'

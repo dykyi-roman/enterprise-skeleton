@@ -1,0 +1,12 @@
+web_routes:
+    resource:
+        path: ../../Presentation/Web
+        namespace: App\YourDomain\Presentation\Web
+    type: attribute
+
+api_routes:
+    resource:
+        path: ../../Presentation/Api
+        namespace: App\YourDomain\Presentation\Api
+    type: attribute
+    prefix: '/api'

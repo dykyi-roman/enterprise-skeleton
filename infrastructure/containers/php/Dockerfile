@@ -76,6 +76,7 @@ RUN apt-get update && apt-get install -y \
         mbstring \
         opcache \
         pcntl \
+        sockets \
         zip \
     && docker-php-ext-configure gd \
     && docker-php-ext-install -j$(nproc) gd
@@ -100,8 +101,8 @@ RUN apt-get update && apt-get install -y \
 #    && docker-php-ext-enable mongodb
 
 # Redis Extension
-RUN pecl install redis \
-    && docker-php-ext-enable redis
+#RUN pecl install redis \
+#    && docker-php-ext-enable redis
 
 # RdKafka Extension
 #RUN apt-get update && apt-get install -y \

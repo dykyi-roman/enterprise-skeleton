@@ -1,9 +1,0 @@
-doctrine:
-    orm:
-        mappings:
-            Domain1:
-                type: attribute
-                is_bundle: false
-                dir: '%kernel.project_dir%/src/Domain1/DomainModel/Model'
-                prefix: 'App\Domain1\DomainModel\Model'
-                alias: Domain1
