@@ -9,9 +9,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-/**
- * @internal
- */
 #[CoversClass(HelloAction::class)]
 final class HelloActionTest extends TestCase
 {

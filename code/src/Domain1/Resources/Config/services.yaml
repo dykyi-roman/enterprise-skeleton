@@ -11,4 +11,6 @@ services:
         exclude:
             - '../../Resources/'
             - '../../DomainModel/Model/'
+            - '../../Tests/'
+            - '../../**/Tests/'
         tags: ['controller.service_arguments']

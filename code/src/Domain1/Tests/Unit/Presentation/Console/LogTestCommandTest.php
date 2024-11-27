@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain1\Tests\Unit\Presentation\Console;
 
-use App\Domain1\Presentation\Api\HelloAction;
 use App\Domain1\Presentation\Console\LogTestCommand;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
