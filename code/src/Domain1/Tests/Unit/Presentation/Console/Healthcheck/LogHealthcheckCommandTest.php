@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain1\Tests\Unit\Presentation\Console;
+namespace App\Domain1\Tests\Unit\Presentation\Console\Healthcheck;
 
-use App\Domain1\Presentation\Console\LogTestCommand;
+use App\Domain1\Presentation\Console\Healthcheck\LogHealthcheckCommand;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -12,8 +12,8 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-#[CoversClass(LogTestCommand::class)]
-final class LogTestCommandTest extends TestCase
+#[CoversClass(LogHealthcheckCommand::class)]
+final class LogHealthcheckCommandTest extends TestCase
 {
     private LoggerInterface&MockObject $logger;
     private CommandTester $commandTester;
@@ -21,7 +21,7 @@ final class LogTestCommandTest extends TestCase
     protected function setUp(): void
     {
         $this->logger = $this->createMock(LoggerInterface::class);
-        $command = new LogTestCommand($this->logger);
+        $command = new LogHealthcheckCommand($this->logger);
         $this->commandTester = new CommandTester($command);
     }
 
@@ -39,10 +39,8 @@ final class LogTestCommandTest extends TestCase
             ->method('critical')
             ->with(
                 'Critical error occurred',
-                self::callback(function (array $context) {
-                    return isset($context['exception'])
-                        && 'Test exception' === $context['exception']
-                        && isset($context['trace']);
+                self::callback(static function (array $context) {
+                    return isset($context['exception'], $context['trace']) && 'Test exception' === $context['exception'];
                 })
             );
 

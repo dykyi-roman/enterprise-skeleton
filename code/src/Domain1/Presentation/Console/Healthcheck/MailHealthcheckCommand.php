@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain1\Presentation\Console;
+namespace App\Domain1\Presentation\Console\Healthcheck;
 
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -11,10 +11,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
-    name: 'app:test:mail',
+    name: 'app:healthcheck:mail',
     description: 'Send a test email using native PHP mail with SMTP'
 )]
-final class MailTestCommand extends Command
+final class MailHealthcheckCommand extends Command
 {
     private const SMTP_SERVICES = [
         'mailhog' => [
@@ -41,7 +41,7 @@ final class MailTestCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            $service = strtolower($input->getOption('service'));
+            $service = strtolower((string) $input->getOption('service'));
             if (!isset(self::SMTP_SERVICES[$service])) {
                 throw new \InvalidArgumentException(sprintf('Invalid service "%s". Available services: %s', $service, implode(', ', array_keys(self::SMTP_SERVICES))));
             }
@@ -96,7 +96,7 @@ final class MailTestCommand extends Command
                     $logContent = shell_exec('tail -n 5 /var/log/msmtp.log');
                     if (null !== $logContent) {
                         $output->writeln('<info>Last msmtp log entries:</info>');
-                        $output->writeln($logContent);
+                        $output->writeln((string) $logContent);
                     }
                 }
 
@@ -118,7 +118,7 @@ final class MailTestCommand extends Command
                 $logContent = shell_exec('tail -n 10 /var/log/msmtp.log');
                 if (null !== $logContent) {
                     $output->writeln('<info>Last msmtp log entries:</info>');
-                    $output->writeln($logContent);
+                    $output->writeln((string) $logContent);
                 }
             }
 

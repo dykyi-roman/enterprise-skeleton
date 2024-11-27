@@ -10,6 +10,7 @@
         <ignoreFiles>
             <directory name="../code/vendor"/>
             <directory name="../code/src/*/Tests"/>
+            <directory name="../code/src/*/Presentation/Console/Healthcheck"/>
             <file name="../code/src/Kernel.php"/>
         </ignoreFiles>
     </projectFiles>

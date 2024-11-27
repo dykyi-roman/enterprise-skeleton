@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain1\Presentation\Console;
+namespace App\Domain1\Presentation\Console\Healthcheck;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -11,10 +11,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
-    name: 'app:log:test',
+    name: 'app:healthcheck:logs',
     description: 'Test different types of logging'
 )]
-final class LogTestCommand extends Command
+final class LogHealthcheckCommand extends Command
 {
     public function __construct(
         private readonly LoggerInterface $logger,

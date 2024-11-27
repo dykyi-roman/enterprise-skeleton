@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain1\Presentation\Console;
+namespace App\Domain1\Presentation\Console\Healthcheck;
 
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -10,10 +10,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
-    name: 'app:test:redis',
+    name: 'app:healthcheck:redis',
     description: 'Test Redis connection'
 )]
-final class RedisTestCommand extends Command
+final class RedisHealthcheckCommand extends Command
 {
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

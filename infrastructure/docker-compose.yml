@@ -298,6 +298,29 @@ services:
             retries: 3
             start_period: 40s
 
+    solr:
+        image: solr:${SOLR_VERSION}
+        container_name: es-solr
+        profiles: ["solr"]
+        command:
+            - bash
+            - -c
+            - 'solr-precreate default /opt/solr/server/solr/configsets/_default'
+        environment:
+            - SOLR_OPTS=-Dsolr.disableConfigSetsCreateAuthChecks=true
+        ports:
+            - "${SOLR_PORT}:8983"
+        volumes:
+            - ./data/solr:/var/solr/data
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8983/solr/"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
+
 networks:
     es-network:
         external: true

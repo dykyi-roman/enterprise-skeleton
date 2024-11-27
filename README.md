@@ -41,6 +41,19 @@ The project uses Docker for containerization with the following services:
   - Used for asynchronous task processing and message queuing
   - Persistent message storage in `data/rabbitmq/`
 
+- **Search Engines**
+  - Apache Solr
+    - Port: 8983
+    - Admin UI: http://localhost:8983/solr
+    - Default Core: 'default'
+    - Persistent data storage in `data/solr/`
+    - Test command: `php bin/console app:test:solr`
+  - Elasticsearch
+    - Port: 9200
+    - Internal Port: 9300
+    - Test command: `php bin/console app:test:elasticsearch`
+    - Used for full-text search and analytics
+
 ## SSL/HTTPS Support
 
 The project includes HTTPS support with the following features:
@@ -332,14 +345,15 @@ make copy-config
 ```
 
 2. Configure your environment:
-Edit `infrastructure/config/cs-config` to enable/disable services you need. Available services:
+Edit `infrastructure/config/cs-config` to enable/disable services. Available services:
 ```
-server=nginx       # Web server (nginx/apache)
-database=postgres  # Database (postgres/mysql/mongodb)
-cache=redis        # Cache service (redis/memcached)
-message=rabbitmq   # Message broker (rabbitmq/kafka)
-mailer=mailhog     # Mail Sandbox: mailhog, papercut
-docs=swagger       # API Documentation
+server=nginx           # Web Server: nginx, apache
+database=postgres      # Database Service: postgres, mysql, mongodb
+cache=redis            # Cache Service: redis, memcached
+search=elasticsearch   # Search: elasticsearch, solr
+message=rabbitmq       # Message Broker: rabbitmq, kafka
+docs=swagger           # API Documentation: swagger
+mailer=mailhog         # Mail Sandbox: mailhog, papercut
 ```
 
 3. Start the environment:

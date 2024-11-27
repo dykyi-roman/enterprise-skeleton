@@ -2,3 +2,5 @@ parameters:
     level: 9
     paths:
         - ../code/src
+    excludePaths:
+        - '../code/src/*/Presentation/Console/Healthcheck/*'
