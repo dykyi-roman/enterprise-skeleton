@@ -10,3 +10,4 @@ server=nginx            # Web Server: nginx, apache
 ;docs=swagger           # API Documentation: swagger
 ;mailer=mailhog         # Mail Sandbox: mailhog, papercut
 ;monitoring=grafana     # Monitoring: zabbix, grafana
+;job=cron               # Scheduling jobs: cron

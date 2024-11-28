@@ -16,10 +16,11 @@ server=nginx           # Web Server: nginx, apache
 database=postgres      # Database Service: postgres, mysql, mongodb
 cache=redis            # Cache Service: redis, memcached
 search=elasticsearch   # Search: elasticsearch, solr
-message=rabbitmq       # Message Broker: rabbitmq, kafka
+message=kafka          # Message Broker: rabbitmq, kafka
 docs=swagger           # API Documentation: swagger
 mailer=mailhog         # Mail Sandbox: mailhog, papercut
-monitoring=zabbix      # Monitoring: zabbix, grafana
+monitoring=grafana     # Monitoring: zabbix, grafana
+job=cron               # Scheduling jobs: cron
 ```
 
 3. Start the environment:
@@ -94,7 +95,7 @@ For development, self-signed certificates are used. For production, replace the 
 - `nginx-selfsigned.crt`: SSL certificate
 - `nginx-selfsigned.key`: Private key
 
-# Code Quality Tools
+## Code Quality Tools
 
 The project includes several code quality and analysis tools:
 
@@ -210,7 +211,16 @@ For production deployment:
 2. Update the SSL configuration in `etc/containers/nginx/site.conf` if needed
 3. Consider using Let's Encrypt for free, trusted SSL certificates
 
-# Contributing
+## Scheduling Cron Jobs
+
+The project includes support for scheduling and managing cron jobs:
+
+- **Symfony Console Commands**:
+  - Scheduled tasks are implemented as Symfony Console Commands
+  - Located in `src/*/Command/` directories within each module
+  - Easy to create and maintain using Symfony's command structure
+
+## Contributing
 
 We welcome contributions to the Enterprise Skeleton project! If you'd like to join the development effort, you can contribute by creating Pull Requests (PRs).
 
