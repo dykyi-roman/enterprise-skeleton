@@ -15,9 +15,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 final class AmqpHealthcheckCommand extends Command
 {
-    private const QUEUE_NAME = 'test_queue';
-    private const EXCHANGE_NAME = 'test_exchange';
-    private const ROUTING_KEY = 'test_key';
+    private const string QUEUE_NAME = 'test_queue';
+    private const string EXCHANGE_NAME = 'test_exchange';
+    private const string ROUTING_KEY = 'test_key';
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

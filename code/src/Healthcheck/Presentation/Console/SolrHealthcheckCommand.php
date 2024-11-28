@@ -16,8 +16,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class SolrHealthcheckCommand extends Command
 {
-    private const SOLR_HOST = 'es-solr:8983';
-    private const CORE_NAME = 'default';
+    private const string SOLR_HOST = 'es-solr:8983';
+    private const string CORE_NAME = 'default';
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

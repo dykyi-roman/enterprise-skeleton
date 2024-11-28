@@ -15,9 +15,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class ZabbixHealthcheckCommand extends Command
 {
-    private const SOCKET_TIMEOUT = 5; // 5 seconds timeout
-    private const ZBX_HEADER = "ZBXD\1";
-    private const ZBX_HEADER_LENGTH = 13; // 5 bytes header + 8 bytes data length
+    private const int SOCKET_TIMEOUT = 5; // 5 seconds timeout
+    private const string ZBX_HEADER = "ZBXD\1";
+    private const int ZBX_HEADER_LENGTH = 13; // 5 bytes header + 8 bytes data length
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

@@ -16,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class ElasticsearchHealthcheckCommand extends Command
 {
-    private const ELASTICSEARCH_HOST = 'es-elasticsearch:9200';
+    private const string ELASTICSEARCH_HOST = 'es-elasticsearch:9200';
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

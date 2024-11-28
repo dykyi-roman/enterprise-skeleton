@@ -7,7 +7,7 @@ network = es-network
 
 # Get the config values
 define get_config
-	cd $(workdir) && sed -n 's/^\([^#]*=\)\([^#]*\).*/\2/p' config/cs-config | tr -d ' ' | tr '\n' ',' | sed 's/,$$//'
+	cd $(workdir) && grep -v '^[[:space:]]*[;#]' config/cs-config.ini | grep '=' | sed 's/[[:space:]]*#.*$$//' | cut -d'=' -f2 | tr -d ' ' | tr '\n' ',' | sed 's/,$$//'
 endef
 config = $(shell $(get_config))
 
@@ -16,8 +16,8 @@ help:
 
 ## -- Config --
 
-copy-config: ## Copy cs-config.dist to cs-config file
-	@cp infrastructure/config/cs-config.dist infrastructure/config/cs-config
+copy-config: ## Copy cs-config.ini.dist to cs-config file
+	@cp infrastructure/config/cs-config.ini.dist infrastructure/config/cs-config
 	@echo "Configuration file copied successfully"
 
 show-config: ## Display current configuration

@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 final class GraphanaHealthcheckCommand extends Command
 {
-    private const PUSH_GATEWAY_HOST = 'es-pushgateway:9091';
+    private const string PUSH_GATEWAY_HOST = 'es-pushgateway:9091';
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

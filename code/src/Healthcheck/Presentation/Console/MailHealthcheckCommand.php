@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 final class MailHealthcheckCommand extends Command
 {
-    private const SMTP_SERVICES = [
+    private const array SMTP_SERVICES = [
         'mailhog' => [
             'host' => 'es-mailhog',
             'port' => 1025,

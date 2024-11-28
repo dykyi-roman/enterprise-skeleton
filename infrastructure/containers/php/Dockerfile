@@ -101,7 +101,7 @@ RUN apt-get update && apt-get install -y \
 #    && docker-php-ext-enable mongodb
 
 # Redis Extension
-#RUN pecl install redis \
+RUN #pecl install redis \
 #    && docker-php-ext-enable redis
 
 # RdKafka Extension
@@ -112,18 +112,18 @@ RUN apt-get update && apt-get install -y \
 #    && docker-php-ext-enable rdkafka
 
 # Memcached Extension
-#RUN apt-get update && apt-get install -y \
-#    libmemcached-dev \
-#    && rm -rf /var/lib/apt/lists/* \
-#    && pecl install memcached \
-#    && docker-php-ext-enable memcached
+RUN apt-get update && apt-get install -y \
+    libmemcached-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && pecl install memcached \
+    && docker-php-ext-enable memcached
 
 # RabbitMQ Extension
-RUN apt-get update && apt-get install -y \
-    librabbitmq-dev \
-    && rm -rf /var/lib/apt/lists/* \
-    && pecl install amqp \
-    && docker-php-ext-enable amqp
+#RUN apt-get update && apt-get install -y \
+#    librabbitmq-dev \
+#    && rm -rf /var/lib/apt/lists/* \
+#    && pecl install amqp \
+#    && docker-php-ext-enable amqp
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
