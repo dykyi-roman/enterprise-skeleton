@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Healthcheck\Tests\Unit\Healthcheck\Presentation\Console;
+namespace App\Healthcheck\Tests\Unit\Presentation\Console;
 
 use App\Healthcheck\Presentation\Console\LogHealthcheckCommand;
 use PHPUnit\Framework\Attributes\CoversClass;

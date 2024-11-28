@@ -4,13 +4,14 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.3",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "chrisguitarguy/request-id-bundle": "^6.0",
         "doctrine/doctrine-bundle": "^2.13",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.3",
+        "psr/http-client": "^1.0",
         "sentry/sentry": "^4.0",
         "symfony/console": "7.0.*",
         "symfony/dotenv": "7.0.*",
@@ -18,7 +19,11 @@
         "symfony/framework-bundle": "7.0.*",
         "symfony/messenger": "7.0.*",
         "symfony/monolog-bundle": "^3.10",
+        "symfony/property-access": "7.0.*",
         "symfony/runtime": "7.0.*",
+        "symfony/serializer": "7.0.*",
+        "symfony/uid": "7.0.*",
+        "symfony/validator": "7.0.*",
         "symfony/yaml": "7.0.*",
         "zircote/swagger-php": "^4.11"
     },
@@ -75,7 +80,9 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.64",
         "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan-symfony": "^2.0",
         "phpunit/phpunit": "^10.5",
+        "psalm/plugin-symfony": "^5.2",
         "qossmic/deptrac": "^2.0",
         "vimeo/psalm": "^5.15"
     }

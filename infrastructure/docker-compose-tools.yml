@@ -1,0 +1,181 @@
+services:
+    mailhog:
+        image: mailhog/mailhog:latest
+        container_name: es-mailhog
+        profiles: ["mailhog"]
+        ports:
+            - "${MAILHOG_SMTP_PORT}:1025"
+            - "${MAILHOG_UI_PORT}:8025"
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD", "nc", "-z", "localhost", "1025"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    papercut:
+        image: jijiechen/papercut:latest
+        container_name: es-papercut
+        profiles: ["papercut"]
+        ports:
+            - "${PAPERCUT_SMTP_PORT}:25"
+            - "${PAPERCUT_UI_PORT}:37408"
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:37408"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    swagger-ui:
+        image: swaggerapi/swagger-ui
+        container_name: es-swagger-ui
+        profiles: ["swagger"]
+        environment:
+            - SWAGGER_JSON=/api/openapi.yaml
+            - BASE_URL=/api/docs
+        volumes:
+            - ../code/docs/api:/api
+        ports:
+            - "${SWAGGER_UI_PORT:-8080}:8080"
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD", "wget", "--spider", "http://localhost:8080"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+
+    grafana:
+        image: grafana/grafana:${GRAFANA_VERSION:-latest}
+        container_name: es-grafana
+        profiles: ["grafana"]
+        ports:
+            - "${GRAFANA_PORT:-3000}:3000"
+        volumes:
+            - grafana-data:/var/lib/grafana
+        environment:
+            - GF_SECURITY_ADMIN_USER=admin
+            - GF_SECURITY_ADMIN_PASSWORD=admin
+        networks:
+            - es-network
+        depends_on:
+            - prometheus
+        healthcheck:
+            test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+
+    prometheus:
+        image: prom/prometheus:${PROMETHEUS_VERSION:-latest}
+        container_name: es-prometheus
+        profiles: ["grafana"]
+        ports:
+            - "${PROMETHEUS_PORT:-9090}:9090"
+        volumes:
+            - ./containers/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+            - prometheus-data:/prometheus
+        command:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--storage.tsdb.path=/prometheus'
+            - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+            - '--web.console.templates=/usr/share/prometheus/consoles'
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD", "wget", "-q", "--spider", "http://localhost:9090/-/healthy"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+
+    pushgateway:
+        image: prom/pushgateway:${PUSHGATEWAY_VERSION:-latest}
+        container_name: es-pushgateway
+        profiles: ["grafana"]
+        ports:
+            - "${PUSHGATEWAY_PORT:-9091}:9091"
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD", "wget", "-q", "--spider", "http://localhost:9091/-/healthy"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+
+    zabbix-postgres:
+        image: postgres:${ZABBIX_POSTGRES_VERSION}
+        container_name: es-zabbix-postgres
+        profiles: ["zabbix"]
+        environment:
+            POSTGRES_DB: ${ZABBIX_POSTGRES_DB}
+            POSTGRES_USER: ${ZABBIX_POSTGRES_USER}
+            POSTGRES_PASSWORD: ${ZABBIX_POSTGRES_PASSWORD}
+        volumes:
+            - zabbix-postgres-data:/var/lib/postgresql/data
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U ${ZABBIX_POSTGRES_USER} -d ${ZABBIX_POSTGRES_DB}"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+
+    zabbix-server:
+        image: zabbix/zabbix-server-pgsql:${ZABBIX_VERSION}
+        container_name: es-zabbix-server
+        profiles: ["zabbix"]
+        ports:
+            - "${ZABBIX_SERVER_PORT}:10051"
+        environment:
+            DB_SERVER_HOST: ${ZABBIX_POSTGRES_HOST}
+            POSTGRES_DB: ${ZABBIX_POSTGRES_DB}
+            POSTGRES_USER: ${ZABBIX_POSTGRES_USER}
+            POSTGRES_PASSWORD: ${ZABBIX_POSTGRES_PASSWORD}
+        depends_on:
+            - zabbix-postgres
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD", "/usr/sbin/zabbix_server", "--help"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+
+    zabbix-web:
+        image: zabbix/zabbix-web-nginx-pgsql:${ZABBIX_VERSION}
+        container_name: es-zabbix-web
+        profiles: ["zabbix"]
+        ports:
+            - "${ZABBIX_WEB_PORT}:8080"
+        environment:
+            DB_SERVER_HOST: ${ZABBIX_POSTGRES_HOST}
+            POSTGRES_DB: ${ZABBIX_POSTGRES_DB}
+            POSTGRES_USER: ${ZABBIX_POSTGRES_USER}
+            POSTGRES_PASSWORD: ${ZABBIX_POSTGRES_PASSWORD}
+            ZBX_SERVER_HOST: zabbix-server
+        depends_on:
+            - zabbix-postgres
+            - zabbix-server
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+
+networks:
+    es-network:
+        external: true
+        driver: bridge
+
+volumes:
+    zabbix-postgres-data:
+        driver: local
+    grafana-data:
+        driver: local
+    prometheus-data:
+        driver: local

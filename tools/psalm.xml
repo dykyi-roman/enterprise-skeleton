@@ -4,6 +4,7 @@
     xmlns="https://getpsalm.org/schema/config"
     findUnusedCode="true"
     findUnusedVariablesAndParams="true"
+    findUnusedBaselineEntry="true"
 >
     <projectFiles>
         <directory name="../code/src"/>
@@ -22,4 +23,8 @@
             </errorLevel>
         </UnusedClass>
     </issueHandlers>
+
+    <plugins>
+        <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin" />
+    </plugins>
 </psalm>

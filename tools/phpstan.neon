@@ -1,3 +1,7 @@
+includes:
+    - ../code/vendor/phpstan/phpstan-symfony/extension.neon
+    - ../code/vendor/phpstan/phpstan-symfony/rules.neon
+
 parameters:
     level: 9
     paths:
