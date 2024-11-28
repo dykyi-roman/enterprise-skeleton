@@ -31,7 +31,7 @@ final class LogHealthcheckCommand extends Command
         try {
             throw new \Exception('Test exception');
         } catch (\Throwable $exception) {
-            $output->writeln('Error: ' . $exception->getMessage());
+            $output->writeln('Error: '.$exception->getMessage());
 
             $this->logger->critical('Critical error occurred', [
                 'exception' => $exception->getMessage(),

@@ -3,6 +3,7 @@ parameters:
     - ../code/src
   exclude_files:
     - '#.*test.*#'
+    - '#vendor#'
   layers:
     - name: Presentation
       collectors:

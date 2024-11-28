@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Healthcheck\Presentation\Console;
 
 use RdKafka\Conf;
-use RdKafka\Producer;
 use RdKafka\KafkaConsumer;
-use Symfony\Component\Console\Command\Command;
+use RdKafka\Producer;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -38,7 +38,7 @@ final class KafkaHealthcheckCommand extends Command
 
             // Create producer
             $producer = new Producer($conf);
-            
+
             // Produce message
             $topic = $producer->newTopic(self::TEST_TOPIC);
             $topic->produce(RD_KAFKA_PARTITION_UA, 0, self::TEST_MESSAGE);
@@ -60,17 +60,19 @@ final class KafkaHealthcheckCommand extends Command
 
             // Try to consume the message
             $message = $consumer->consume(5000);
-            
-            if ($message->payload === self::TEST_MESSAGE) {
+
+            if (self::TEST_MESSAGE === $message->payload) {
                 $io->success('Successfully consumed test message');
+
                 return Command::SUCCESS;
             }
 
             $io->error('Failed to consume test message');
-            return Command::FAILURE;
 
+            return Command::FAILURE;
         } catch (\Exception $exception) {
-            $io->error('Kafka health check failed: ' . $exception->getMessage());
+            $io->error('Kafka health check failed: '.$exception->getMessage());
+
             return Command::FAILURE;
         }
     }

@@ -1,7 +1,9 @@
 parameters:
   paths:
     - ../code/src
-  exclude_files: []
+  exclude_files:
+    - '#.*test.*#'
+    - '#vendor#'
   layers:
     - name: HealthcheckClasses
       collectors:
