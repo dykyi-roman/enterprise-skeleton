@@ -50,8 +50,8 @@ final class MemcacheHealthcheckCommand extends Command
             $output->writeln('<info>Memcached connection test completed successfully!</info>');
 
             return Command::SUCCESS;
-        } catch (\Exception $e) {
-            $output->writeln(sprintf('<error>Memcached test failed: %s</error>', $e->getMessage()));
+        } catch (\Exception $exception) {
+            $output->writeln(sprintf('<error>Memcached test failed: %s</error>', $exception->getMessage()));
 
             return Command::FAILURE;
         }

@@ -167,6 +167,31 @@ services:
             timeout: 10s
             retries: 3
 
+    cron:
+        image: php:${CRON_VERSION}
+        profiles: ["cron"]
+        container_name: es-cron
+        volumes:
+          - ../code:/var/www/html
+          - ./cron/crontab:/etc/cron.d/crontab
+        command: >
+          sh -c "apt-get update &&
+                 apt-get install -y --no-install-recommends cron procps git zip unzip libzip-dev &&
+                 chmod 0644 /etc/cron.d/crontab &&
+                 crontab /etc/cron.d/crontab &&
+                 touch /var/log/cron.log &&
+                 chmod 0666 /var/log/cron.log &&
+                 echo 'Starting cron daemon...' > /var/log/cron.log &&
+                 /usr/sbin/cron -f -l 2 > /var/log/cron.log 2>&1"
+        networks:
+          - es-network
+        healthcheck:
+            test: ["CMD-SHELL", "ps aux | grep '[c]ron' || exit 1"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+
 networks:
     es-network:
         external: true

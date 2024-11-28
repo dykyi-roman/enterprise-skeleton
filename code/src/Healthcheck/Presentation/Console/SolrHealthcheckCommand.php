@@ -89,8 +89,8 @@ final class SolrHealthcheckCommand extends Command
             $io->success('All test documents deleted');
 
             return Command::SUCCESS;
-        } catch (\Exception $e) {
-            $io->error($e->getMessage());
+        } catch (\Exception $exception) {
+            $io->error($exception->getMessage());
 
             return Command::FAILURE;
         }

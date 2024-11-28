@@ -86,8 +86,8 @@ final class AmqpHealthcheckCommand extends Command
             $output->writeln('<info>AMQP test completed successfully!</info>');
 
             return Command::SUCCESS;
-        } catch (\AMQPException $e) {
-            $output->writeln(sprintf('<error>AMQP test failed: %s</error>', $e->getMessage()));
+        } catch (\AMQPException $exception) {
+            $output->writeln(sprintf('<error>AMQP test failed: %s</error>', $exception->getMessage()));
 
             return Command::FAILURE;
         }

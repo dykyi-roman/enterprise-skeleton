@@ -69,8 +69,8 @@ final class KafkaHealthcheckCommand extends Command
             $io->error('Failed to consume test message');
             return Command::FAILURE;
 
-        } catch (\Exception $e) {
-            $io->error('Kafka health check failed: ' . $e->getMessage());
+        } catch (\Exception $exception) {
+            $io->error('Kafka health check failed: ' . $exception->getMessage());
             return Command::FAILURE;
         }
     }

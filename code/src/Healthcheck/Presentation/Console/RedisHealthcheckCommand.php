@@ -36,8 +36,8 @@ final class RedisHealthcheckCommand extends Command
             $output->writeln('<info>Redis connection test completed successfully!</info>');
 
             return Command::SUCCESS;
-        } catch (\Exception $e) {
-            $output->writeln(sprintf('<error>Redis test failed: %s</error>', $e->getMessage()));
+        } catch (\Exception $exception) {
+            $output->writeln(sprintf('<error>Redis test failed: %s</error>', $exception->getMessage()));
 
             return Command::FAILURE;
         }

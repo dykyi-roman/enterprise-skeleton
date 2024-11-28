@@ -1,4 +1,5 @@
 #-- Variables --
+env = dev
 workdir = ./infrastructure
 compose-file = docker-compose.yml
 compose-tools-file = docker-compose-tools.yml
@@ -55,6 +56,13 @@ enter: ## Enter PHP container shell
 
 console: ## Execute Symfony console commands (usage: make console command="your:command")
 	docker exec -it $(php) bash -c "php bin/console $(filter-out $@,$(MAKECMDGOALS))"
+
+## -- Logs --
+logs-cron: ## View cron output logs
+	docker exec es-cron tail -f /var/log/cron.log
+
+logs-php: ## View PHP logs
+	tail -f code/var/log/$(env)-$(shell date +%Y-%m-%d).log
 
 ## -- Code Quality & Testing --
 
