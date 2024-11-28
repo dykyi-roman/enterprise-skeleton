@@ -87,12 +87,12 @@ RUN apt-get update && apt-get install -y \
 #        pdo_mysql
 
 # PostgreSQL Extension
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/* \
-    && docker-php-ext-install -j$(nproc) \
-        pgsql \
-        pdo_pgsql
+#RUN apt-get update && apt-get install -y \
+#    libpq-dev \
+#    && rm -rf /var/lib/apt/lists/* \
+#    && docker-php-ext-install -j$(nproc) \
+#        pgsql \
+#        pdo_pgsql
 
 # MongoDB Extension
 #RUN apt-get update && apt-get install -y libssl-dev \
@@ -101,7 +101,7 @@ RUN apt-get update && apt-get install -y \
 #    && docker-php-ext-enable mongodb
 
 # Redis Extension
-RUN #pecl install redis \
+#RUN pecl install redis \
 #    && docker-php-ext-enable redis
 
 # RdKafka Extension
@@ -112,11 +112,12 @@ RUN #pecl install redis \
 #    && docker-php-ext-enable rdkafka
 
 # Memcached Extension
-RUN apt-get update && apt-get install -y \
-    libmemcached-dev \
-    && rm -rf /var/lib/apt/lists/* \
-    && pecl install memcached \
-    && docker-php-ext-enable memcached
+#RUN apt-get update && apt-get install -y \
+#    libmemcached-dev \
+#    zlib1g-dev \
+#    && rm -rf /var/lib/apt/lists/* \
+#    && pecl install memcached \
+#    && docker-php-ext-enable memcached
 
 # RabbitMQ Extension
 #RUN apt-get update && apt-get install -y \

@@ -17,7 +17,7 @@ help:
 ## -- Config --
 
 copy-config: ## Copy cs-config.ini.dist to cs-config file
-	@cp infrastructure/config/cs-config.ini.dist infrastructure/config/cs-config
+	@cp infrastructure/config/cs-config.ini.dist infrastructure/config/cs-config.ini
 	@echo "Configuration file copied successfully"
 
 show-config: ## Display current configuration
