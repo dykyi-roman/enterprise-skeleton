@@ -75,14 +75,19 @@ logs-php: ## View PHP logs
 
 phpcs: ## Run PHP CS Fixer to fix code style
 	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/php-cs-fixer fix -v --using-cache=no --config=../tools/.php-cs-fixer.php"
-	@echo "phpcs done"
+	@echo "PHP CS Fixer done!"
 
 phpstan: ## Run PHPStan for static code analysis
 	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/phpstan analyse src --configuration=../tools/phpstan.neon"
+	@echo "Phpstan done!"
 
-test: ## Run PHPUnit tests
+test-php: ## Run PHPUnit tests
 	docker exec -it $(php) bash -c "cd /var/www/html/code && APP_ENV=test php vendor/bin/phpunit -c ../tools/phpunit.xml.dist"
-	@echo "Test done!"
+	@echo "Php Test done!"
+
+test-postman: ## Run Postman collection tests using Newman
+	cd $(workdir) && COMPOSE_PROFILES="newman,php,nginx" docker compose -f $(compose-file) -f $(compose-tools-file) run --rm newman
+	@echo "Postman Test done!"
 
 deptrac: ## Check dependencies between domains (no cache)
 	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/deptrac analyse --config-file=../tools/deptrac-domain.yaml --no-cache --report-uncovered"

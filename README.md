@@ -12,14 +12,12 @@ make copy-config
 ```
 
 2. Configure your environment:
-   Edit `infrastructure/config/cs-config` to enable/disable services. Available services:
+   Edit `infrastructure/config/cs-config` to enable/disable services.
 
 3. Start:
 ```bash
 make install
 ```
-
----
 
 # Infrastructure
 
@@ -63,7 +61,28 @@ make install
 
 ---
 
-# Code
+# Project Structure
+
+## Modular Architecture
+The project follows a domain-driven modular architecture:
+- Each domain is a separate module in `src/`
+- Modules are independent and loosely coupled
+- Each module contains its own:
+  - Business logic
+  - Configuration
+  - Dependencies
+  - Tests
+
+## Independent Configuration
+- Configuration is modular and domain-specific
+- Each module can have its own configuration
+- Shared configuration is minimal and clearly separated
+- Environment-specific settings use `.env` files
+
+## How adding new domain models
+
+1. Add new Domain Model to the `/src` directory by example `code/src/YourDomain`
+2. Register it in the domain configuration `code/config/packages/domains.yaml`
 
 ### Health check
 
@@ -93,10 +112,7 @@ All commands return:
 Usage example:
 ```bash
 # Test MySQL connection
-php bin/console app:healthcheck:mysql
-
-# Test Redis connection
-php bin/console app:healthcheck:redis
+php bin/console app:healthcheck:log
 ```
 ---
 
@@ -124,8 +140,11 @@ The project includes several code quality and analysis tools:
 
 ### PHPUnit
 - Testing framework with automatic test suite discovery
-- Run: `make test`
+- Run: `make test-php`
 
+### Newman
+- Testing Postman collection using Newman
+- Run: `make test-postman`
 ---
 
 ## Postman Collection
@@ -140,6 +159,10 @@ The collection includes examples for authorization, API endpoints, and automated
 3. Set up environment variables like `base_url` and `auth_token` if needed.
 4. Use the ready-to-go requests to interact with the API.
 
+### Automated Testing with Newman
+- Newman is integrated for automated Postman collection testing
+- Run tests using: `make test-postman`
+
 ## Request-ID Tracking
 
 The application implements request tracking using Request-IDs with the following features:
@@ -148,30 +171,6 @@ The application implements request tracking using Request-IDs with the following
   - Inspects incoming requests for the `Request-Id` header
   - If no request ID is found, automatically generates a version 4 UUID
   - Ensures every request has a unique identifier for tracking
-
-## Project Structure
-
-### Modular Architecture
-The project follows a domain-driven modular architecture:
-- Each domain is a separate module in `src/`
-- Modules are independent and loosely coupled
-- Each module contains its own:
-  - Business logic
-  - Configuration
-  - Dependencies
-  - Tests
-
-### Independent Configuration
-- Configuration is modular and domain-specific
-- Each module can have its own configuration
-- Shared configuration is minimal and clearly separated
-- Environment-specific settings use `.env` files
-
-### Adding New Domain Models
-
-When adding a new Domain Model to the `/src` directory, you need to register it in the domains configuration:
-
-1. Add your domain configuration to `code/config/packages/domains.yaml`
 
 ## SSL/HTTPS Support
 

@@ -192,6 +192,19 @@ services:
             retries: 3
             start_period: 10s
 
+    newman:
+        image: postman/newman:${NEWMAN_VERSION}
+        container_name: es-newman
+        profiles: ["newman"]
+        volumes:
+            - ./postman:/etc/newman
+        command: ["run", "/etc/newman/postman_collection.json", "-e", "/etc/newman/postman_environment_test.json", "--insecure"]
+        networks:
+            - es-network
+        depends_on:
+            - php
+            - nginx
+
 networks:
     es-network:
         external: true
