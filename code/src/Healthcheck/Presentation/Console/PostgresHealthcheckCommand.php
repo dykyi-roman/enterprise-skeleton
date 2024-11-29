@@ -36,12 +36,14 @@ final class PostgresHealthcheckCommand extends Command
             $stmt = $pdo->query('SELECT 1');
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-            if ($result && $result['?column?'] === 1) {
+            if ($result && 1 === $result['?column?']) {
                 $output->writeln('<info>PostgreSQL connection test successful!</info>');
+
                 return Command::SUCCESS;
             }
 
             $output->writeln('<error>PostgreSQL connection test failed: Unexpected result</error>');
+
             return Command::FAILURE;
         } catch (\PDOException $exception) {
             $output->writeln(sprintf('<error>PostgreSQL connection test failed: %s</error>', $exception->getMessage()));

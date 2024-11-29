@@ -18,11 +18,11 @@ final class CassandraHealthcheckCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $host = getenv('CASSANDRA_HOST') ?: 'es-cassandra';
-        $port = (int)(getenv('CASSANDRA_PORT') ?: 9042);
+        $port = (int) (getenv('CASSANDRA_PORT') ?: 9042);
 
         try {
             $socket = @fsockopen($host, $port, $errno, $errstr, 5);
-            if ($socket === false) {
+            if (false === $socket) {
                 $output->writeln(sprintf('<error>Cassandra is not accessible: %s</error>', $errstr));
 
                 return Command::FAILURE;

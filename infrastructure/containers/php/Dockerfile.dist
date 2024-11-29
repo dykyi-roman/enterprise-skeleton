@@ -103,16 +103,16 @@ RUN apt-get update && apt-get install -y \
 #    && docker-php-ext-enable mongodb
 
 # <<<cassandra<<<
-RUN apt-get update && apt-get install -y \
-    cmake \
-    g++ \
-    libgmp-dev \
-    libpcre3-dev \
-    libuv1-dev \
-    libssl-dev \
-    && rm -rf /var/lib/apt/lists/* \
-    && pecl install cassandra \
-    && docker-php-ext-enable cassandra
+#RUN apt-get update && apt-get install -y \
+#    cmake \
+#    g++ \
+#    libgmp-dev \
+#    libpcre3-dev \
+#    libuv1-dev \
+#    libssl-dev \
+#    && rm -rf /var/lib/apt/lists/* \
+#    && pecl install cassandra \
+#    && docker-php-ext-enable cassandra
 
 # <<<redis<<<
 #RUN pecl install redis \

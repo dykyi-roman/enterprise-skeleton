@@ -36,8 +36,9 @@ final class MysqlHealthcheckCommand extends Command
             $stmt = $pdo->query('SELECT 1');
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-            if ($result && $result['1'] === 1) {
+            if ($result && 1 === $result['1']) {
                 $output->writeln('<info>MySQL connection test successful!</info>');
+
                 return Command::SUCCESS;
             }
 
