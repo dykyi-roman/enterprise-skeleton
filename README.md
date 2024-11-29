@@ -90,22 +90,23 @@ The project follows a domain-driven modular architecture:
 
 The project includes a set of health check commands to monitor various services:
 
-| Command                         | Description                                               |
-|---------------------------------|-----------------------------------------------------------|
-| `app:healthcheck:mysql`         | Tests MySQL database connection and basic operations      |
-| `app:healthcheck:postgres`      | Tests PostgreSQL database connection and basic operations |
-| `app:healthcheck:mongodb`       | Tests MongoDB connection availability                     |
-| `app:healthcheck:cassandra`     | Tests Cassandra connection availability                   |
-| `app:healthcheck:redis`         | Tests Redis cache server connection                       |
-| `app:healthcheck:memcache`      | Tests Memcache server connection                          |
-| `app:healthcheck:amqp`          | Tests RabbitMQ message broker connection                  |
-| `app:healthcheck:kafka`         | Tests Apache Kafka message broker connection              |
-| `app:healthcheck:elasticsearch` | Tests Elasticsearch search engine connection              |
-| `app:healthcheck:solr`          | Tests Apache Solr search engine connection                |
-| `app:healthcheck:mail`          | Tests mail server connection and configuration            |
-| `app:healthcheck:zabbix`        | Tests Zabbix monitoring integration                       |
-| `app:healthcheck:graphana`      | Tests Grafana monitoring integration                      |
-| `app:healthcheck:log`           | Tests logging system configuration                        |
+| Command                         | Description                                                |
+|---------------------------------|------------------------------------------------------------|
+| `app:healthcheck:mysql`         | Tests MySQL database connection and basic operations       |
+| `app:healthcheck:postgres`      | Tests PostgreSQL database connection and basic operations  |
+| `app:healthcheck:mongodb`       | Tests MongoDB connection availability                      |
+| `app:healthcheck:cassandra`     | Tests Cassandra connection availability                    |
+| `app:healthcheck:redis`         | Tests Redis cache server connection                        |
+| `app:healthcheck:memcache`      | Tests Memcache server connection                           |
+| `app:healthcheck:amqp`          | Tests RabbitMQ message broker connection                   |
+| `app:healthcheck:kafka`         | Tests Apache Kafka message broker connection               |
+| `app:healthcheck:elasticsearch` | Tests Elasticsearch search engine connection               |
+| `app:healthcheck:solr`          | Tests Apache Solr search engine connection                 |
+| `app:healthcheck:mail`          | Tests mail server connection and configuration             |
+| `app:healthcheck:zabbix`        | Tests Zabbix monitoring integration                        |
+| `app:healthcheck:graphana`      | Tests Grafana monitoring integration                       |
+| `app:healthcheck:logstash`      | Tests Logstash logging integration                         |
+| `app:healthcheck:log`           | Tests logging system configuration                         |
 
 All commands return:
 - Success (0): When the service is available and functioning correctly
@@ -149,7 +150,7 @@ The project includes several code quality and analysis tools:
 - Run: `make test-postman`
 ---
 
-## ELK
+## Elasticsearch, Kibana & Logstash (ELK)
 
 1. Create index
 ```bash
