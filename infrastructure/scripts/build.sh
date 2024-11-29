@@ -35,15 +35,13 @@ if [ "$first_line" != "$input_param" ]; then
     
     # Process each parameter
     for param in "${PARAMS[@]}"; do
-        # Find start marker
-        start_pattern="# <<<${param}<<<"
-
-        if grep -q "$start_pattern" "$DOCKERFILE"; then
+        # Find line containing the parameter in a marker
+        marker_line=$(grep -n "^# <<<.*${param}.*<<<$" "$DOCKERFILE" | cut -d: -f1)
+        
+        if [ -n "$marker_line" ]; then
             echo "Found section for $param"
-
-            # Get the line number of the start marker
-            start_line=$(grep -n "$start_pattern" "$DOCKERFILE" | cut -d: -f1)
-
+            start_line=$marker_line
+            
             # Get the line number of the next marker or end of file
             next_marker=$(tail -n +$((start_line + 1)) "$DOCKERFILE" | grep -n "# <<<" | head -1 | cut -d: -f1)
             if [ -n "$next_marker" ]; then
@@ -51,21 +49,21 @@ if [ "$first_line" != "$input_param" ]; then
             else
                 end_line=$(wc -l < "$DOCKERFILE")
             fi
-
+            
             # Extract the content between markers
             content=$(sed -n "$((start_line + 1)),$((end_line - 1))p" "$DOCKERFILE")
-
+            
             # Remove the '#' from the beginning of each line
             content_without_comments=$(echo "$content" | sed 's/^#//')
-
+            
             # Create temporary file
             temp_file=$(mktemp)
-
+            
             # Write the updated content
             sed -n "1,${start_line}p" "$DOCKERFILE" > "$temp_file"
             echo "$content_without_comments" >> "$temp_file"
             sed -n "$end_line,\$p" "$DOCKERFILE" >> "$temp_file"
-
+            
             # Replace original file
             mv "$temp_file" "$DOCKERFILE"
         fi
