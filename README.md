@@ -1,5 +1,7 @@
 # Enterprise Skeleton Project
 
+![img.png](img.png)
+
 A modern enterprise-grade application skeleton with Docker support and HTTPS configuration.
 
 ---
