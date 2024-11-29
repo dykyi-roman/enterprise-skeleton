@@ -6,17 +6,24 @@ when@dev:
     monolog:
         handlers:
             main:
-                type: fingers_crossed
-                action_level: error
-                handler: grouped
-                excluded_http_codes: [404, 405]
-            grouped:
-                type: group
-                members: [streamed]
-            streamed:
                 type: stream
                 path: "php://stdout"
                 level: debug
+                channels: ["!event"]
+                formatter: monolog.formatter.json
+                handler: rotating_file
+            rotating_file:
+                type: rotating_file
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: debug
+                max_files: 10
+                filename_format: "{filename}-{date}"
+                date_format: "Y-m-d"
+                formatter: monolog.formatter.json
+            errors:
+                type: stream
+                path: "php://stderr"
+                level: error
                 formatter: monolog.formatter.json
             console:
                 type: console
