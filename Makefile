@@ -32,7 +32,14 @@ install: copy-config ## Install project dependencies and set up Docker environme
 	docker exec -it $(php) bash -c "composer install"
 
 up: ## Start Docker containers
-	export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose -f $(compose-file) -f $(compose-tools-file) up -d
+	@if cd $(workdir) && ./scripts/build.sh $(config); then \
+    		export COMPOSE_PROFILES="$(config)" && \
+			docker compose -f $(compose-file) -f $(compose-tools-file) build php && \
+			docker compose -f $(compose-file) -f $(compose-tools-file) up -d; \
+    	else \
+    		export COMPOSE_PROFILES="$(config)" && \
+            docker compose -f $(compose-file) -f $(compose-tools-file) up -d; \
+    fi
 
 down: ## Stop Docker containers
 	cd $(workdir) && COMPOSE_PROFILES="$(config)" docker compose -f $(compose-file) -f $(compose-tools-file) down --remove-orphans

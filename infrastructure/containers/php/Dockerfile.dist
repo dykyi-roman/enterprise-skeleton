@@ -1,3 +1,5 @@
+# nginx
+
 # Arguments defined in docker-compose.yml
 ARG PHP_VERSION
 FROM php:${PHP_VERSION}-fpm
@@ -26,22 +28,6 @@ RUN apt-get update && apt-get install -y \
     # Cleanup
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
-
-# Install mail support and configure msmtp
-#RUN apt-get update && apt-get install -y \
-#    msmtp \
-#    msmtp-mta \
-#    && rm -rf /var/lib/apt/lists/* \
-#    && apt-get clean
-#
-#COPY msmtprc /etc/msmtprc
-#RUN chmod 0644 /etc/msmtprc && \
-#    chown root:root /etc/msmtprc && \
-#    ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
-#    ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
-#    touch /var/log/msmtp.log && \
-#    chown www-data:www-data /var/log/msmtp.log && \
-#    chmod 666 /var/log/msmtp.log
 
 # Install core PHP extensions
 RUN apt-get update && apt-get install -y \
@@ -81,50 +67,74 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd \
     && docker-php-ext-install -j$(nproc) gd
 
-# MySQL Extension
+# <<<mailhog,papercut<<<
+#RUN apt-get update && apt-get install -y \
+#    msmtp \
+#    msmtp-mta \
+#    && rm -rf /var/lib/apt/lists/* \
+#    && apt-get clean
+#
+#COPY msmtprc /etc/msmtprc
+#RUN chmod 0644 /etc/msmtprc && \
+#    chown root:root /etc/msmtprc && \
+#    ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
+#    ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
+#    touch /var/log/msmtp.log && \
+#    chown www-data:www-data /var/log/msmtp.log && \
+#    chmod 666 /var/log/msmtp.log
+# >>>mailhog,papercut>>>
+
+# <<<mysql<<<
 #RUN apt-get update && apt-get install -y \
 #    && docker-php-ext-install -j$(nproc) \
 #        pdo_mysql
+# >>>mysql>>>
 
-# PostgreSQL Extension
+# <<<postgres<<<
 #RUN apt-get update && apt-get install -y \
 #    libpq-dev \
 #    && rm -rf /var/lib/apt/lists/* \
 #    && docker-php-ext-install -j$(nproc) \
 #        pgsql \
 #        pdo_pgsql
+# >>>postgres>>>
 
-# MongoDB Extension
+# <<<mongodb<<<
 #RUN apt-get update && apt-get install -y libssl-dev \
 #    && rm -rf /var/lib/apt/lists/* \
 #    && pecl install mongodb-1.17.0 \
 #    && docker-php-ext-enable mongodb
+# >>>mongodb>>>
 
-# Redis Extension
+# <<<redis<<<
 #RUN pecl install redis \
 #    && docker-php-ext-enable redis
+# >>>redis>>>
 
-# RdKafka Extension
+# <<<kafka<<<
 #RUN apt-get update && apt-get install -y \
 #    librdkafka-dev \
 #    && rm -rf /var/lib/apt/lists/* \
 #    && pecl install rdkafka \
 #    && docker-php-ext-enable rdkafka
+# >>>kafka>>>
 
-# Memcached Extension
+# <<<memcached<<<
 #RUN apt-get update && apt-get install -y \
 #    libmemcached-dev \
 #    zlib1g-dev \
 #    && rm -rf /var/lib/apt/lists/* \
 #    && pecl install memcached \
 #    && docker-php-ext-enable memcached
+# >>>memcached>>>
 
-# RabbitMQ Extension
+# <<<rabbitmq<<<
 #RUN apt-get update && apt-get install -y \
 #    librabbitmq-dev \
 #    && rm -rf /var/lib/apt/lists/* \
 #    && pecl install amqp \
 #    && docker-php-ext-enable amqp
+# >>>rabbitmq>>>
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
@@ -141,7 +151,3 @@ RUN chown -R es:es /var/www/html
 
 # Switch to non-root user
 USER es
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
-    CMD php-fpm -t || exit 1
