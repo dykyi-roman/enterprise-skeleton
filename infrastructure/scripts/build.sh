@@ -6,9 +6,15 @@ if [ -z "$1" ]; then
 fi
 
 DOCKERFILE="containers/php/Dockerfile"
+DOCKERFILE_DIST="containers/php/Dockerfile.dist"
+
+if [ ! -f "$DOCKERFILE_DIST" ]; then
+    echo "Error: $DOCKERFILE_DIST not found"
+    exit 1
+fi
 
 if [ ! -f "$DOCKERFILE" ]; then
-    cp containers/php/Dockerfile.dist "$DOCKERFILE"
+    cp "$DOCKERFILE_DIST" "$DOCKERFILE"
 fi
 
 # Get first line from Dockerfile and remove '#', spaces and newlines
@@ -17,7 +23,7 @@ input_param=$(echo "$1" | tr -d '[:space:]')
 
 if [ "$first_line" != "$input_param" ]; then
     # Update first line in Dockerfile
-    cp containers/php/Dockerfile.dist "$DOCKERFILE"
+    cp "$DOCKERFILE_DIST" "$DOCKERFILE"
 
     # Detect OS and adjust sed command
     if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -37,7 +43,7 @@ if [ "$first_line" != "$input_param" ]; then
     for param in "${PARAMS[@]}"; do
         # Find line containing the parameter in a marker
         marker_line=$(grep -n "^# <<<.*${param}.*<<<$" "$DOCKERFILE" | cut -d: -f1)
-        
+
         if [ -n "$marker_line" ]; then
             echo "Found section for $param"
             start_line=$marker_line
