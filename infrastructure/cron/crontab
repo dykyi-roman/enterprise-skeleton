@@ -1,4 +1,2 @@
 # Run PHP scripts
-* * * * * echo "[$(date)] Starting cron job" >> /var/log/cron.log 2>&1
-
 #* * * * * /usr/local/bin/php /var/www/html/bin/console {COMMAND} >> /var/log/cron.log 2>&1

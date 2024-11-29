@@ -82,13 +82,11 @@ RUN apt-get update && apt-get install -y \
 #    touch /var/log/msmtp.log && \
 #    chown www-data:www-data /var/log/msmtp.log && \
 #    chmod 666 /var/log/msmtp.log
-# >>>mailhog,papercut>>>
 
 # <<<mysql<<<
 #RUN apt-get update && apt-get install -y \
 #    && docker-php-ext-install -j$(nproc) \
 #        pdo_mysql
-# >>>mysql>>>
 
 # <<<postgres<<<
 #RUN apt-get update && apt-get install -y \
@@ -97,19 +95,16 @@ RUN apt-get update && apt-get install -y \
 #    && docker-php-ext-install -j$(nproc) \
 #        pgsql \
 #        pdo_pgsql
-# >>>postgres>>>
 
 # <<<mongodb<<<
 #RUN apt-get update && apt-get install -y libssl-dev \
 #    && rm -rf /var/lib/apt/lists/* \
 #    && pecl install mongodb-1.17.0 \
 #    && docker-php-ext-enable mongodb
-# >>>mongodb>>>
 
 # <<<redis<<<
 #RUN pecl install redis \
 #    && docker-php-ext-enable redis
-# >>>redis>>>
 
 # <<<kafka<<<
 #RUN apt-get update && apt-get install -y \
@@ -117,7 +112,6 @@ RUN apt-get update && apt-get install -y \
 #    && rm -rf /var/lib/apt/lists/* \
 #    && pecl install rdkafka \
 #    && docker-php-ext-enable rdkafka
-# >>>kafka>>>
 
 # <<<memcached<<<
 #RUN apt-get update && apt-get install -y \
@@ -126,7 +120,6 @@ RUN apt-get update && apt-get install -y \
 #    && rm -rf /var/lib/apt/lists/* \
 #    && pecl install memcached \
 #    && docker-php-ext-enable memcached
-# >>>memcached>>>
 
 # <<<rabbitmq<<<
 #RUN apt-get update && apt-get install -y \
@@ -134,7 +127,6 @@ RUN apt-get update && apt-get install -y \
 #    && rm -rf /var/lib/apt/lists/* \
 #    && pecl install amqp \
 #    && docker-php-ext-enable amqp
-# >>>rabbitmq>>>
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
