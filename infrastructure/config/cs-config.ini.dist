@@ -3,11 +3,12 @@
 #------------------------------------------------------------------------------
 
 server=nginx            # Web Server: nginx, apache
-;database=postgres      # Database Service: postgres, mysql, mongodb
+;database=postgres      # Database Service: postgres, mysql
+;nosql=mongodb          # NoSQL Database Service: mongodb, cassandra
 ;cache=redis            # Cache Service: redis, memcached
 ;search=elasticsearch   # Search: elasticsearch, solr
 ;message=kafka          # Message Broker: rabbitmq, kafka
 ;docs=swagger           # API Documentation: swagger
 ;mailer=mailhog         # Mail Sandbox: mailhog, papercut
-;monitoring=grafana     # Monitoring: zabbix, grafana
+;monitoring=grafana     # Monitoring: grafana, zabbix
 ;job=cron               # Scheduling jobs: cron

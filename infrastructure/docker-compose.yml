@@ -132,6 +132,28 @@ services:
             timeout: 5s
             retries: 5
 
+    cassandra:
+        image: cassandra:${CASSANDRA_VERSION}
+        container_name: es-cassandra
+        profiles: [ "cassandra" ]
+        restart: unless-stopped
+        ports:
+            - ${CASSANDRA_PORT}:9042
+        volumes:
+            - ./data/cassandra:/var/lib/cassandra
+        environment:
+            - CASSANDRA_CLUSTER_NAME=AppCluster
+            - CASSANDRA_ENDPOINT_SNITCH=SimpleSnitch
+            - CASSANDRA_DC=datacenter1
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 40s
+
     redis:
         image: redis:${REDIS_VERSION}
         container_name: es-redis

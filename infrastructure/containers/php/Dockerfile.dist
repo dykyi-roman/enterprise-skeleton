@@ -102,6 +102,18 @@ RUN apt-get update && apt-get install -y \
 #    && pecl install mongodb-1.17.0 \
 #    && docker-php-ext-enable mongodb
 
+# <<<cassandra<<<
+RUN apt-get update && apt-get install -y \
+    cmake \
+    g++ \
+    libgmp-dev \
+    libpcre3-dev \
+    libuv1-dev \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && pecl install cassandra \
+    && docker-php-ext-enable cassandra
+
 # <<<redis<<<
 #RUN pecl install redis \
 #    && docker-php-ext-enable redis

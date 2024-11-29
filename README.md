@@ -30,7 +30,10 @@ make install
 ### Databases
 - PostgreSQL
 - MySQL
+
+### NoSQL Database
 - MongoDB
+- Cassandra
 
 ### Cache
 - Redis
@@ -71,6 +74,7 @@ The project includes a set of health check commands to monitor various services:
 | `app:healthcheck:mysql`         | Tests MySQL database connection and basic operations      |
 | `app:healthcheck:postgres`      | Tests PostgreSQL database connection and basic operations |
 | `app:healthcheck:mongodb`       | Tests MongoDB connection availability                     |
+| `app:healthcheck:cassandra`     | Tests Cassandra connection availability                   |
 | `app:healthcheck:redis`         | Tests Redis cache server connection                       |
 | `app:healthcheck:memcache`      | Tests Memcache server connection                          |
 | `app:healthcheck:amqp`          | Tests RabbitMQ message broker connection                  |
