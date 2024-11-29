@@ -23,44 +23,19 @@ make install
 
 # Infrastructure
 
-### Web Servers
-- Nginx
-- Apache
-
-### Databases
-- PostgreSQL
-- MySQL
-
-### NoSQL Database
-- MongoDB
-- Cassandra
-
-### Cache
-- Redis
-- Memcached
-
-### Message Brokers
-- RabbitMQ
-- Kafka
-
-### Search
-- elasticsearch
-- solr
-
-### Monitoring
-- zabbix
-- grafana
-
-### Mail Sandbox
-- mailhog
-- papercut
-
-### API Documentation
-- swagger
-
-### Scheduling jobs
-- cron
-
+| Category          | Services                  |
+|-------------------|---------------------------|
+| Web Servers       | • Nginx<br>• Apache       |
+| Databases         | • PostgreSQL<br>• MySQL   |
+| NoSQL Database    | • MongoDB<br>• Cassandra  |
+| Cache             | • Redis<br>• Memcached    |
+| Message Brokers   | • RabbitMQ<br>• Kafka     |
+| Search            | • Elasticsearch<br>• Solr |
+| Monitoring        | • Zabbix<br>• Grafana     |
+| Mail Sandbox      | • Mailhog<br>• Papercut   |
+| API Documentation | • Swagger                 |
+| Scheduling Jobs   | • Cron                    |
+| Log collection    | • ELK                     |
 ---
 
 # Project Structure
