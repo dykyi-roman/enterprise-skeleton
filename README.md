@@ -149,6 +149,17 @@ The project includes several code quality and analysis tools:
 - Run: `make test-postman`
 ---
 
+## ELK
+
+1. Create index
+```bash
+  curl -X PUT http://localhost:9200/logs -H Content-Type: application/json -d {"settings":{"number_of_shards":1,"number_of_replicas":0},"mappings":{"properties":{"@timestamp":{"type":"date"},"message":{"type":"text"},"level":{"type":"keyword"},"channel":{"type":"keyword"},"context":{"type":"object"}}}}
+```
+2. Reload logstash
+```bash
+docker compose -f infrastructure/docker-compose-tools.yml --profile elk restart logstash
+```
+
 ## Postman Collection
 
 The project includes a Postman collection located at: `infrastructure/postman`
