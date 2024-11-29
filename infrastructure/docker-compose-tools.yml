@@ -205,9 +205,9 @@ services:
             - php
             - nginx
 
-    elasticsearch:
+    elasticsearch-elk:
         image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION:-8.11.1}
-        container_name: es-elasticsearch
+        container_name: es-elasticsearch-elk
         profiles: ["elk"]
         environment:
             - discovery.type=single-node
@@ -232,12 +232,12 @@ services:
         container_name: es-kibana
         profiles: ["elk"]
         environment:
-            - ELASTICSEARCH_HOSTS=http://es-elasticsearch:9200
+            - ELASTICSEARCH_HOSTS=http://elasticsearch-elk:9200
             - XPACK_SECURITY_ENABLED=false
         ports:
             - "${KIBANA_PORT:-5601}:5601"
         depends_on:
-            - elasticsearch
+            - elasticsearch-elk
         networks:
             - es-network
         healthcheck:
@@ -259,7 +259,7 @@ services:
         environment:
             - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
         depends_on:
-            - elasticsearch
+            - elasticsearch-elk
         networks:
             - es-network
         healthcheck:

@@ -14,7 +14,7 @@ when@dev:
                 type: group
                 members: [streamed, logstash]
             streamed:
-                type: info
+                type: stream
                 path: "php://stdout"
                 level: debug
                 formatter: monolog.formatter.json

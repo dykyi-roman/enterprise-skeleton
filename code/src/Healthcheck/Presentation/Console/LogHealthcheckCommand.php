@@ -28,16 +28,6 @@ final class LogHealthcheckCommand extends Command
         $this->logger->info('This is info log message');
         $this->logger->error('This is error message');
 
-        try {
-            throw new \Exception('Test exception');
-        } catch (\Throwable $exception) {
-            $output->writeln('Error: '.$exception->getMessage());
-
-            $this->logger->critical('Critical error occurred', [
-                'exception' => $exception->getMessage(),
-                'trace' => $exception->getTraceAsString(),
-            ]);
-        }
 
         $output->writeln('SUCCESS');
 
