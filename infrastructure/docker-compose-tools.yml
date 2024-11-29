@@ -205,10 +205,10 @@ services:
             - php
             - nginx
 
-    elasticsearch-elk:
+    elasticsearch-logs:
         image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION:-8.11.1}
-        container_name: es-elasticsearch-elk
-        profiles: ["elk"]
+        container_name: es-elasticsearch-logs
+        profiles: ["kibana", "graylog"]
         environment:
             - discovery.type=single-node
             - ES_JAVA_OPTS=-Xms512m -Xmx512m
@@ -230,14 +230,14 @@ services:
     kibana:
         image: docker.elastic.co/kibana/kibana:${ELK_VERSION:-8.11.1}
         container_name: es-kibana
-        profiles: ["elk"]
+        profiles: ["kibana"]
         environment:
-            - ELASTICSEARCH_HOSTS=http://elasticsearch-elk:9200
+            - ELASTICSEARCH_HOSTS=http://elasticsearch-logs:9200
             - XPACK_SECURITY_ENABLED=false
         ports:
             - "${KIBANA_PORT:-5601}:5601"
         depends_on:
-            - elasticsearch-elk
+            - elasticsearch-logs
         networks:
             - es-network
         healthcheck:
@@ -249,7 +249,7 @@ services:
     logstash:
         image: docker.elastic.co/logstash/logstash:${ELK_VERSION:-8.11.1}
         container_name: es-logstash
-        profiles: ["elk"]
+        profiles: ["kibana"]
         volumes:
             - ./containers/logstash/pipeline:/usr/share/logstash/pipeline
             - ./containers/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
@@ -259,13 +259,35 @@ services:
         environment:
             - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
         depends_on:
-            - elasticsearch-elk
+            - elasticsearch-logs
         networks:
             - es-network
         healthcheck:
             test: ["CMD-SHELL", "curl -s http://localhost:9600 | grep -q '\"status\":\"green\"'"]
             interval: 20s
             timeout: 10s
+            retries: 5
+
+    graylog:
+        image: graylog/graylog:${GRAYLOG_VERSION}
+        container_name: es-graylog
+        profiles: ["graylog"]
+        environment:
+            - GRAYLOG_PASSWORD_SECRET=${GRAYLOG_PASSWORD_SECRET}
+            - GRAYLOG_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}
+            - GRAYLOG_HTTP_EXTERNAL_URI=http://localhost:${GRAYLOG_WEB_PORT}/
+            - GRAYLOG_ELASTICSEARCH_HOSTS=http://elasticsearch-logs:${ELASTICSEARCH_PORT}
+        ports:
+            - "${GRAYLOG_PORT}:9000"
+            - "${GRAYLOG_WEB_PORT}:9001"
+        depends_on:
+            - elasticsearch-logs
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:9000/api/system/lbstatus"]
+            interval: 10s
+            timeout: 5s
             retries: 5
 
 networks:

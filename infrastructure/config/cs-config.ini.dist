@@ -11,5 +11,5 @@ server=nginx            # Web Server: nginx, apache
 ;docs=swagger           # API Documentation: swagger
 ;mailer=mailhog         # Mail Sandbox: mailhog, papercut
 ;monitoring=grafana     # Monitoring: grafana, zabbix
-;logs=elk               # Log collection: elk
-;job=cron               # Scheduling jobs: cron
+;logs=kibana            # Log Management: kibana, graylog
+;job=cron               # Scheduling Jobs: cron
