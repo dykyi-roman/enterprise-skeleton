@@ -2,7 +2,7 @@
 
 ![img.png](img.png)
 
-A modern enterprise-grade application skeleton with Docker support and HTTPS configuration.
+This repository serves as a foundational skeleton for starting any new project. It is designed to streamline development by integrating support for all essential and popular services that developers commonly need.
 
 ---
 
