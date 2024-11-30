@@ -219,7 +219,6 @@ services:
             - elasticsearch-data:/usr/share/elasticsearch/data
         ports:
             - "${KIBANA_ELASTICSEARCH_INTERNAL_PORT:-9200}:9200"
-            - "${KIBANA_ELASTICSEARCH_INTERNAL_PORT:-9300}:9300"
         networks:
             - es-network
         healthcheck:
@@ -317,6 +316,8 @@ services:
             - GRAYLOG_INPUT_GELF_UDP_ENABLED=true
             - GRAYLOG_INPUT_GELF_UDP_PORT=12201
             - GRAYLOG_INPUT_GELF_UDP_BIND_ADDRESS=0.0.0.0
+            - GRAYLOG_PASSWORD_SECRET=${GRAYLOG_PASSWORD_SECRET}
+            - GRAYLOG_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}
         depends_on:
             - elasticsearch-graylog
             - mongodb-graylog

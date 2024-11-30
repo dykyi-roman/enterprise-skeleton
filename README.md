@@ -23,20 +23,20 @@ make install
 
 # Infrastructure
 
-| Category          | Services                  |
-|-------------------|---------------------------|
-| Language          | • PHP                     |
-| Web Servers       | • Nginx<br>• Apache       |
-| Databases         | • PostgreSQL<br>• MySQL   |
-| NoSQL Database    | • MongoDB<br>• Cassandra  |
-| Cache             | • Redis<br>• Memcached    |
-| Message Brokers   | • RabbitMQ<br>• Kafka     |
-| Search            | • Elasticsearch<br>• Solr |
-| Monitoring        | • Zabbix<br>• Grafana     |
-| Mail Sandbox      | • Mailhog<br>• Papercut   |
-| Log Management    | • Kibana<br>• Graylog     |
-| API Documentation | • Swagger                 |
-| Scheduling Jobs   | • Cron                    |
+| Category          | Services                  | Version                        | Browser URL                                     |
+|-------------------|---------------------------|--------------------------------|-------------------------------------------------|
+| Language          | • PHP                     | v8.3                           | -                                               |
+| Web Servers       | • Nginx<br>• Apache       | • stable-alpine<br>• v2.4      | http://localhost:1000<br>https://localhost:1001 |
+| Databases         | • PostgreSQL<br>• MySQL   | • v15<br>• v8.0                | -                                               |
+| NoSQL Database    | • MongoDB<br>• Cassandra  | • v6.0<br>• v4.1               | -                                               |
+| Cache             | • Redis<br>• Memcached    | • v7.2-alpine<br>• v1.6-alpine | -                                               |
+| Message Brokers   | • RabbitMQ<br>• Kafka     | • latest<br>• latest           | http://localhost:15672<br>http://localhost:8080 |
+| Search            | • Elasticsearch<br>• Solr | • latest<br>• latest           | -                                               |
+| Monitoring        | • Zabbix<br>• Grafana     | • latest<br>• latest           | http://localhost:8081<br>http://localhost:3000  |
+| Mail Sandbox      | • Mailhog<br>• Papercut   | • latest<br>• latest           | http://localhost:8025<br>http://localhost:37408 |
+| Log Management    | • Kibana<br>• Graylog     | • latest<br>• latest           | http://localhost:5601<br>http://localhost:9400  |
+| API Documentation | • Swagger                 | latest                         | http://localhost:8080/api/docs                  |
+| Scheduling Jobs   | • Cron                    | latest                         | -                                               |
 ---
 
 # Project Structure
