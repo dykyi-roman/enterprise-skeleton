@@ -1,0 +1,66 @@
+image: php:8.3
+
+cache:
+  paths:
+    - vendor/
+
+before_script:
+  # Install system dependencies
+  - apt-get update && apt-get install -y git zip unzip
+  # Install Composer
+  - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  # Install project dependencies
+  - composer install --no-interaction --no-progress
+
+stages:
+  - build
+  - quality
+  - test
+  - deploy
+
+build-job:
+  stage: build
+  script:
+    - echo "Compiling the code..."
+    - composer install --no-interaction --no-progress
+    - echo "Compile complete."
+
+php-cs-fixer:
+  stage: quality
+  script:
+    - echo "Running PHP CS Fixer..."
+    - vendor/bin/php-cs-fixer fix --dry-run --diff --verbose
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  allow_failure: false
+
+deptrac:
+  stage: quality
+  script:
+    - echo "Running Deptrac..."
+    - vendor/bin/deptrac analyze --config-file=deptrac.yaml
+
+phpstan:
+  stage: quality
+  script:
+    - echo "Running PHPStan..."
+    - vendor/bin/phpstan analyse src tests --level=8
+
+psalm:
+  stage: quality
+  script:
+    - echo "Running Psalm..."
+    - vendor/bin/psalm --show-info=true
+
+phpunit:
+  stage: test
+  script:
+    - echo "Running PHPUnit tests..."
+    - vendor/bin/phpunit --coverage-text --colors=never
+
+deploy-job:
+  stage: deploy
+  environment: production
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."

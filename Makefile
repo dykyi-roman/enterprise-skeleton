@@ -104,7 +104,7 @@ ci: ## Run all code quality checks
 	$(MAKE) phpstan
 	$(MAKE) psalm
 	$(MAKE) deptrac
-	$(MAKE) test-run
+	$(MAKE) test-php
 
 ## -- Documentation --
 
