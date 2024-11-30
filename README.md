@@ -23,6 +23,8 @@ make install
 
 # Infrastructure
 
+PHP container will be build automatically depend on which services you choose. 
+
 | Category          | Services                  | Version                        | Browser URL                                     |
 |-------------------|---------------------------|--------------------------------|-------------------------------------------------|
 | Language          | • PHP                     | v8.3                           | -                                               |
@@ -119,12 +121,14 @@ The project includes several code quality and analysis tools:
 docker compose -f infrastructure/docker-compose-tools.yml --profile elk restart logstash
 ```
 
-# Graylog Configuration
+---
+
+## Graylog Configuration
 
 1. Run `composer req graylog2/gelf-php`
 
 ## Configure UDP Input
-1. Open http://localhost:9001 in your browser
+1. Open http://localhost:9400 in your browser
 2. Login with your admin credentials
 3. Go to System → Inputs
 4. Select "GELF UDP" from the dropdown
@@ -174,6 +178,40 @@ The project includes HTTPS support with the following features:
 For development, self-signed certificates are used. For production, replace the certificates in `etc/containers/nginx/ssl/` with your own SSL certificates:
 - `nginx-selfsigned.crt`: SSL certificate
 - `nginx-selfsigned.key`: Private key
+
+## Cron
+
+The project includes a built-in cron job scheduler for running automated tasks. Cron jobs are managed through Docker containers, ensuring consistent execution across different environments.
+
+### Configuration
+
+Cron jobs are defined in the `infrastructure/crontab` file. Each line follows the standard cron format:
+
+```
+* * * * * command-to-execute
+```
+
+### Available Commands
+
+The following commands are available for cron management:
+
+```bash
+# View current cron jobs
+docker-compose exec cron crontab -l
+
+# Edit cron jobs
+docker-compose exec cron crontab -e
+
+# View cron logs
+docker-compose logs cron
+```
+
+### Best Practices
+
+- Always redirect output to logs (`>> /var/log/cron.log 2>&1`)
+- Use absolute paths in cron commands
+- Keep the cron schedule in version control
+- Monitor cron job execution through logs
 
 ---
 
