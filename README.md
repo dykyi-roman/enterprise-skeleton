@@ -18,6 +18,26 @@ A comprehensive project skeleton for enterprise applications with integrated sup
 - 📚 API documentation
 - ⏰ Task scheduling
 
+## Frameworks
+
+<div style="display: flex; justify-content: space-around; align-items: center;">
+    <a href="https://symfony.com" target="_blank">
+        <img src="https://symfony.com/logos/symfony_dynamic_01.svg" alt="Symfony Logo" width="400">
+    </a>
+    <a href="https://laravel.com" target="_blank">
+        <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
+    </a>
+</div>
+
+To switch between frameworks, use the following command:
+```bash
+# Example: Switch to Laravel framework
+make framework laravel
+
+# Example: Switch to Symfony framework
+make framework symfony
+```
+
 ---
 
 ## Quick Start
@@ -160,9 +180,10 @@ We welcome contributions to the Enterprise Skeleton project! If you'd like to jo
 
 We are currently looking for contributions in the following areas:
 
-- **Sentry Integration**: We need help implementing Sentry for error tracking and monitoring. If you have experience with Sentry integration in Symfony applications, we'd love your contribution!
-
-- **RoadRunner Integration**: We are looking to integrate RoadRunner as a high-performance PHP application server. If you have experience with RoadRunner implementation, particularly in Symfony applications, your contribution would be valuable!
+- **Sentry Integration**: We need help implementing Sentry for error tracking and monitoring. If you have experience with Sentry integration in PHP applications, we'd love your contribution!
+- **RoadRunner Integration**: We are looking to integrate RoadRunner as a high-performance PHP application server. If you have experience with RoadRunner implementation, your contribution would be valuable!
+- 
+- **New Framework Integrations**: We are actively looking to expand our framework support. If you'd like to integrate a new PHP framework (like Yii, Slim, or others), we welcome your contribution! Each framework should:
 
 ### How to Submit a Pull Request
 
