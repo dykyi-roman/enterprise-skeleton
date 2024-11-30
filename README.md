@@ -29,6 +29,15 @@ A comprehensive project skeleton for enterprise applications with integrated sup
     </a>
 </div>
 
+To switch between frameworks, use the following command:
+```bash
+# Example: Switch to Laravel framework
+make framework laravel
+
+# Example: Switch to Symfony framework
+make framework symfony
+```
+
 ---
 
 ## Quick Start
@@ -39,7 +48,7 @@ make copy-config
 ```
 
 2. Configure environment:
-   - Edit `infrastructure/config/cs-config` to customize services
+    - Edit `infrastructure/config/cs-config` to customize services
 
 3. Install and start:
 ```bash
@@ -72,10 +81,10 @@ PHP container will be build automatically depend on which services you choose.
 - Modular architecture in `src/` directory
 - Independent domain modules
 - Each module contains:
-  - Domain logic
-  - Infrastructure layer
-  - Module-specific config
-  - Test suite
+    - Domain logic
+    - Infrastructure layer
+    - Module-specific config
+    - Test suite
 
 ### Adding New Domains
 1. Create domain in `/src/YourDomain`
@@ -145,9 +154,9 @@ composer req graylog2/gelf-php
 ```
 
 2. Configure UDP Input:
-  - Access http://localhost:9400
-  - Navigate to System → Inputs
-  - Add "GELF UDP" input on port 12201
+- Access http://localhost:9400
+- Navigate to System → Inputs
+- Add "GELF UDP" input on port 12201
 
 ### Elasticsearch, Kibana & Logstash (ELK) Configuration
 
@@ -171,9 +180,10 @@ We welcome contributions to the Enterprise Skeleton project! If you'd like to jo
 
 We are currently looking for contributions in the following areas:
 
-- **Sentry Integration**: We need help implementing Sentry for error tracking and monitoring. If you have experience with Sentry integration in Symfony applications, we'd love your contribution!
-
-- **RoadRunner Integration**: We are looking to integrate RoadRunner as a high-performance PHP application server. If you have experience with RoadRunner implementation, particularly in Symfony applications, your contribution would be valuable!
+- **Sentry Integration**: We need help implementing Sentry for error tracking and monitoring. If you have experience with Sentry integration in PHP applications, we'd love your contribution!
+- **RoadRunner Integration**: We are looking to integrate RoadRunner as a high-performance PHP application server. If you have experience with RoadRunner implementation, your contribution would be valuable!
+-
+- **New Framework Integrations**: We are actively looking to expand our framework support. If you'd like to integrate a new PHP framework (like Yii, Slim, or others), we welcome your contribution! Each framework should:
 
 ### How to Submit a Pull Request
 
