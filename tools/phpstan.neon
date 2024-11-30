@@ -1,6 +1,6 @@
 includes:
-    - ../code/vendor/phpstan/phpstan-symfony/extension.neon
-    - ../code/vendor/phpstan/phpstan-symfony/rules.neon
+    - ../code/vendor/larastan/larastan/extension.neon
+    - ../code/vendor/nesbot/carbon/extension.neon
 
 parameters:
     level: 9

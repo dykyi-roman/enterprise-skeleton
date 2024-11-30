@@ -1,5 +1,5 @@
 #-- Variables --
-env = dev
+env = local
 workdir = ./infrastructure
 compose-file = docker-compose.yml
 compose-tools-file = docker-compose-tools.yml
@@ -62,14 +62,14 @@ enter: ## Enter PHP container shell
 	docker exec -it $(php) sh
 
 console: ## Execute Symfony console commands (usage: make console command="your:command")
-	docker exec -it $(php) bash -c "php bin/console $(filter-out $@,$(MAKECMDGOALS))"
+	docker exec -it $(php) bash -c "php artisan $(filter-out $@,$(MAKECMDGOALS))"
 
 ## -- Logs --
 logs-cron: ## View cron output logs
 	docker exec es-cron tail -f /var/log/cron.log
 
 logs-php: ## View PHP logs
-	tail -f code/var/log/$(env)-$(shell date +%Y-%m-%d).log
+	tail -f code/storage/logs/$(env)-$(shell date +%Y-%m-%d).log
 
 ## -- Code Quality & Testing --
 
@@ -114,11 +114,20 @@ swagger-generate: ## Generate OpenAPI/Swagger documentation
 
 ## -- Database Migrations --
 
-migration-create: ## Create a new migration (usage: make migration-create)
-	docker exec -it $(php) bash -c "php bin/console doctrine:migrations:diff"
+migration-create: ## Create a new migration (usage: make migration-create name="create_users_table")
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php artisan make:migration $(name)"
 
 migration-run: ## Run all pending migrations
-	docker exec -it $(php) bash -c "php bin/console doctrine:migrations:migrate --no-interaction"
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php artisan migrate"
+
+migration-rollback: ## Rollback the last database migration
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php artisan migrate:rollback"
+
+migration-fresh: ## Drop all tables and re-run all migrations
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php artisan migrate:fresh"
+
+migration-status: ## Show the status of each migration
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php artisan migrate:status"
 
 # This is required to handle arguments in make commands
 %:
