@@ -250,7 +250,7 @@ services:
             retries: 3
 
     elasticsearch:
-        image: elasticsearch:${ELASTICSEARCH_VERSION}
+        image: elasticsearch:${ELASTICSEARCH_APP_VERSION}
         container_name: es-elasticsearch
         profiles: ["elasticsearch"]
         environment:

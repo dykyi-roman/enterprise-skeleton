@@ -197,7 +197,7 @@ services:
         container_name: es-newman
         profiles: ["newman"]
         volumes:
-            - ./postman:/etc/newman
+            - ../tools/postman:/etc/newman
         command: ["run", "/etc/newman/postman_collection.json", "-e", "/etc/newman/postman_environment_test.json", "--insecure"]
         networks:
             - es-network
@@ -205,10 +205,10 @@ services:
             - php
             - nginx
 
-    elasticsearch-logs:
+    elasticsearch-elk:
         image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION:-8.11.1}
-        container_name: es-elasticsearch-logs
-        profiles: ["kibana", "graylog"]
+        container_name: es-elasticsearch-elk
+        profiles: ["kibana"]
         environment:
             - discovery.type=single-node
             - ES_JAVA_OPTS=-Xms512m -Xmx512m
@@ -218,7 +218,8 @@ services:
         volumes:
             - elasticsearch-data:/usr/share/elasticsearch/data
         ports:
-            - "${ELASTICSEARCH_PORT:-9200}:9200"
+            - "${KIBANA_ELASTICSEARCH_INTERNAL_PORT:-9200}:9200"
+            - "${KIBANA_ELASTICSEARCH_INTERNAL_PORT:-9300}:9300"
         networks:
             - es-network
         healthcheck:
@@ -232,12 +233,12 @@ services:
         container_name: es-kibana
         profiles: ["kibana"]
         environment:
-            - ELASTICSEARCH_HOSTS=http://elasticsearch-logs:9200
+            - ELASTICSEARCH_HOSTS=http://elasticsearch-elk:9200
             - XPACK_SECURITY_ENABLED=false
         ports:
             - "${KIBANA_PORT:-5601}:5601"
         depends_on:
-            - elasticsearch-logs
+            - elasticsearch-elk
         networks:
             - es-network
         healthcheck:
@@ -259,13 +260,47 @@ services:
         environment:
             - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
         depends_on:
-            - elasticsearch-logs
+            - elasticsearch-elk
         networks:
             - es-network
         healthcheck:
             test: ["CMD-SHELL", "curl -s http://localhost:9600 | grep -q '\"status\":\"green\"'"]
             interval: 20s
             timeout: 10s
+            retries: 5
+
+    mongodb-graylog:
+        image: mongo:5
+        container_name: es-mongodb-graylog
+        profiles: ["graylog"]
+        volumes:
+            - mongodb_data:/data/db
+        networks:
+            - es-network
+        healthcheck:
+            test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    elasticsearch-graylog:
+        image: docker.elastic.co/elasticsearch/elasticsearch:${GRAYLOG_ELASTICSEARCH_VERSION}
+        container_name: es-elasticsearch-graylog
+        profiles: ["graylog"]
+        environment:
+            - discovery.type=single-node
+            - ES_JAVA_OPTS=-Xms512m -Xmx512m
+        volumes:
+            - elasticsearch-graylog-data:/usr/share/elasticsearch/data
+        ports:
+            - "${GRAYLOG_ELASTICSEARCH_PORT}:9200"
+            - "${GRAYLOG_ELASTICSEARCH_INTERNAL_PORT}:9300"
+        networks:
+            - es-network
+        healthcheck:
+            test: ["CMD-SHELL", "curl -f http://localhost:9200/_cat/health || exit 1"]
+            interval: 10s
+            timeout: 5s
             retries: 5
 
     graylog:
@@ -276,12 +311,14 @@ services:
             - GRAYLOG_PASSWORD_SECRET=${GRAYLOG_PASSWORD_SECRET}
             - GRAYLOG_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}
             - GRAYLOG_HTTP_EXTERNAL_URI=http://localhost:${GRAYLOG_WEB_PORT}/
-            - GRAYLOG_ELASTICSEARCH_HOSTS=http://elasticsearch-logs:${ELASTICSEARCH_PORT}
+            - GRAYLOG_ELASTICSEARCH_HOSTS=http://elasticsearch-graylog:9200
+            - GRAYLOG_MONGODB_URI=mongodb://mongodb-graylog:27017/graylog
         ports:
             - "${GRAYLOG_PORT}:9000"
             - "${GRAYLOG_WEB_PORT}:9001"
         depends_on:
-            - elasticsearch-logs
+            - elasticsearch-graylog
+            - mongodb-graylog
         networks:
             - es-network
         healthcheck:
@@ -303,4 +340,8 @@ volumes:
     prometheus-data:
         driver: local
     elasticsearch-data:
+        driver: local
+    elasticsearch-graylog-data:
+        driver: local
+    mongodb_data:
         driver: local

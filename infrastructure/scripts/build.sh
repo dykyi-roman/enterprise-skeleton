@@ -34,7 +34,7 @@ if [ "$first_line" != "$input_param" ]; then
         sed -i "1s/.*$/# $input_param/" "$DOCKERFILE"
     fi
 
-    echo "PHP changed"
+    echo "Configuration changed"
 
     # Process input parameters
     IFS=',' read -ra PARAMS <<< "$input_param"
@@ -77,6 +77,6 @@ if [ "$first_line" != "$input_param" ]; then
 
     exit 0
 else
-    echo "PHP unchanged"
+    echo "Configuration unchanged"
     exit 1
 fi

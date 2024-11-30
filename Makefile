@@ -90,8 +90,8 @@ test-postman: ## Run Postman collection tests using Newman
 	@echo "Postman Test done!"
 
 deptrac: ## Check dependencies between domains (no cache)
-	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/deptrac analyse --config-file=../tools/deptrac-domain.yaml --no-cache | grep -v 'Uncovered'"
-	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/deptrac analyse --config-file=../tools/deptrac-layers.yaml --no-cache | grep -v 'Uncovered'"
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/deptrac analyse --config-file=../tools/deptrac/deptrac-domain.yaml --no-cache | grep -v 'Uncovered'"
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/deptrac analyse --config-file=../tools/deptrac/deptrac-layers.yaml --no-cache | grep -v 'Uncovered'"
 	@echo "Deptrac done!"
 
 psalm: ## Run Psalm static analysis (no cache)

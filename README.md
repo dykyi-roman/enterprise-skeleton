@@ -25,6 +25,7 @@ make install
 
 | Category          | Services                  |
 |-------------------|---------------------------|
+| Language          | • PHP                     |
 | Web Servers       | • Nginx<br>• Apache       |
 | Databases         | • PostgreSQL<br>• MySQL   |
 | NoSQL Database    | • MongoDB<br>• Cassandra  |
@@ -46,8 +47,8 @@ The project follows a domain-driven modular architecture:
 - Modules are independent and loosely coupled
 - Each module contains its own:
   - Business logic
+  - Infrastructure
   - Configuration
-  - Dependencies
   - Tests
 
 ## Independent Configuration
@@ -63,25 +64,7 @@ The project follows a domain-driven modular architecture:
 
 ### Health check
 
-The project includes a set of health check commands to monitor various services:
-
-| Command                         | Description                                                |
-|---------------------------------|------------------------------------------------------------|
-| `app:healthcheck:mysql`         | Tests MySQL database connection and basic operations       |
-| `app:healthcheck:postgres`      | Tests PostgreSQL database connection and basic operations  |
-| `app:healthcheck:mongodb`       | Tests MongoDB connection availability                      |
-| `app:healthcheck:cassandra`     | Tests Cassandra connection availability                    |
-| `app:healthcheck:redis`         | Tests Redis cache server connection                        |
-| `app:healthcheck:memcache`      | Tests Memcache server connection                           |
-| `app:healthcheck:amqp`          | Tests RabbitMQ message broker connection                   |
-| `app:healthcheck:kafka`         | Tests Apache Kafka message broker connection               |
-| `app:healthcheck:elasticsearch` | Tests Elasticsearch search engine connection               |
-| `app:healthcheck:solr`          | Tests Apache Solr search engine connection                 |
-| `app:healthcheck:mail`          | Tests mail server connection and configuration             |
-| `app:healthcheck:zabbix`        | Tests Zabbix monitoring integration                        |
-| `app:healthcheck:graphana`      | Tests Grafana monitoring integration                       |
-| `app:healthcheck:logstash`      | Tests Logstash logging integration                         |
-| `app:healthcheck:log`           | Tests logging system configuration                         |
+The project includes a set of health check commands to monitor various services.
 
 All commands return:
 - Success (0): When the service is available and functioning correctly
@@ -90,7 +73,7 @@ All commands return:
 Usage example:
 ```bash
 # Test MySQL connection
-php bin/console app:healthcheck:log
+php bin/console app:healthcheck:mysql
 ```
 ---
 
