@@ -60,11 +60,17 @@ when@prod:
                 path: "php://stdout"
                 level: info
                 formatter: monolog.formatter.json
-            logstash:
-                type: socket
-                connection_string: 'tcp://logstash:50000'
-                level: debug
-                formatter: monolog.formatter.json
+#            logstash:
+#                type: socket
+#                connection_string: 'tcp://logstash:50000'
+#                level: debug
+#                formatter: monolog.formatter.json
+#            graylog:
+#                type: gelf
+#                publisher:
+#                    hostname: es-graylog
+#                    port: 12201
+#                level: debug
             console:
                 type: console
                 process_psr_3_messages: false

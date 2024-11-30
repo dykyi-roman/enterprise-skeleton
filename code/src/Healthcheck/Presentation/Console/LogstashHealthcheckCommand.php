@@ -22,7 +22,7 @@ final class LogstashHealthcheckCommand extends Command
     {
         try {
             $socket = @fsockopen(self::LOGSTASH_HOST, self::LOGSTASH_PORT, $errno, $errstr, 5);
-            
+
             if (!$socket) {
                 throw new \RuntimeException("Could not connect to Logstash: $errstr ($errno)");
             }
@@ -32,8 +32,8 @@ final class LogstashHealthcheckCommand extends Command
                 'message' => 'Logstash healthcheck test message',
                 'environment' => 'test',
                 'service' => 'healthcheck',
-                'type' => 'test'
-            ]) . "\n";
+                'type' => 'test',
+            ])."\n";
 
             fwrite($socket, $testMessage);
             fclose($socket);
@@ -42,7 +42,7 @@ final class LogstashHealthcheckCommand extends Command
 
             return Command::SUCCESS;
         } catch (\Exception $e) {
-            $output->writeln('<error>Failed to send test message to Logstash: ' . $e->getMessage() . '</error>');
+            $output->writeln('<error>Failed to send test message to Logstash: '.$e->getMessage().'</error>');
 
             return Command::FAILURE;
         }

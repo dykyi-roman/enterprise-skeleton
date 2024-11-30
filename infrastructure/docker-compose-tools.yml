@@ -270,7 +270,7 @@ services:
             retries: 5
 
     mongodb-graylog:
-        image: mongo:5
+        image: mongo:${GRAYLOG_MONGO_VERSION}
         container_name: es-mongodb-graylog
         profiles: ["graylog"]
         volumes:
@@ -307,15 +307,16 @@ services:
         image: graylog/graylog:${GRAYLOG_VERSION}
         container_name: es-graylog
         profiles: ["graylog"]
+        ports:
+            - "${GRAYLOG_PORT:-9000}:9000"
+            - "${GRAYLOG_UDP_PORT:-12201}:12201/udp"
         environment:
-            - GRAYLOG_PASSWORD_SECRET=${GRAYLOG_PASSWORD_SECRET}
-            - GRAYLOG_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}
-            - GRAYLOG_HTTP_EXTERNAL_URI=http://localhost:${GRAYLOG_WEB_PORT}/
+            - GRAYLOG_HTTP_EXTERNAL_URI=http://localhost:${GRAYLOG_PORT:-9000}/
             - GRAYLOG_ELASTICSEARCH_HOSTS=http://elasticsearch-graylog:9200
             - GRAYLOG_MONGODB_URI=mongodb://mongodb-graylog:27017/graylog
-        ports:
-            - "${GRAYLOG_PORT}:9000"
-            - "${GRAYLOG_WEB_PORT}:9001"
+            - GRAYLOG_INPUT_GELF_UDP_ENABLED=true
+            - GRAYLOG_INPUT_GELF_UDP_PORT=12201
+            - GRAYLOG_INPUT_GELF_UDP_BIND_ADDRESS=0.0.0.0
         depends_on:
             - elasticsearch-graylog
             - mongodb-graylog

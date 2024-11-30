@@ -1,6 +1,6 @@
 parameters:
   paths:
-    - ../code/src
+    - ../../code/src
   exclude_files:
     - '#.*test.*#'
     - '#vendor#'

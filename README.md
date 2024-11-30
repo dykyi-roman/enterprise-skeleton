@@ -108,7 +108,7 @@ The project includes several code quality and analysis tools:
 - Run: `make test-postman`
 ---
 
-## Elasticsearch, Kibana & Logstash (ELK)
+## Elasticsearch, Kibana & Logstash (ELK) Configuration
 
 1. Create index
 ```bash
@@ -118,6 +118,22 @@ The project includes several code quality and analysis tools:
 ```bash
 docker compose -f infrastructure/docker-compose-tools.yml --profile elk restart logstash
 ```
+
+# Graylog Configuration
+
+1. Run `composer req graylog2/gelf-php`
+
+## Configure UDP Input
+1. Open http://localhost:9001 in your browser
+2. Login with your admin credentials
+3. Go to System → Inputs
+4. Select "GELF UDP" from the dropdown
+5. Click "Launch new input"
+6. Configure with:
+  - Title: "GELF UDP Input"
+  - Port: 12201
+  - Bind address: 0.0.0.0
+7. Save the configuration
 
 ## Postman Collection
 
