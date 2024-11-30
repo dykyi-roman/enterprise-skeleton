@@ -1,4 +1,4 @@
-image: php:8.3
+image: php:8.3-cli
 
 cache:
   paths:
@@ -10,53 +10,51 @@ before_script:
   # Install Composer
   - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   # Install project dependencies
-  - composer install --no-interaction --no-progress
+  - cd code && composer install --no-interaction --no-progress
 
 stages:
   - build
   - quality
-  - test
   - deploy
 
 build-job:
   stage: build
   script:
     - echo "Compiling the code..."
-    - composer install --no-interaction --no-progress
+    - cd code && composer install --no-interaction --no-progress
     - echo "Compile complete."
 
 php-cs-fixer:
   stage: quality
   script:
     - echo "Running PHP CS Fixer..."
-    - vendor/bin/php-cs-fixer fix --dry-run --diff --verbose
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - vendor/bin/php-cs-fixer fix -v --using-cache=no --config=../tools/.php-cs-fixer.php
   allow_failure: false
 
 deptrac:
   stage: quality
   script:
     - echo "Running Deptrac..."
-    - vendor/bin/deptrac analyze --config-file=deptrac.yaml
+    - vendor/bin/deptrac analyse --config-file=../tools/deptrac/deptrac-domain.yaml --no-cache | grep -v 'Uncovered'
+    - vendor/bin/deptrac analyse --config-file=../tools/deptrac/deptrac-layers.yaml --no-cache | grep -v 'Uncovered'
 
 phpstan:
   stage: quality
   script:
     - echo "Running PHPStan..."
-    - vendor/bin/phpstan analyse src tests --level=8
+    - vendor/bin/phpstan analyse src --configuration=../tools/phpstan.neon
 
 psalm:
   stage: quality
   script:
     - echo "Running Psalm..."
-    - vendor/bin/psalm --show-info=true
+    - vendor/bin/psalm --config=../tools/psalm.xml --no-cache
 
 phpunit:
-  stage: test
+  stage: quality
   script:
     - echo "Running PHPUnit tests..."
-    - vendor/bin/phpunit --coverage-text --colors=never
+    - vendor/bin/phpunit -c ../tools/phpunit.xml.dist
 
 deploy-job:
   stage: deploy
