@@ -66,13 +66,13 @@ PHP container will be build automatically depend on which services you choose.
 | **Web Servers**     | Nginx<br>Apache                             | stable-alpine<br>2.4     | http://localhost:1000<br>https://localhost:1001 |
 | **Databases**       | PostgreSQL<br>MySQL<br>MongoDB<br>Cassandra | 15<br>8.0<br>6.0<br>4.1  | -                                               |
 | **Caching**         | Redis<br>Memcached                          | 7.2-alpine<br>1.6-alpine | -                                               |
-| **Message Brokers** | RabbitMQ<br>Kafka                           | latest<br>latest         | http://localhost:15672<br>http://localhost:8080 |
-| **Search**          | Elasticsearch<br>Solr                       | latest<br>latest         | -                                               |
-| **Monitoring**      | Zabbix<br>Grafana                           | latest<br>latest         | http://localhost:8081<br>http://localhost:3000  |
-| **Mail Testing**    | Mailhog<br>Papercut                         | latest<br>latest         | http://localhost:8025<br>http://localhost:37408 |
-| **Logging**         | Kibana<br>Graylog                           | latest<br>latest         | http://localhost:5601<br>http://localhost:9400  |
-| **Documentation**   | Swagger                                     | latest                   | http://localhost:1002                           |
-| **Task Scheduling** | Cron                                        | latest                   | -                                               |
+| **Message Brokers** | RabbitMQ<br>Kafka                           | 3.12-alpine<br>3.3.1     | http://localhost:15672<br>http://localhost:8080 |
+| **Search**          | Elasticsearch<br>Solr                       | 8.11.1<br>9.3            | -                                               |
+| **Monitoring**      | Zabbix<br>Grafana                           | 6.4<br>10.2.0            | http://localhost:8081<br>http://localhost:3000  |
+| **Mail Testing**    | Mailhog<br>Papercut                         | v1.0.1<br>5.7.0          | http://localhost:8025<br>http://localhost:37408 |
+| **Logging**         | Kibana<br>Graylog                           | 8.11.1<br>5.2            | http://localhost:5601<br>http://localhost:9400  |
+| **Documentation**   | Swagger                                     | v5.9.1                   | http://localhost:1002                           |
+| **Task Scheduling** | Cron                                        | PHP 8.3-cli              | -                                               |
 
 ---
 
