@@ -35,7 +35,7 @@ services:
         profiles: ["swagger"]
         environment:
             - SWAGGER_JSON=/api/openapi.yaml
-            - BASE_URL=/api/docs
+            - BASE_URL=/
         volumes:
             - ../code/docs/api:/api
         ports:
@@ -43,10 +43,11 @@ services:
         networks:
             - es-network
         healthcheck:
-            test: ["CMD", "wget", "--spider", "http://localhost:8080"]
-            interval: 10s
-            timeout: 5s
-            retries: 3
+            test: ["CMD", "curl", "-f", "http://localhost:8080"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 30s
 
     grafana:
         image: grafana/grafana:${GRAFANA_VERSION:-latest}
