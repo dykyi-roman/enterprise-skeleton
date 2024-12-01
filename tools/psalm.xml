@@ -11,6 +11,7 @@
         <ignoreFiles>
             <directory name="../code/vendor"/>
             <directory name="../code/src/*/Tests"/>
+            <directory name="../code/src/*/Resources"/>
             <directory name="../code/src/Healthcheck/Presentation/Console"/>
         </ignoreFiles>
     </projectFiles>

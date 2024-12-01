@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\YourDomain\Presentation\Web;
 
-use App\Providers\Attributes\WebRoute;
+use App\YourDomain\Resources\Attribute\WebRoute;
 use Symfony\Component\HttpFoundation\Response;
 
 #[WebRoute('/test', ['GET'], 'web.test')]

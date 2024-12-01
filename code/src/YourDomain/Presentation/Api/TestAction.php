@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\YourDomain\Presentation\Api;
 
+use App\YourDomain\Resources\Attribute\ApiRoute;
 use OpenApi\Attributes as OA;
-use App\Providers\Attributes\ApiRoute;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,6 +24,6 @@ final class TestAction extends AbstractApiAction
 {
     public function __invoke(): Response
     {
-        return new JsonResponse(['message' => 'API Test Action']);
+        return new JsonResponse('Test');
     }
 }

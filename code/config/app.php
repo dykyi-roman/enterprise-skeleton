@@ -34,10 +34,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
-        App\Providers\DomainRoutesServiceProvider::class,
-        App\Providers\DomainCommandsServiceProvider::class,
+        App\Healthcheck\Resources\DomainServiceProvider::class,
+        App\YourDomain\Resources\DomainServiceProvider::class,
     ],
     'aliases' => [
         'App' => Illuminate\Support\Facades\App::class,

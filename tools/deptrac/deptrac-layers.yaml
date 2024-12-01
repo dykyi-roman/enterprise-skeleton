@@ -4,6 +4,7 @@ parameters:
   exclude_files:
     - '#.*test.*#'
     - '#vendor#'
+    - '#Resources#'
   layers:
     - name: Presentation
       collectors:

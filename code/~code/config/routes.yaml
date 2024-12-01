@@ -1,5 +1,0 @@
-controllers:
-    resource:
-        path: ../src/
-        namespace: App
-    type: attribute

@@ -2,20 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Providers\Attributes;
+namespace App\YourDomain\Resources\Attribute;
 
-use Attribute;
-
-#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
-class ApiRoute extends Route
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
+class WebRoute extends Route
 {
     public function __construct(
         string $path,
         string|array $methods = ['GET'],
         ?string $name = null,
-        array $middleware = []
+        array $middleware = [],
     ) {
-        $middleware = array_merge(['api'], $middleware);
+        $middleware = array_merge(['web'], $middleware);
         parent::__construct($path, $methods, $name, $middleware);
     }
 }
