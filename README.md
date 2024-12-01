@@ -71,7 +71,7 @@ PHP container will be build automatically depend on which services you choose.
 | **Monitoring**      | Zabbix<br>Grafana                           | latest<br>latest         | http://localhost:8081<br>http://localhost:3000  |
 | **Mail Testing**    | Mailhog<br>Papercut                         | latest<br>latest         | http://localhost:8025<br>http://localhost:37408 |
 | **Logging**         | Kibana<br>Graylog                           | latest<br>latest         | http://localhost:5601<br>http://localhost:9400  |
-| **Documentation**   | Swagger                                     | latest                   | http://localhost:8080/api/docs                  |
+| **Documentation**   | Swagger                                     | latest                   | http://localhost:1002                           |
 | **Task Scheduling** | Cron                                        | latest                   | -                                               |
 
 ---
