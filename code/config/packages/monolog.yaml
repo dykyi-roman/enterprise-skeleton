@@ -65,6 +65,9 @@ when@prod:
 #                connection_string: 'tcp://logstash:50000'
 #                level: debug
 #                formatter: monolog.formatter.json
+#                timeout: 1
+#                connection_timeout: 1
+#                persistent: false
 #            graylog:
 #                type: gelf
 #                publisher:
