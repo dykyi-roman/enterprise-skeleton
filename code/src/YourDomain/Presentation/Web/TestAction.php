@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\YourDomain\Presentation\Web;
 
+use App\Providers\Attributes\WebRoute;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
+#[WebRoute('/test', ['GET'], 'web.test')]
 final class TestAction
 {
-    #[Route('/test', name: 'web_test', methods: ['GET'])]
     public function __invoke(): Response
     {
         return new Response('Test');
