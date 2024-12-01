@@ -164,7 +164,7 @@ php bin/console app:healthcheck:mysql
 - Monitor with `docker-compose exec cron crontab -l`
 
 ### API Testing
-- Postman collection in `infrastructure/postman`
+- Postman collection in `tools/postman`
 - Environment variables support
 - Automated testing via Newman
 
