@@ -72,6 +72,7 @@ PHP container will be build automatically depend on which services you choose.
 | **Mail Testing**    | Mailhog<br>Papercut                         | latest<br>latest         | http://localhost:8025<br>http://localhost:37408 |
 | **Logging**         | Kibana<br>Graylog                           | latest<br>latest         | http://localhost:5601<br>http://localhost:9400  |
 | **Documentation**   | Swagger                                     | latest                   | http://localhost:8080/api/docs                  |
+| **Task Scheduling** | Cron                                        | latest                   | -                                               |
 
 ---
 
@@ -86,9 +87,34 @@ PHP container will be build automatically depend on which services you choose.
   - Module-specific config
   - Test suite
 
+- Recommended structure:
+```
+src/
+└── YourDomain/
+    ├── Application/
+    │   └── Query/
+    │   └── Command/
+    ├── DomainModel/
+    │   ├── Model/
+    │   ├── Repository/
+    │   └── Service/
+    ├── Infrastructure/
+    │   ├── Repository/
+    │   └── Clients/
+    ├── Presentation/
+    │   ├── Api/
+    │   ├── Console/
+    │   └── Web/
+    ├── Resources/
+    └── Tests/
+        ├── Unit/
+        └── Integration/
+```
+
 ### Adding New Domains
 1. Create domain in `/src/YourDomain`
-2. Register in `code/config/packages/domains.yaml`
+2. Register your provider in `code/config/app.php` (Laravel) or `code/config/packages/domains.yaml` (Symfony)
+3. Follow existing domain structure.
 
 ---
 
@@ -182,7 +208,6 @@ We are currently looking for contributions in the following areas:
 
 - **Sentry Integration**: We need help implementing Sentry for error tracking and monitoring. If you have experience with Sentry integration in PHP applications, we'd love your contribution!
 - **RoadRunner Integration**: We are looking to integrate RoadRunner as a high-performance PHP application server. If you have experience with RoadRunner implementation, your contribution would be valuable!
-- 
 - **New Framework Integrations**: We are actively looking to expand our framework support. If you'd like to integrate a new PHP framework (like Yii, Slim, or others), we welcome your contribution! Each framework should:
 
 ### How to Submit a Pull Request
@@ -196,7 +221,7 @@ We are currently looking for contributions in the following areas:
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
 
 ## Author
 [Dykyi Roman](https://dykyi-roman.github.io/)
