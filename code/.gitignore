@@ -1,3 +1,7 @@
+###> laravel ###
+/storage/
+/bootstrap/
+###> laravel ###
 
 ###> symfony/framework-bundle ###
 /.env.local
