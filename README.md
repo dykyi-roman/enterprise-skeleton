@@ -208,7 +208,6 @@ We are currently looking for contributions in the following areas:
 
 - **Sentry Integration**: We need help implementing Sentry for error tracking and monitoring. If you have experience with Sentry integration in PHP applications, we'd love your contribution!
 - **RoadRunner Integration**: We are looking to integrate RoadRunner as a high-performance PHP application server. If you have experience with RoadRunner implementation, your contribution would be valuable!
--
 - **New Framework Integrations**: We are actively looking to expand our framework support. If you'd like to integrate a new PHP framework (like Yii, Slim, or others), we welcome your contribution! Each framework should:
 
 ### How to Submit a Pull Request
