@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\YourDomain\Tests\Unit\Presentation\Api;
+namespace App\CoreDomain\Tests\Unit\Presentation\Api;
 
-use App\YourDomain\Presentation\Api\TestAction;
+use App\CoreDomain\Presentation\Api\TestAction;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;

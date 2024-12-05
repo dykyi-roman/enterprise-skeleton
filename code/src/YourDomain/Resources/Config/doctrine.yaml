@@ -1,9 +1,9 @@
 doctrine:
     orm:
         mappings:
-            YourDomain:
+            CoreDomain:
                 type: attribute
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/YourDomain/DomainModel/Model'
-                prefix: 'App\YourDomain\DomainModel\Model'
-                alias: YourDomain
+                dir: '%kernel.project_dir%/src/CoreDomain/DomainModel/Model'
+                prefix: 'App\CoreDomain\DomainModel\Model'
+                alias: CoreDomain

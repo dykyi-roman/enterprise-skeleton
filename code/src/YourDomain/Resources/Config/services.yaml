@@ -6,7 +6,7 @@ services:
         autoconfigure: true
         public: false
 
-    App\YourDomain\:
+    App\CoreDomain\:
         resource: '../../'
         exclude:
             - '../../Resources/'

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\YourDomain\Presentation\Api;
+namespace App\CoreDomain\Presentation\Api;
 
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
