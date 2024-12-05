@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\YourDomain\Resources\Attribute;
+namespace App\CoreDomain\Resources\Attribute;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
 class WebRoute extends Route

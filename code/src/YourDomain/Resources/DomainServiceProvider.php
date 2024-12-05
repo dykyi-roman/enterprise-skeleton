@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\YourDomain\Resources;
+namespace App\CoreDomain\Resources;
 
-use App\YourDomain\Resources\Attribute\Route;
+use App\CoreDomain\Resources\Attribute\Route;
 use Illuminate\Support\Facades\Route as LaravelRoute;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Console\Attribute\AsCommand;

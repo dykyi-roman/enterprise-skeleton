@@ -35,7 +35,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         App\Healthcheck\Resources\DomainServiceProvider::class,
-        App\YourDomain\Resources\DomainServiceProvider::class,
+        App\CoreDomain\Resources\DomainServiceProvider::class,
     ],
     'aliases' => [
         'App' => Illuminate\Support\Facades\App::class,

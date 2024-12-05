@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\YourDomain\Presentation\Api;
+namespace App\CoreDomain\Presentation\Api;
 
-use App\YourDomain\Resources\Attribute\ApiRoute;
+use App\CoreDomain\Resources\Attribute\ApiRoute;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
