@@ -92,8 +92,9 @@ PHP container will be build automatically depend on which services you choose.
 src/
 └── YourDomain/
     ├── Application/
-    │   └── Query/
-    │   └── Command/
+    │   └── YourUseCase/
+    |       └── Query/
+    │       └── Command/ 
     ├── DomainModel/
     │   ├── Model/
     │   ├── Repository/
@@ -102,10 +103,17 @@ src/
     │   ├── Repository/
     │   └── Clients/
     ├── Presentation/
-    │   ├── Api/
+    │   └── Api/
+    |       └── Request/
+    │       └── Response/ 
     │   ├── Console/
     │   └── Web/
+    |       └── Request/
+    │       └── Response/ 
     ├── Resources/
+    |       └── Config/
+    |       └── Assets/
+    │       └── Template/ 
     └── Tests/
         ├── Unit/
         └── Integration/
