@@ -42,6 +42,20 @@ class Kernel extends BaseKernel
             if (is_dir($apiPath)) {
                 $routes->import($apiPath, 'attribute')
                     ->prefix('/'.$domainName);
+            } else {
+                // Search in subdirectories for API routes
+                $subFinder = new Finder();
+                $subFinder->directories()
+                    ->in($domainPath)
+                    ->depth(0);
+
+                foreach ($subFinder as $subFolder) {
+                    $apiPath = $domainPath . '/' . $subFolder->getBasename() . '/Presentation/Api';
+                    if (is_dir($apiPath)) {
+                        $routes->import($apiPath, 'attribute')
+                            ->prefix('/' . $domainName);
+                    }
+                }
             }
 
             // Load Web routes
@@ -49,12 +63,39 @@ class Kernel extends BaseKernel
             if (is_dir($webPath)) {
                 $routes->import($webPath, 'attribute')
                     ->prefix('/'.$domainName);
+            } else {
+                // Search in subdirectories for Web routes
+                $subFinder = new Finder();
+                $subFinder->directories()
+                    ->in($domainPath)
+                    ->depth(0);
+
+                foreach ($subFinder as $subFolder) {
+                    $webPath = $domainPath.'/'.$subFolder->getBasename().'/Presentation/Web';
+                    if (is_dir($webPath)) {
+                        $routes->import($webPath, 'attribute')
+                            ->prefix('/'.$domainName);
+                    }
+                }
             }
 
             // Load YAML routes if they exist (optional)
             $routesPath = $domainPath.'/Resources/Config/routes.yaml';
             if (file_exists($routesPath)) {
                 $routes->import($routesPath);
+            } else {
+                // Search in subdirectories for routes.yaml
+                $subFinder = new Finder();
+                $subFinder->directories()
+                    ->in($domainPath)
+                    ->depth(0);
+
+                foreach ($subFinder as $subFolder) {
+                    $routesPath = $domainPath.'/'.$subFolder->getBasename().'/Resources/Config/routes.yaml';
+                    if (file_exists($routesPath)) {
+                        $routes->import($routesPath);
+                    }
+                }
             }
         }
     }
@@ -79,6 +120,20 @@ class Kernel extends BaseKernel
 
             if (file_exists($servicesPath)) {
                 $loader->load($servicesPath);
+            } else {
+                // Search in all subdirectories
+                $subFinder = new Finder();
+                $subFinder->directories()
+                    ->in($domainPath)
+                    ->depth(0);
+
+                foreach ($subFinder as $subFolder) {
+                    $servicesPath = $domainPath.'/'.$subFolder->getBasename().'/Resources/Config/services.yaml';
+
+                    if (file_exists($servicesPath)) {
+                        $loader->load($servicesPath);
+                    }
+                }
             }
         }
 
