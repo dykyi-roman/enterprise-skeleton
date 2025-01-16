@@ -7,11 +7,16 @@
         "php": ">=8.3",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "ext-sockets": "*",
         "chrisguitarguy/request-id-bundle": "^6.0",
         "doctrine/doctrine-bundle": "^2.13",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.3",
         "psr/http-client": "^1.0",
+        "psr/log": "^3.0",
         "sentry/sentry": "^4.0",
         "symfony/console": "7.0.*",
         "symfony/dotenv": "7.0.*",
@@ -54,7 +59,9 @@
         "symfony/polyfill-php74": "*",
         "symfony/polyfill-php80": "*",
         "symfony/polyfill-php81": "*",
-        "symfony/polyfill-php82": "*"
+        "symfony/polyfill-php82": "*",
+        "symfony/polyfill-php83": "*",
+        "symfony/polyfill-php84": "*"
     },
     "scripts": {
         "auto-scripts": {
@@ -79,6 +86,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.64",
+        "maglnet/composer-require-checker": "^4.14",
         "phpstan/phpstan": "^2.0",
         "phpstan/phpstan-symfony": "^2.0",
         "phpunit/phpunit": "^10.5",

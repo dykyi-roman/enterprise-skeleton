@@ -74,7 +74,7 @@ logs-php: ## View PHP logs
 ## -- Code Quality & Testing --
 
 phpcs: ## Run PHP CS Fixer to fix code style
-	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/php-cs-fixer fix -v --using-cache=no --config=../tools/.php-cs-fixer.php"
+	docker exec -it $(php) bash -c "cd /var/www/html/code && PHP_CS_FIXER_IGNORE_ENV=1 php vendor/bin/php-cs-fixer fix -v --using-cache=no --config=../tools/.php-cs-fixer.php"
 	@echo "PHP CS Fixer done!"
 
 phpstan: ## Run PHPStan for static code analysis
@@ -98,12 +98,17 @@ psalm: ## Run Psalm static analysis (no cache)
 	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/psalm --config=../tools/psalm.xml --no-cache"
 	@echo "Psalm done!"
 
+composer-require-checker: ## Check composer dependencies
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/composer-require-checker check --config-file=../tools/composer-require-checker.json composer.json"
+	@echo "Composer Require Checker done!"
+
 ci: ## Run all code quality checks
 	$(MAKE) phpcs
 	$(MAKE) swagger-generate
 	$(MAKE) phpstan
 	$(MAKE) psalm
 	$(MAKE) deptrac
+	$(MAKE) composer-require-checker
 	$(MAKE) test-php
 
 ## -- Framework Selection --

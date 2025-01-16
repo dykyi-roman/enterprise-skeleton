@@ -30,7 +30,7 @@
         ]
     },
     "friendsofphp/php-cs-fixer": {
-        "version": "3.64",
+        "version": "3.66",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -42,7 +42,7 @@
         ]
     },
     "phpstan/phpstan": {
-        "version": "2.0",
+        "version": "2.1",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "main",
@@ -54,7 +54,7 @@
         ]
     },
     "phpunit/phpunit": {
-        "version": "11.4",
+        "version": "10.5",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -96,11 +96,12 @@
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "1.0",
-            "ref": "146251ae39e06a95be0fe3d13c807bcf3938b172"
+            "version": "2.4",
+            "ref": "52e9754527a15e2b79d9a610f98185a1fe46622a"
         },
         "files": [
-            ".env"
+            ".env",
+            ".env.dev"
         ]
     },
     "symfony/framework-bundle": {

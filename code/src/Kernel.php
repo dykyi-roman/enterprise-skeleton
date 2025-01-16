@@ -50,10 +50,10 @@ class Kernel extends BaseKernel
                     ->depth(0);
 
                 foreach ($subFinder as $subFolder) {
-                    $apiPath = $domainPath . '/' . $subFolder->getBasename() . '/Presentation/Api';
+                    $apiPath = $domainPath.'/'.$subFolder->getBasename().'/Presentation/Api';
                     if (is_dir($apiPath)) {
                         $routes->import($apiPath, 'attribute')
-                            ->prefix('/' . $domainName);
+                            ->prefix('/'.$domainName);
                     }
                 }
             }
