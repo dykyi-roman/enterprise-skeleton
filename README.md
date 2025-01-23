@@ -48,7 +48,7 @@ make copy-config
 ```
 
 2. Configure environment:
-   - Edit `infrastructure/config/cs-config` to customize services
+    - Edit `infrastructure/config/cs-config` to customize services
 
 3. Install and start:
 ```bash
@@ -82,10 +82,10 @@ PHP container will be build automatically depend on which services you choose.
 - Modular architecture in `src/` directory
 - Independent domain modules
 - Each module contains:
-  - Domain logic
-  - Infrastructure layer
-  - Module-specific config
-  - Test suite
+    - Domain logic
+    - Infrastructure layer
+    - Module-specific config
+    - Test suite
 
 - Recommended structure:
 ```
@@ -100,7 +100,9 @@ src/
     │   ├── Repository/
     │   └── Service/
     ├── Infrastructure/
-    │   ├── Repository/
+    │   ├── Persistence/
+    │   │     └── InMemmory/
+    │   │        └── Repository/
     │   └── Clients/
     ├── Presentation/
     │   └── Api/
@@ -134,6 +136,7 @@ src/
 | Deptrac      | Architecture validation | `make deptrac`      |
 | PHPStan      | Static analysis         | `make phpstan`      |
 | Psalm        | Type checking           | `make psalm`        |
+| PhpMetrics   | Php metrics             | `make phpmetrics`   |
 | PHPUnit      | Testing                 | `make test-php`     |
 | Newman       | API testing             | `make test-postman` |
 
@@ -188,9 +191,9 @@ composer req graylog2/gelf-php
 ```
 
 2. Configure UDP Input:
-  - Access http://localhost:9400
-  - Navigate to System → Inputs
-  - Add "GELF UDP" input on port 12201
+- Access http://localhost:9400
+- Navigate to System → Inputs
+- Add "GELF UDP" input on port 12201
 
 ### Elasticsearch, Kibana & Logstash (ELK) Configuration
 
