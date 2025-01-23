@@ -98,6 +98,10 @@ psalm: ## Run Psalm static analysis (no cache)
 	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/psalm --config=../tools/psalm.xml --no-cache"
 	@echo "Psalm done!"
 
+phpmetrics: ## Generate PHP Metrics report
+	docker exec -it $(php) bash -c 'cd /var/www/html/code && COMPOSER_VENDOR_DIR=vendor php -d memory_limit=1G vendor/bin/phpmetrics --report-html=docs/metrics src/'
+	@echo "PHP Metrics report generated in code/docs/metrics directory!"
+
 ci: ## Run all code quality checks
 	$(MAKE) phpcs
 	$(MAKE) swagger-generate
