@@ -102,6 +102,10 @@ composer-require-checker: ## Check composer dependencies
 	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/composer-require-checker check --config-file=../tools/composer-require-checker.json composer.json"
 	@echo "Composer Require Checker done!"
 
+phpmetrics: ## Generate PHP Metrics report
+	docker exec -it $(php) bash -c 'cd /var/www/html/code && COMPOSER_VENDOR_DIR=vendor php -d memory_limit=1G vendor/bin/phpmetrics --report-html=docs/metrics src/'
+	@echo "PHP Metrics report generated in code/docs/metrics directory!"
+
 ci: ## Run all code quality checks
 	$(MAKE) phpcs
 	$(MAKE) swagger-generate

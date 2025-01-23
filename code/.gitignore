@@ -30,3 +30,5 @@ phpstan.neon
 ###> qossmic/deptrac ###
 /.deptrac.cache
 ###< qossmic/deptrac ###
+
+/docs/metrics/
