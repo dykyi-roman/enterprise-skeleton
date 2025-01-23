@@ -100,7 +100,9 @@ src/
     │   ├── Repository/
     │   └── Service/
     ├── Infrastructure/
-    │   ├── Repository/
+    │   ├── Persistence/
+    │   │     └── InMemmory/
+    │   │        └── Repository/
     │   └── Clients/
     ├── Presentation/
     │   └── Api/
@@ -134,6 +136,7 @@ src/
 | Deptrac      | Architecture validation | `make deptrac`      |
 | PHPStan      | Static analysis         | `make phpstan`      |
 | Psalm        | Type checking           | `make psalm`        |
+| PhpMetrics   | Php metrics             | `make phpmetrics`   |
 | PHPUnit      | Testing                 | `make test-php`     |
 | Newman       | API testing             | `make test-postman` |
 
