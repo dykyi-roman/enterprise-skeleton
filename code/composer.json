@@ -32,7 +32,10 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "App\\Shared\\": "src/Shared/",
+            "App\\CoreDomain\\": "src/CoreDomain/",
+            "App\\Healthcheck\\": "src/Healthcheck/"
         }
     },
     "autoload-dev": {

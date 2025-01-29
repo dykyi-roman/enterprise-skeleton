@@ -1,5 +1,6 @@
 <?php
 
+use App\Shared\Resources\AppNamespaceServiceProvider;
 use App\Shared\Resources\ResponderServiceProvider;
 
 return [
@@ -36,6 +37,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        AppNamespaceServiceProvider::class,
         App\Healthcheck\Resources\DomainServiceProvider::class,
         App\CoreDomain\Resources\DomainServiceProvider::class,
         ResponderServiceProvider::class,

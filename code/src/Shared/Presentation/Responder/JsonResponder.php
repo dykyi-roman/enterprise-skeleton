@@ -6,22 +6,40 @@ namespace App\Shared\Presentation\Responder;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 final class JsonResponder extends AbstractResponder
 {
     public function handle(Request $request, \Closure $next)
     {
-        $response = $next($request);
+        try {
+            $response = $next($request);
 
-        if (!$response instanceof ResponderInterface) {
-            return $response;
+            if ($response instanceof \Throwable) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => [
+                        'message' => $response->getMessage()
+                    ]
+                ], 500);
+            }
+
+            if (!$response instanceof ResponderInterface) {
+                return $response;
+            }
+
+            return response()->json(
+                $response->payload(),
+                $response->statusCode()
+            );
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'message' => $e->getMessage()
+                ]
+            ], 500);
         }
-
-        if (!$this->supportsContentType($request->getAcceptable())) {
-            return $response;
-        }
-
-        return $this->createResponse($response);
     }
 
     protected function supportsContentType(array $contentTypes): bool

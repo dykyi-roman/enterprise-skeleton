@@ -24,6 +24,6 @@ final class TestAction extends AbstractApiAction
 {
     public function __invoke(TestJsonResponder $responder): ResponderInterface
     {
-        return $responder->success('Success!')->respond();
+        return $responder->success('Success!');
     }
 }
