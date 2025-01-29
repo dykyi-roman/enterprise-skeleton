@@ -16,7 +16,6 @@ final class ResponderServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->app['router']->aliasMiddleware('json.response', JsonResponder::class);
-        $this->app['router']->pushMiddlewareToGroup('api', 'json.response');
+        $this->app['router']->prependMiddlewareToGroup('api', JsonResponder::class);
     }
 }

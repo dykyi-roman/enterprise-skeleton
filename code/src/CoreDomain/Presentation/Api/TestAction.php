@@ -24,8 +24,8 @@ use OpenApi\Attributes as OA;
 #[ApiRoute('/api/test', ['GET'], 'api.test')]
 final class TestAction extends AbstractApiAction
 {
-    public function __invoke(TestJsonResponder $responder)
+    public function __invoke(TestJsonResponder $responder): ResponderInterface
     {
-        return $responder->success('Success!');
+        return $responder->success('Success!')->respond();
     }
 }
