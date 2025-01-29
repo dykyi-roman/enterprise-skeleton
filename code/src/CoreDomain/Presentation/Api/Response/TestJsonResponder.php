@@ -6,7 +6,7 @@ namespace App\CoreDomain\Presentation\Api\Response;
 
 use App\Shared\Presentation\Responder\ResponderInterface;
 
-final class TestJsonResponder implements ResponderInterface
+final class TestJsonResponder implements ResponderInterface, \Stringable
 {
     /** @var array<string, mixed> */
     private array $data = [];
@@ -50,5 +50,15 @@ final class TestJsonResponder implements ResponderInterface
     public function statusCode(): int
     {
         return $this->statusCode;
+    }
+
+    public function jsonSerialize(): string
+    {
+        return serialize($this);
+    }
+
+    public function __toString()
+    {
+        return $this::class;
     }
 }

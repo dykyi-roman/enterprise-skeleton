@@ -6,6 +6,7 @@ namespace App\Shared\Presentation\Responder;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 final class JsonResponder extends AbstractResponder
 {
@@ -13,6 +14,13 @@ final class JsonResponder extends AbstractResponder
     {
         try {
             $response = $next($request);
+            if (!$response instanceof Response) {
+                return $response;
+            }
+
+            if (!$response->original instanceof ResponderInterface) {
+                return $response;
+            }
 
             if ($response instanceof \Throwable) {
                 return response()->json([
@@ -23,19 +31,21 @@ final class JsonResponder extends AbstractResponder
                 ], 500);
             }
 
-            if (!$response instanceof ResponderInterface) {
-                return $response;
+            // Handle wrapped responder from PreventEarlyResponseConversion middleware
+            if (is_object($response) && method_exists($response, 'getResponder')) {
+                $response = $response->getResponder();
             }
 
+
             return response()->json(
-                $response->payload(),
-                $response->statusCode()
+                $response->original->payload(),
+                $response->original->statusCode(),
             );
-        } catch (\Throwable $e) {
+        } catch (\Throwable $exception) {
             return response()->json([
                 'success' => false,
                 'errors' => [
-                    'message' => $e->getMessage()
+                    'message' => $exception->getMessage()
                 ]
             ], 500);
         }
