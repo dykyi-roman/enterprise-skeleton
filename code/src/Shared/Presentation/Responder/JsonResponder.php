@@ -13,6 +13,10 @@ final class JsonResponder extends AbstractResponder
     public function handle(Request $request, \Closure $next)
     {
         try {
+            if (!$this->supportsContentType($request->getAcceptableContentTypes())) {
+                return throw new \RuntimeException('Unsupported content type');
+            }
+
             $response = $next($request);
             if (!$response instanceof Response) {
                 return $response;
@@ -22,25 +26,7 @@ final class JsonResponder extends AbstractResponder
                 return $response;
             }
 
-            if ($response instanceof \Throwable) {
-                return response()->json([
-                    'success' => false,
-                    'errors' => [
-                        'message' => $response->getMessage()
-                    ]
-                ], 500);
-            }
-
-            // Handle wrapped responder from PreventEarlyResponseConversion middleware
-            if (is_object($response) && method_exists($response, 'getResponder')) {
-                $response = $response->getResponder();
-            }
-
-
-            return response()->json(
-                $response->original->payload(),
-                $response->original->statusCode(),
-            );
+            return $this->createResponse($response->original);
         } catch (\Throwable $exception) {
             return response()->json([
                 'success' => false,
@@ -54,7 +40,7 @@ final class JsonResponder extends AbstractResponder
     protected function supportsContentType(array $contentTypes): bool
     {
         if (empty($contentTypes)) {
-            return true;
+            return false;
         }
 
         return in_array('application/json', $contentTypes, true);
