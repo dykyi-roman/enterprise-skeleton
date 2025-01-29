@@ -10,7 +10,7 @@ final class TestJsonResponder implements ResponderInterface
 {
     /** @var array<string, mixed> */
     private array $data = [];
-    private int $statusCode;
+    private int $statusCode = 200;
 
     /** @return array<string, mixed> */
     public function payload(): array
@@ -28,7 +28,6 @@ final class TestJsonResponder implements ResponderInterface
 
         return $this;
     }
-
 
     public function error(string $message): self
     {

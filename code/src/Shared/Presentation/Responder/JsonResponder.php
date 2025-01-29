@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Shared\Presentation\Responder;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
 final class JsonResponder extends AbstractResponder
 {
-    public function handle($request, \Closure $next)
+    public function handle(Request $request, \Closure $next)
     {
         $response = $next($request);
 
@@ -23,10 +26,14 @@ final class JsonResponder extends AbstractResponder
 
     protected function supportsContentType(array $contentTypes): bool
     {
+        if (empty($contentTypes)) {
+            return true;
+        }
+
         return in_array('application/json', $contentTypes, true);
     }
 
-    protected function createResponse(ResponderInterface $result)
+    protected function createResponse(ResponderInterface $result): JsonResponse
     {
         return response()->json(
             $result->payload(),
