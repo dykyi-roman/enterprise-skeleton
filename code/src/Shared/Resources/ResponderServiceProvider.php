@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Shared\Resources;
+
+use App\Shared\Presentation\Responder\JsonResponder;
+
+use Illuminate\Support\ServiceProvider;
+
+final class ResponderServiceProvider extends ServiceProvider
+{
+    public function boot(): void
+    {
+        $this->app['router']->pushMiddlewareToGroup('api', JsonResponder::class);
+    }
+}

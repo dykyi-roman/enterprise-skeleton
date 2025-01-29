@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\CoreDomain\Presentation\Api;
 
+use App\CoreDomain\Presentation\Api\Response\TestJsonResponder;
 use App\CoreDomain\Resources\Attribute\ApiRoute;
+use App\Shared\Presentation\Responder\ResponderInterface;
 use OpenApi\Attributes as OA;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 #[OA\Get(
     path: '/api/test',
@@ -22,8 +22,8 @@ use Symfony\Component\HttpFoundation\Response;
 #[ApiRoute('/api/test', ['GET'], 'api.test')]
 final class TestAction extends AbstractApiAction
 {
-    public function __invoke(): Response
+    public function __invoke(TestJsonResponder $responder): ResponderInterface
     {
-        return new JsonResponse('Test');
+        return $responder->success('Success!')->respond();
     }
 }

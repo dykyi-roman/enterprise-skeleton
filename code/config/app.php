@@ -1,5 +1,7 @@
 <?php
 
+use App\Shared\Resources\ResponderServiceProvider;
+
 return [
     'name' => env('APP_NAME', 'Laravel'),
     'env' => env('APP_ENV', 'local'),
@@ -36,6 +38,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         App\Healthcheck\Resources\DomainServiceProvider::class,
         App\CoreDomain\Resources\DomainServiceProvider::class,
+        ResponderServiceProvider::class,
     ],
     'aliases' => [
         'App' => Illuminate\Support\Facades\App::class,
