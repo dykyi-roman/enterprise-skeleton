@@ -6,7 +6,9 @@ namespace App\CoreDomain\Presentation\Api;
 
 use App\CoreDomain\Presentation\Api\Response\TestJsonResponder;
 use App\CoreDomain\Resources\Attribute\ApiRoute;
+use App\Shared\Presentation\Responder\JsonResponder;
 use App\Shared\Presentation\Responder\ResponderInterface;
+use Illuminate\Http\JsonResponse;
 use OpenApi\Attributes as OA;
 
 #[OA\Get(
@@ -22,8 +24,9 @@ use OpenApi\Attributes as OA;
 #[ApiRoute('/api/test', ['GET'], 'api.test')]
 final class TestAction extends AbstractApiAction
 {
-    public function __invoke(TestJsonResponder $responder): ResponderInterface
+    public function __invoke(TestJsonResponder $responder)
     {
-        return $responder->success('Success!');
+        return $responder->success('Success!'); // error - Unable to detect application namespace.
+//        return new JsonResponse('Success!'); // work
     }
 }
