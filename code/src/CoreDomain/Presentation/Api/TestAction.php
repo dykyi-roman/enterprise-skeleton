@@ -26,7 +26,6 @@ final class TestAction extends AbstractApiAction
 {
     public function __invoke(TestJsonResponder $responder)
     {
-        return $responder->success('Success!'); // error - Unable to detect application namespace.
-//        return new JsonResponse('Success!'); // work
+        return $responder->success('Success!');
     }
 }
