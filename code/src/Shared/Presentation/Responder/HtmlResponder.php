@@ -18,10 +18,6 @@ final class HtmlResponder extends AbstractResponder
     public function handle(Request $request, \Closure $next): Response
     {
         $response = $next($request);
-        if (!$response instanceof Response) {
-            return response($response);
-        }
-
         if (!$response->original instanceof TemplateResponderInterface) {
             return $response;
         }

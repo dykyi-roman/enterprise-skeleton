@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 
 abstract class AbstractResponder
 {
+    /** @psalm-suppress PossiblyUnusedMethod */
     abstract protected function handle(Request $request, \Closure $next): Response|JsonResponse;
 
     /**
