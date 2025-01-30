@@ -10,20 +10,20 @@ use Illuminate\Http\Response;
 
 final class JsonResponder extends AbstractResponder
 {
-    public function handle(Request $request, \Closure $next): Response|JsonResponse
+    public function handle(Request $request, \Closure $next): JsonResponse
     {
         try {
             if (!$this->supportsContentType($request->getAcceptableContentTypes())) {
-                return throw new \RuntimeException('Unsupported content type');
+                throw new \RuntimeException('Unsupported content type');
             }
 
             $response = $next($request);
-            if (!$response instanceof Response) {
+            if ($response instanceof JsonResponse) {
                 return $response;
             }
 
-            if (!$response->original instanceof ResponderInterface) {
-                return $response;
+            if (!$response instanceof Response || !$response->original instanceof ResponderInterface) {
+                return response()->json($response);
             }
 
             return $this->createResponse($response->original);

@@ -19,7 +19,7 @@ final class HtmlResponder extends AbstractResponder
     {
         $response = $next($request);
         if (!$response instanceof Response) {
-            return $response;
+            return response($response);
         }
 
         if (!$response->original instanceof TemplateResponderInterface) {
@@ -49,7 +49,9 @@ final class HtmlResponder extends AbstractResponder
 
         $view = $this->viewFactory->make($result->template(), $result->payload());
 
-        return response($view, $result->statusCode(), $result->headers())
+        $statusCode = max(100, min(599, $result->statusCode()));
+
+        return response($view, $statusCode, $result->headers())
             ->header('X-Content-Type-Options', 'nosniff')
             ->header('X-Frame-Options', 'DENY')
             ->header('X-XSS-Protection', '1; mode=block');

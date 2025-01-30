@@ -15,6 +15,6 @@ final readonly class TestAction
         TestActionRequest $request,
         TestActionHtmlResponse $response,
     ): TestActionHtmlResponse {
-        return $response->context(['status' => 'OK'])->respond();
+        return $response->context(['status' => $request->message])->respond();
     }
 }
