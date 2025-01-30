@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\CoreDomain\Presentation\Api\Response;
+namespace App\Healthcheck\Presentation\Api\Response;
 
 use App\Shared\Presentation\Responder\ResponderInterface;
 
-final class TestJsonResponder implements ResponderInterface, \Stringable
+final class TestJsonResponder implements ResponderInterface
 {
     /** @var array<string, mixed> */
     private array $data = [];
@@ -57,7 +57,7 @@ final class TestJsonResponder implements ResponderInterface, \Stringable
         return serialize($this);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this::class;
     }

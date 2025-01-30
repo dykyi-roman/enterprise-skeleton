@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\CoreDomain\Presentation\Web\Request;
+namespace App\Healthcheck\Presentation\Web\Request;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -10,7 +10,7 @@ final class TestActionRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Shared\Presentation\Responder;
 
-interface ResponderInterface
+/**
+ * @see \Stringable interface use like a trick. Because framwork do not want parse an object class in the request.
+ */
+interface ResponderInterface extends \Stringable
 {
     public function respond(): self;
 

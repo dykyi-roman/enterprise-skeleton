@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\CoreDomain\Tests\Unit\Presentation\Web;
+namespace App\Healthcheck\Tests\Unit\Presentation\Web;
 
-use App\CoreDomain\Presentation\Web\TestAction;
+use App\Healthcheck\Presentation\Web\TestAction;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;

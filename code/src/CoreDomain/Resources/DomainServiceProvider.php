@@ -15,6 +15,7 @@ final class DomainServiceProvider extends ServiceProvider
     {
         $this->registerRoutes();
         $this->registerCommands();
+        $this->registerViews();
     }
 
     private function registerRoutes(): void
@@ -106,5 +107,11 @@ final class DomainServiceProvider extends ServiceProvider
         }
 
         return null;
+    }
+
+    private function registerViews(): void
+    {
+        $viewsPath = dirname(__DIR__).'/Resources/Views';
+        $this->loadViewsFrom($viewsPath, 'core');
     }
 }

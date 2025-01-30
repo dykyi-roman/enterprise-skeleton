@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Healthcheck\Resources;
 
-use App\Healthcheck\Resources\Attribute\Route;
+use App\CoreDomain\Resources\Attribute\Route;
 use Illuminate\Support\Facades\Route as LaravelRoute;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -15,6 +15,7 @@ final class DomainServiceProvider extends ServiceProvider
     {
         $this->registerRoutes();
         $this->registerCommands();
+        $this->registerViews();
     }
 
     private function registerRoutes(): void
@@ -106,5 +107,11 @@ final class DomainServiceProvider extends ServiceProvider
         }
 
         return null;
+    }
+
+    private function registerViews(): void
+    {
+        $viewsPath = dirname(__DIR__).'/Resources/Views';
+        $this->loadViewsFrom($viewsPath, 'healthcheck');
     }
 }

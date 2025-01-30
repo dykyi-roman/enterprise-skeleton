@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\CoreDomain\Presentation\Api;
+namespace App\Healthcheck\Presentation\Api;
 
-use App\CoreDomain\Presentation\Api\Response\TestJsonResponder;
 use App\CoreDomain\Resources\Attribute\ApiRoute;
+use App\Healthcheck\Presentation\Api\Response\TestJsonResponder;
+use App\Shared\Presentation\Api\AbstractApiAction;
 use App\Shared\Presentation\Responder\ResponderInterface;
 use OpenApi\Attributes as OA;
 
@@ -23,7 +24,7 @@ use OpenApi\Attributes as OA;
 final class TestAction extends AbstractApiAction
 {
     public function __invoke(
-        TestJsonResponder $responder
+        TestJsonResponder $responder,
     ): ResponderInterface {
         return $responder->success('Success!')->respond();
     }
