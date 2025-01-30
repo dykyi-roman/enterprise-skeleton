@@ -26,6 +26,10 @@ final class TestAction extends AbstractApiAction
     public function __invoke(
         TestJsonResponder $responder,
     ): ResponderInterface {
-        return $responder->success('Success!')->respond();
+        try {
+            return $responder->success('Success!')->respond();
+        } catch (\Throwable $exception) {
+            return $responder->error($exception->getMessage())->respond();
+        }
     }
 }
