@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\CoreDomain\Presentation\Api;
+namespace App\Healthcheck\Presentation\Api;
 
+use App\Healthcheck\Presentation\Api\Resonse\TestJsonResponse;
+use App\Shared\Presentation\Api\AbstractApiAction;
 use OpenApi\Attributes as OA;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 final class TestAction extends AbstractApiAction
@@ -22,8 +22,13 @@ final class TestAction extends AbstractApiAction
         content: new OA\JsonContent(type: 'string', example: 'Test')
     )]
     #[Route('/test', name: 'api_test', methods: ['GET'])]
-    public function __invoke(): Response
-    {
-        return new JsonResponse('Test');
+    public function __invoke(
+        TestJsonResponse $response,
+    ): TestJsonResponse {
+        try {
+            return $response->success('Success!')->respond();
+        } catch (\Throwable $exception) {
+            return $response->error($exception->getMessage())->respond();
+        }
     }
 }

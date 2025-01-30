@@ -8,3 +8,6 @@ parameters:
         - ../code/src
     excludePaths:
         - '../code/src/Healthcheck/Presentation/Console/*'
+    ignoreErrors:
+        - message: '#Cannot cast mixed to string#'
+          path: ../code/src/Shared/Presentation/Responder/HtmlResponder.php

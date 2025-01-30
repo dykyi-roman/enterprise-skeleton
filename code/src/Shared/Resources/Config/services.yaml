@@ -1,0 +1,24 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    App\Shared\:
+        resource: '../../'
+        exclude:
+            - '../../Resources/'
+            - '../../DomainModel/Model/'
+            - '../../Tests/'
+            - '../../**/Tests/'
+        tags: ['controller.service_arguments']
+
+    App\Shared\Presentation\Responder\JsonResponder:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    App\Shared\Presentation\Responder\HtmlResponder:
+        tags:
+            - { name: kernel.event_subscriber }

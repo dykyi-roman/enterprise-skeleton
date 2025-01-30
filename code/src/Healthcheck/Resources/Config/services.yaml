@@ -10,4 +10,5 @@ services:
         resource: '../../'
         exclude:
             - '../../Resources/'
+            - '../../Tests/'
         tags: ['controller.service_arguments']

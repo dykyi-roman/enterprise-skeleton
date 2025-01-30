@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\CoreDomain\Tests\Unit\Presentation\Api;
+namespace App\Healthcheck\Tests\Unit\Presentation\Api;
 
-use App\CoreDomain\Presentation\Api\TestAction;
+use App\Healthcheck\Presentation\Api\Resonse\TestJsonResponse;
+use App\Healthcheck\Presentation\Api\TestAction;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,7 +23,7 @@ final class TestActionTest extends TestCase
 
     public function testInvoke(): void
     {
-        $response = $this->action->__invoke();
+        $response = $this->action->__invoke(new TestJsonResponse());
 
         self::assertInstanceOf(JsonResponse::class, $response);
         self::assertEquals('"Test"', $response->getContent());

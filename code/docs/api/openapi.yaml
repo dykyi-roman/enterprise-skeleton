@@ -8,7 +8,7 @@ paths:
       tags:
         - Test
       summary: 'Test route message'
-      operationId: a8f0116599fa3fecd2a57520d657a57c
+      operationId: d6fe608c367613a068939fc91c32ed27
       responses:
         '200':
           description: Success
