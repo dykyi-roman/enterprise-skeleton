@@ -28,7 +28,7 @@ final class TestActionTest extends TestCase
         );
 
         self::assertInstanceOf(TestHtmlResponse::class, $response);
-        self::assertEquals('Test', $response->payload());
+        self::assertArrayHasKey('lang', $response->payload());
         self::assertEquals(200, $response->statusCode());
     }
 }

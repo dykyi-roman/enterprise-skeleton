@@ -8,7 +8,6 @@ use App\Healthcheck\Presentation\Api\Resonse\TestJsonResponse;
 use App\Healthcheck\Presentation\Api\TestAction;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[CoversClass(TestAction::class)]
 final class TestActionTest extends TestCase
@@ -25,9 +24,9 @@ final class TestActionTest extends TestCase
     {
         $response = $this->action->__invoke(new TestJsonResponse());
 
-        self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertEquals('"Test"', $response->getContent());
-        self::assertEquals(200, $response->getStatusCode());
-        self::assertEquals('application/json', $response->headers->get('Content-Type'));
+        self::assertInstanceOf(TestJsonResponse::class, $response);
+        self::assertArrayHasKey('success', $response->payload());
+        self::assertArrayHasKey('message', $response->payload());
+        self::assertEquals(200, $response->statusCode());
     }
 }

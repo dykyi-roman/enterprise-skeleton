@@ -18,6 +18,7 @@ final class HtmlResponder extends AbstractResponder
     {
         if ($result instanceof TemplateResponderInterface) {
             $content = $result->template();
+            /** @var mixed $value */
             foreach ($result->payload() as $key => $value) {
                 $content = str_replace('{{'.$key.'}}', null === $value ? '' : (string) $value, $content);
             }
