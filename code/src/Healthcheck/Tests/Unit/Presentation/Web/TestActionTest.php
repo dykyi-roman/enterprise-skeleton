@@ -9,7 +9,6 @@ use App\Healthcheck\Presentation\Web\Response\TestActionHtmlResponse;
 use App\Healthcheck\Presentation\Web\TestAction;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 #[CoversClass(TestAction::class)]
 final class TestActionTest extends TestCase
@@ -28,8 +27,8 @@ final class TestActionTest extends TestCase
             new TestActionHtmlResponse(),
         );
 
-        self::assertInstanceOf(Response::class, $response);
-        self::assertEquals('Test', $response->getContent());
-        self::assertEquals(200, $response->getStatusCode());
+        self::assertInstanceOf(TestActionHtmlResponse::class, $response);
+        self::assertEquals('healthcheck::test', $response->template());
+        self::assertEquals(200, $response->statusCode());
     }
 }

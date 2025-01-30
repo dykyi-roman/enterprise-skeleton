@@ -18,6 +18,10 @@ final class HtmlResponder extends AbstractResponder
     public function handle(Request $request, \Closure $next): Response
     {
         $response = $next($request);
+        if (!$response instanceof Response) {
+            throw new \RuntimeException('Unsupported response format');
+        }
+
         if (!$response->original instanceof TemplateResponderInterface) {
             return $response;
         }
