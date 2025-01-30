@@ -52,13 +52,13 @@ final class TestJsonResponder implements ResponderInterface
         return $this->statusCode;
     }
 
-    public function jsonSerialize(): string
-    {
-        return serialize($this);
-    }
-
     public function __toString(): string
     {
         return $this::class;
+    }
+
+    public function headers(): array
+    {
+        return ['Content-Type' => 'application/json'];
     }
 }

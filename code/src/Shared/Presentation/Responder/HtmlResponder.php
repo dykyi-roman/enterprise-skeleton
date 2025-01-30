@@ -16,7 +16,7 @@ final class HtmlResponder extends AbstractResponder
     ) {
     }
 
-    public function handle(Request $request, \Closure $next)
+    public function handle(Request $request, \Closure $next): View|Response
     {
         $response = $next($request);
         if (!$response instanceof Response) {
@@ -30,6 +30,9 @@ final class HtmlResponder extends AbstractResponder
         return $this->createResponse($response->original);
     }
 
+    /**
+     * @param string[] $contentTypes
+     */
     protected function supportsContentType(array $contentTypes): bool
     {
         if (empty($contentTypes)) {
@@ -39,9 +42,12 @@ final class HtmlResponder extends AbstractResponder
         return in_array('text/html', $contentTypes, true);
     }
 
-    protected function createResponse(TemplateResponderInterface $result): View
+    protected function createResponse(ResponderInterface $result): View
     {
+        if (!$result instanceof TemplateResponderInterface) {
+            throw new \InvalidArgumentException('Result must implement TemplateResponderInterface');
+        }
+
         return $this->viewFactory->make($result->template(), $result->payload());
     }
 }
-

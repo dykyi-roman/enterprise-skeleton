@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Healthcheck\Tests\Unit\Presentation\Web;
 
+use App\Healthcheck\Presentation\Web\Request\TestActionRequest;
+use App\Healthcheck\Presentation\Web\Response\TestActionHtmlResponse;
 use App\Healthcheck\Presentation\Web\TestAction;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -21,7 +23,10 @@ final class TestActionTest extends TestCase
 
     public function testInvoke(): void
     {
-        $response = $this->action->__invoke();
+        $response = $this->action->__invoke(
+            new TestActionRequest(),
+            new TestActionHtmlResponse(),
+        );
 
         self::assertInstanceOf(Response::class, $response);
         self::assertEquals('Test', $response->getContent());

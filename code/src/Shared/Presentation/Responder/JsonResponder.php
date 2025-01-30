@@ -10,7 +10,7 @@ use Illuminate\Http\Response;
 
 final class JsonResponder extends AbstractResponder
 {
-    public function handle(Request $request, \Closure $next)
+    public function handle(Request $request, \Closure $next): Response|JsonResponse
     {
         try {
             if (!$this->supportsContentType($request->getAcceptableContentTypes())) {
@@ -31,12 +31,15 @@ final class JsonResponder extends AbstractResponder
             return response()->json([
                 'success' => false,
                 'errors' => [
-                    'message' => $exception->getMessage()
-                ]
+                    'message' => $exception->getMessage(),
+                ],
             ], 500);
         }
     }
 
+    /**
+     * @param string[] $contentTypes
+     */
     protected function supportsContentType(array $contentTypes): bool
     {
         if (empty($contentTypes)) {
@@ -50,7 +53,8 @@ final class JsonResponder extends AbstractResponder
     {
         return response()->json(
             $result->payload(),
-            $result->statusCode()
+            $result->statusCode(),
+            $result->headers(),
         );
     }
 }

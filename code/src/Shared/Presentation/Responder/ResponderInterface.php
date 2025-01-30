@@ -15,4 +15,7 @@ interface ResponderInterface extends \Stringable
     public function payload(): array;
 
     public function statusCode(): int;
+
+    /** @return array<string, string> */
+    public function headers(): array;
 }

@@ -49,7 +49,21 @@ make copy-config
 
 2. Configure environment:
     - Edit `infrastructure/config/cs-config` to customize services
-
+    - Just uncomment what you need. Example:
+    - ```
+      server=nginx            # Web Server: nginx, apache
+      database=postgres       # Database Service: postgres, mysql
+      ;nosql=mongodb          # NoSQL Database Service: mongodb, cassandra
+      cache=redis             # Cache Service: redis, memcached
+      ;search=elasticsearch   # Search: elasticsearch, solr
+      ;message=kafka          # Message Broker: rabbitmq, kafka
+      docs=swagger            # API Documentation: swagger
+      ;mailer=mailhog         # Mail Sandbox: mailhog, papercut
+      ;monitoring=grafana     # Monitoring: grafana, zabbix
+      ;logs=kibana            # Log Management: kibana, graylog
+      ;job=cron               # Scheduling Jobs: cron
+      ```
+      
 3. Install and start:
 ```bash
 make install
@@ -79,7 +93,8 @@ PHP container will be build automatically depend on which services you choose.
 ## Project Architecture
 
 ### Domain-Driven Structure
-- Modular architecture in `src/` directory
+- Modular architecture in `src/` directory 
+- Independent [ADR](https://github.com/pmjones/adr) approach
 - Independent domain modules
 - Each module contains:
     - Domain logic
@@ -140,6 +155,28 @@ src/
 | PHPUnit      | Testing                 | `make test-php`     |
 | Newman       | API testing             | `make test-postman` |
 
+### Config
+
+| Purpose                                   | Command             |
+|-------------------------------------------|---------------------|
+| Copy cs-config.ini.dist to cs-config file | `make copy-config ` |
+| Display current configuration             | `make show-config`  |
+
+### Code Quality & Testing
+
+| Purpose                        | Command   |
+|--------------------------------|-----------|
+| Clear caches and dump autoload | `make cc` |
+| Run all code quality checks    | `make ci` |
+
+### Logs
+
+| Purpose               | Command           |
+|-----------------------|-------------------|
+| View cron output logs | `make logs-cron ` |
+| View PHP logs         | `make logs-php`   |
+
+... And others.
 ---
 
 ## Additional Features
