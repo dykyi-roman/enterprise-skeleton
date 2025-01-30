@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Shared\Presentation\Responder;
 
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -16,7 +15,7 @@ final class HtmlResponder extends AbstractResponder
     ) {
     }
 
-    public function handle(Request $request, \Closure $next): View|Response
+    public function handle(Request $request, \Closure $next): Response
     {
         $response = $next($request);
         if (!$response instanceof Response) {
@@ -42,12 +41,17 @@ final class HtmlResponder extends AbstractResponder
         return in_array('text/html', $contentTypes, true);
     }
 
-    protected function createResponse(ResponderInterface $result): View
+    protected function createResponse(ResponderInterface $result): Response
     {
         if (!$result instanceof TemplateResponderInterface) {
             throw new \InvalidArgumentException('Result must implement TemplateResponderInterface');
         }
 
-        return $this->viewFactory->make($result->template(), $result->payload());
+        $view = $this->viewFactory->make($result->template(), $result->payload());
+
+        return response($view, $result->statusCode(), $result->headers())
+            ->header('X-Content-Type-Options', 'nosniff')
+            ->header('X-Frame-Options', 'DENY')
+            ->header('X-XSS-Protection', '1; mode=block');
     }
 }
