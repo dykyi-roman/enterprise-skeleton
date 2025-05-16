@@ -36,22 +36,26 @@ final class TestJsonResponse implements ResponderInterface
         return $this;
     }
 
+    #[\Override]
     public function respond(): self
     {
         return $this;
     }
 
     /** @return array<string, mixed> */
+    #[\Override]
     public function payload(): array
     {
         return $this->data;
     }
 
+    #[\Override]
     public function statusCode(): int
     {
         return $this->statusCode;
     }
 
+    #[\Override]
     public function headers(): array
     {
         return [

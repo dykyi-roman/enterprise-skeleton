@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 abstract class AbstractResponder implements EventSubscriberInterface
 {
+    #[\Override]
     public static function getSubscribedEvents(): array
     {
         return [

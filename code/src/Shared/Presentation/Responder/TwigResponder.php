@@ -13,11 +13,13 @@ final class TwigResponder extends AbstractResponder
     }
 
     /** @param array<string> $contentTypes */
+    #[\Override]
     protected function supportsContentType(array $contentTypes): bool
     {
         return in_array('text/html', $contentTypes, true);
     }
 
+    #[\Override]
     protected function createResponse(ResponderInterface $result): Response
     {
         // TODO:: Generate twig file logic here

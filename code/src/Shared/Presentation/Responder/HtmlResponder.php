@@ -9,11 +9,13 @@ use Symfony\Component\HttpFoundation\Response;
 final class HtmlResponder extends AbstractResponder
 {
     /** @param array<string> $contentTypes */
+    #[\Override]
     protected function supportsContentType(array $contentTypes): bool
     {
         return in_array('text/html', $contentTypes, true);
     }
 
+    #[\Override]
     protected function createResponse(ResponderInterface $result): Response
     {
         if ($result instanceof TemplateResponderInterface) {
