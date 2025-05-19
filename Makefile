@@ -98,6 +98,14 @@ psalm: ## Run Psalm static analysis (no cache)
 	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/psalm --config=../tools/psalm.xml --no-cache"
 	@echo "Psalm done!"
 
+composer-require-checker: ## Check composer dependencies
+	docker exec -it $(php) bash -c "cd /var/www/html/code && php vendor/bin/composer-require-checker check --config-file=../tools/composer-require-checker.json composer.json"
+	@echo "Composer Require Checker done!"
+
+composer-outdated: ## Check composer outdated
+	docker exec -it $(php) bash -c "cd /var/www/html/code && composer outdated --direct --major-only --ignore-platform-req=php"
+	@echo "Composer Outdated Checker done!"
+
 phpmetrics: ## Generate PHP Metrics report
 	docker exec -it $(php) bash -c 'cd /var/www/html/code && COMPOSER_VENDOR_DIR=vendor php -d memory_limit=1G vendor/bin/phpmetrics --report-html=docs/metrics src/'
 	@echo "PHP Metrics report generated in code/docs/metrics directory!"
@@ -111,6 +119,7 @@ ci: ## Run all code quality checks
 	$(MAKE) phpstan
 	$(MAKE) psalm
 	$(MAKE) deptrac
+	$(MAKE) composer-require-checker
 	$(MAKE) test-php
 
 ## -- Framework Selection --
