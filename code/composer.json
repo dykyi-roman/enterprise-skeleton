@@ -30,7 +30,7 @@
         "symfony/uid": "7.2.*",
         "symfony/validator": "7.2.*",
         "symfony/yaml": "7.2.*",
-        "zircote/swagger-php": "^4.11"
+        "zircote/swagger-php": "^5.1"
     },
     "config": {
         "allow-plugins": {
@@ -90,7 +90,7 @@
         "phpmetrics/phpmetrics": "3.0.0-rc8",
         "phpstan/phpstan": "^2.0",
         "phpstan/phpstan-symfony": "^2.0",
-        "phpunit/phpunit": "^10.5",
+        "phpunit/phpunit": "^12.1",
         "psalm/plugin-symfony": "^5.2",
         "qossmic/deptrac": "^2.0",
         "vimeo/psalm": "dev-master"
