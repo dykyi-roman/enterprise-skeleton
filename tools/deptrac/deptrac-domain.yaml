@@ -14,12 +14,12 @@ parameters:
           must_not:
             - type: interface
               value: .*Interface$
-    - name: YourDomainClasses
+    - name: CoreDomainClasses
       collectors:
         - type: bool
           must:
             - type: directory
-              value: src/YourDomain/.*
+              value: src/CoreDomain/.*
           must_not:
             - type: interface
               value: .*Interface$
@@ -31,21 +31,21 @@ parameters:
               value: src/Healthcheck/.*
             - type: interface
               value: .*Interface$
-    - name: YourDomainInterfaces
+    - name: CoreDomainInterfaces
       collectors:
         - type: bool
           must:
             - type: directory
-              value: src/YourDomain/.*
+              value: src/CoreDomain/.*
             - type: interface
               value: .*Interface$
 
   ruleset:
     HealthcheckClasses:
       - HealthcheckInterfaces # Can use/implement own domain interfaces
-      - YourDomainInterfaces  # Can use other domain interfaces
-    YourDomainClasses:
-      - YourDomainInterfaces  # Can use/implement own domain interfaces
+      - CoreDomainInterfaces  # Can use other domain interfaces
+    CoreDomainClasses:
+      - CoreDomainInterfaces  # Can use/implement own domain interfaces
       - HealthcheckInterfaces # Can use other domain interfaces
     HealthcheckInterfaces: ~
-    YourDomainInterfaces: ~
+    CoreDomainInterfaces: ~
