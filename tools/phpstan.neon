@@ -3,7 +3,7 @@ includes:
     - ../code/vendor/phpstan/phpstan-symfony/rules.neon
 
 parameters:
-    level: 9
+    level: max
     paths:
         - ../code/src
     excludePaths:
