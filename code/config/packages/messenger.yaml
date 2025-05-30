@@ -3,6 +3,14 @@ framework:
         # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
         # failure_transport: failed
 
+        # Defining message buses (CQRS)
+        default_bus: command.bus
+        buses:
+            command.bus: ~
+            query.bus: ~
+            messenger.bus.default: ~
+
+        # Defining message transports
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
             # async: '%env(MESSENGER_TRANSPORT_DSN)%'

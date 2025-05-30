@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Healthcheck\Presentation\Api;
+namespace Healthcheck\Presentation\Api;
 
-use App\Healthcheck\Presentation\Api\Resonse\TestJsonResponse;
-use App\Shared\Presentation\Api\AbstractApiAction;
+use Healthcheck\Presentation\Api\Resonse\TestJsonResponse;
+use Shared\Presentation\Api\AbstractApiAction;
 use OpenApi\Attributes as OA;
 use Symfony\Component\Routing\Annotation\Route;
 

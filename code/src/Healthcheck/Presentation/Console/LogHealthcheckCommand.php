@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Healthcheck\Presentation\Console;
+namespace Healthcheck\Presentation\Console;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;

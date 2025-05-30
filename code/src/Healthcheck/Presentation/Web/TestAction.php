@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Healthcheck\Presentation\Web;
+namespace Healthcheck\Presentation\Web;
 
-use App\Healthcheck\Presentation\Web\Request\TestRequest;
-use App\Healthcheck\Presentation\Web\Resonse\TestHtmlResponse;
+use Healthcheck\Presentation\Web\Request\TestRequest;
+use Healthcheck\Presentation\Web\Resonse\TestHtmlResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Annotation\Route;
 

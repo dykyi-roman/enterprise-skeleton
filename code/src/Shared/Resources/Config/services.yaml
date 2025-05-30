@@ -6,19 +6,57 @@ services:
         autoconfigure: true
         public: false
 
-    App\Shared\:
+    Shared\:
         resource: '../../'
         exclude:
             - '../../Resources/'
-            - '../../DomainModel/Model/'
-            - '../../Tests/'
+            - '../../Presentation/Api/{Request,Response}/'
+            - '../../Presentation/Web/{Request,Response}/'
+            - '../../Presentation/Console/{Input,Output}/'
+            - '../../Application/**/*Command.php'
+            - '../../Application/**/*Query.php'
+            - '../../DomainModel/*/{Dto,Event,Enum,Entity,Exception,ValueObject}/'
             - '../../**/Tests/'
-        tags: ['controller.service_arguments']
+        tags: [ 'controller.service_arguments' ]
 
-    App\Shared\Presentation\Responder\JsonResponder:
+    # HTTP Client Logging Middleware
+    Shared\Infrastructure\HttpClient\HttpClientLoggingMiddleware:
+        arguments:
+            $logger: '@logger'
+
+    Shared\Infrastructure\HttpClient\HttpClientLoggingMiddlewareFactory:
+        arguments:
+            $middleware: '@Shared\Infrastructure\HttpClient\HttpClientLoggingMiddleware'
+
+    guzzle.middleware.logging:
+        class: Closure
+        factory: ['@Shared\Infrastructure\HttpClient\HttpClientLoggingMiddlewareFactory', 'create']
+
+    # Define the HTTP client service
+    GuzzleHttp\Client:
+        class: GuzzleHttp\Client
+        arguments:
+            $config:
+                handler: '@guzzle.handler'
+
+    guzzle.handler:
+        class: GuzzleHttp\HandlerStack
+        factory: ['GuzzleHttp\HandlerStack', 'create']
+        calls:
+            - [push, ['@guzzle.middleware.logging']]
+
+    Psr\Http\Client\ClientInterface: '@GuzzleHttp\Client'
+
+    # Global Assert Validation Error Handler
+    Shared\Infrastructure\ErrorHandler\GlobalErrorHandler:
         tags:
             - { name: kernel.event_subscriber }
 
-    App\Shared\Presentation\Responder\HtmlResponder:
+    # Responder
+    Shared\Presentation\Responder\JsonResponder:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Shared\Presentation\Responder\HtmlResponder:
         tags:
             - { name: kernel.event_subscriber }

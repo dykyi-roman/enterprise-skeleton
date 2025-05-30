@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Healthcheck\Presentation\Web\Request;
+namespace Healthcheck\Presentation\Web\Request;
 
 use Symfony\Component\Validator\Constraints as Assert;
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Healthcheck\Presentation\Web\Resonse;
+namespace Healthcheck\Presentation\Web\Resonse;
 
-use App\Shared\Presentation\Responder\TemplateResponderInterface;
+use Shared\Presentation\Responder\TemplateResponderInterface;
 
 final class TestHtmlResponse implements TemplateResponderInterface
 {

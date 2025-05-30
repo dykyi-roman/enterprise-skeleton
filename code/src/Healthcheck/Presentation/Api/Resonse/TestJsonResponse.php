@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Healthcheck\Presentation\Api\Resonse;
+namespace Healthcheck\Presentation\Api\Resonse;
 
-use App\Shared\Presentation\Responder\ResponderInterface;
+use Shared\Presentation\Responder\ResponderInterface;
 
 final class TestJsonResponse implements ResponderInterface
 {

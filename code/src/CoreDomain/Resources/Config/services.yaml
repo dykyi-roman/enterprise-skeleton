@@ -6,11 +6,17 @@ services:
         autoconfigure: true
         public: false
 
-    App\CoreDomain\:
+    CoreDomain\:
         resource: '../../'
         exclude:
             - '../../Resources/'
-            - '../../DomainModel/Model/'
-            - '../../Tests/'
+            - '../../Presentation/Api/{Request,Response}/'
+            - '../../Presentation/Web/{Request,Response}/'
+            - '../../Presentation/Console/{Input,Output}/'
+            - '../../Application/**/*Command.php'
+            - '../../Application/**/*Query.php'
+            - '../../Application/**/*Dto.php'
+            - '../../Application/**/*Exception.php'
+            - '../../DomainModel/{Dto,Event,Enum,Entity,Exception,ValueObject}/'
             - '../../**/Tests/'
-        tags: ['controller.service_arguments']
+        tags: [ 'controller.service_arguments' ]

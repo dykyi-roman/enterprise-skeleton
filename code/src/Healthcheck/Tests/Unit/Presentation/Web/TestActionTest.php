@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Healthcheck\Tests\Unit\Presentation\Web;
+namespace Healthcheck\Tests\Unit\Presentation\Web;
 
-use App\Healthcheck\Presentation\Web\Request\TestRequest;
-use App\Healthcheck\Presentation\Web\Resonse\TestHtmlResponse;
-use App\Healthcheck\Presentation\Web\TestAction;
+use Healthcheck\Presentation\Web\Request\TestRequest;
+use Healthcheck\Presentation\Web\Resonse\TestHtmlResponse;
+use Healthcheck\Presentation\Web\TestAction;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

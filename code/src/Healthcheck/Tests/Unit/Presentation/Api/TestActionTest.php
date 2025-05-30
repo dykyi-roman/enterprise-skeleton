@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Healthcheck\Tests\Unit\Presentation\Api;
+namespace Healthcheck\Tests\Unit\Presentation\Api;
 
-use App\Healthcheck\Presentation\Api\Resonse\TestJsonResponse;
-use App\Healthcheck\Presentation\Api\TestAction;
+use Healthcheck\Presentation\Api\Resonse\TestJsonResponse;
+use Healthcheck\Presentation\Api\TestAction;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 

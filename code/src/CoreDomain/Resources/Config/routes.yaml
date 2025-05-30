@@ -1,0 +1,12 @@
+#web_routes:
+#  resource:
+#    path: ../../Presentation/Web
+#    namespace: CoreDomain\Presentation\Web
+#  type: attribute
+#
+#api_routes:
+#    resource:
+#        path: ../../Presentation/Api
+#        namespace: CoreDomain\Presentation\Api
+#    type: attribute
+#    prefix: '/api'

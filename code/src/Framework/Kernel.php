@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace Framework;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\FileLocator;
@@ -41,7 +41,7 @@ class Kernel extends BaseKernel
             $apiPath = $domainPath.'/Presentation/Api';
             if (is_dir($apiPath)) {
                 $routes->import($apiPath, 'attribute')
-                    ->prefix('/'.$domainName);
+                    ->prefix('/'.$domainName.'/api');
             } else {
                 // Search in subdirectories for API routes
                 $subFinder = new Finder();
