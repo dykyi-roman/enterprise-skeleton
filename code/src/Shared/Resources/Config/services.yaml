@@ -15,6 +15,7 @@ services:
             - '../../Presentation/Console/{Input,Output}/'
             - '../../Application/**/*Command.php'
             - '../../Application/**/*Query.php'
+            - '../../Application/{Exception}/'
             - '../../DomainModel/*/{Dto,Event,Enum,Entity,Exception,ValueObject}/'
             - '../../**/Tests/'
         tags: [ 'controller.service_arguments' ]

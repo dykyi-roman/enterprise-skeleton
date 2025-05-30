@@ -13,9 +13,9 @@ final class TestAction
 {
     #[Route('/test', name: 'web_test', methods: ['GET'])]
     public function __invoke(
-        #[MapQueryString] ?TestRequest $request,
+        #[MapQueryString] TestRequest $request,
         TestHtmlResponse $response,
     ): TestHtmlResponse {
-        return $response->context(['lang' => $request?->lang])->respond();
+        return $response->context(['lang' => $request->lang])->respond();
     }
 }
