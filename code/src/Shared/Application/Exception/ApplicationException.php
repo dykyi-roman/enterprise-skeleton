@@ -16,7 +16,7 @@ class ApplicationException extends \RuntimeException
 
     /**
      * @param non-empty-string $classPath
-     * @param T $errorCode
+     * @param T                $errorCode
      */
     public function __construct(
         string $classPath,
@@ -27,7 +27,7 @@ class ApplicationException extends \RuntimeException
     ) {
         $namespaceParts = explode('\\', $classPath);
         $useCasesIndex = array_search('UseCases', $namespaceParts, true);
-        if ($useCasesIndex === false) {
+        if (false === $useCasesIndex) {
             throw new \RuntimeException('Invalid command namespace structure');
         }
 

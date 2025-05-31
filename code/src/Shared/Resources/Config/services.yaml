@@ -61,3 +61,5 @@ services:
     Shared\Presentation\Responder\HtmlResponder:
         tags:
             - { name: kernel.event_subscriber }
+            
+    Shared\Presentation\Responder\ConsoleResponder: ~

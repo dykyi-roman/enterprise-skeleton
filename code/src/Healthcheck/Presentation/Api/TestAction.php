@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Healthcheck\Presentation\Api;
 
 use Healthcheck\Presentation\Api\Resonse\TestJsonResponse;
-use Shared\Presentation\Api\AbstractApiAction;
 use OpenApi\Attributes as OA;
+use Shared\Presentation\Api\AbstractApiAction;
 use Symfony\Component\Routing\Annotation\Route;
 
 final class TestAction extends AbstractApiAction
