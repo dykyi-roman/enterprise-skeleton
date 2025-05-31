@@ -7,6 +7,9 @@ namespace CoreDomain\DomainModel\Entity;
 use Shared\DomainModel\Entity\AggregateRoot;
 use Shared\DomainModel\Event\DomainEventInterface;
 
+/**
+ * @implements AggregateRoot<DomainEventInterface>
+ */
 abstract class AbstractAggregateRoot implements AggregateRoot
 {
     /** @var DomainEventInterface[] */
@@ -17,6 +20,9 @@ abstract class AbstractAggregateRoot implements AggregateRoot
         $this->domainEvents[] = $event;
     }
 
+    /**
+     * @return DomainEventInterface[]
+     */
     public function releaseEvents(): array
     {
         $events = $this->domainEvents;

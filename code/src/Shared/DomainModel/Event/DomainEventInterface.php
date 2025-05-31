@@ -12,5 +12,8 @@ interface DomainEventInterface extends \JsonSerializable
 
     public function getEventName(): string;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function jsonSerialize(): array;
 }

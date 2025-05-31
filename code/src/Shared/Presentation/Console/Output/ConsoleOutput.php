@@ -10,21 +10,49 @@ use Symfony\Component\Console\Command\Command;
 final readonly class ConsoleOutput implements ResponderInterface
 {
     /**
-     * @param array<int, string|array<string, string>> $messages Array of messages or formatted messages
-     * @param array<string, mixed>                     $result   Result data
-     * @param array<string, string>                    $headers  Response headers
+     * @var array<int, string|array{type: string, content: string}>
+     */
+    private array $messages;
+    private ?string $title;
+    /**
+     * @var array<string, mixed>
+     */
+    private array $result;
+    private bool $success;
+    private int $statusCode;
+    private ?string $successMessage;
+    private ?string $errorMessage;
+    private ?float $executionTime;
+    /**
+     * @var array<string, string>
+     */
+    private array $headers;
+
+    /**
+     * @param array<int, string|array{type: string, content: string}> $messages Array of messages or formatted messages
+     * @param array<string, mixed>                                    $result   Result data
+     * @param array<string, string>                                   $headers  Response headers
      */
     public function __construct(
-        private array $messages = [],
-        private ?string $title = null,
-        private array $result = [],
-        private bool $success = true,
-        private int $statusCode = Command::SUCCESS,
-        private ?string $successMessage = null,
-        private ?string $errorMessage = null,
-        private ?float $executionTime = null,
-        private array $headers = [],
+        array $messages = [],
+        ?string $title = null,
+        array $result = [],
+        bool $success = true,
+        int $statusCode = Command::SUCCESS,
+        ?string $successMessage = null,
+        ?string $errorMessage = null,
+        ?float $executionTime = null,
+        array $headers = [],
     ) {
+        $this->messages = $messages;
+        $this->title = $title;
+        $this->result = $result;
+        $this->success = $success;
+        $this->statusCode = $statusCode;
+        $this->successMessage = $successMessage;
+        $this->errorMessage = $errorMessage;
+        $this->executionTime = $executionTime;
+        $this->headers = $headers;
     }
 
     public function respond(): self
@@ -85,8 +113,8 @@ final readonly class ConsoleOutput implements ResponderInterface
     }
 
     /**
-     * @param array<int, string|array<string, string>> $messages
-     * @param array<string, mixed>                     $result   Optional result data
+     * @param array<int, string|array{type: string, content: string}> $messages
+     * @param array<string, mixed>                                    $result
      */
     public static function success(
         array $messages = [],
@@ -108,8 +136,8 @@ final readonly class ConsoleOutput implements ResponderInterface
     }
 
     /**
-     * @param array<int, string|array<string, string>> $messages
-     * @param string|null                              $errorMessage Error message to display
+     * @param array<int, string|array{type: string, content: string}> $messages
+     * @param string|null                                             $errorMessage Error message to display
      */
     public static function failure(
         array $messages = [],

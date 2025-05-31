@@ -41,10 +41,8 @@ abstract class AbstractConsoleCommand extends Command
             $response = $this->executeCommand($input, $output);
 
             // Add performance information if not already added
-            if ($response instanceof ConsoleOutput && null === $response->executionTime()) {
-                $performanceInfo = $this->getPerformanceInfo();
-                $response = $this->addPerformanceInfo($response, $performanceInfo);
-            }
+            $performanceInfo = $this->getPerformanceInfo();
+            $response = $this->addPerformanceInfo($response, $performanceInfo);
 
             // Send response
             return $this->responder->renderToConsole($response, $output, $input);
@@ -96,36 +94,78 @@ abstract class AbstractConsoleCommand extends Command
         ];
     }
 
+    /**
+     * @param array<string, float|string> $performanceInfo
+     */
     protected function addPerformanceInfo(ConsoleOutput $response, array $performanceInfo): ConsoleOutput
     {
         $payload = $response->payload();
 
         // Add performance information to result
-        if (!isset($payload['result'])) {
+        if (!isset($payload['result']) || !is_array($payload['result'])) {
             $payload['result'] = [];
         }
-
-        // Add performance metrics
         $payload['result']['performance'] = [
             'execution_time' => $performanceInfo['execution_time'],
             'memory_usage' => $performanceInfo['memory_usage'],
             'peak_memory' => $performanceInfo['peak_memory'],
         ];
 
-        // Set execution time
-        $payload['execution_time'] = $performanceInfo['execution_time'];
+        $payload['execution_time'] = $payload['result']['performance']['execution_time'];
 
-        // Create new object with updated data
+        // Приведение типов для конструктора ConsoleOutput
+        $messages = [];
+        $messagesRaw = $payload['messages'] ?? [];
+        if (!is_array($messagesRaw)) {
+            $messagesRaw = [];
+        }
+        foreach ($messagesRaw as $msg) {
+            if (is_string($msg)) {
+                $messages[] = $msg;
+            } elseif (is_array($msg) && isset($msg['type'], $msg['content']) && is_string($msg['type']) && is_string($msg['content'])) {
+                $messages[] = [
+                    'type' => $msg['type'],
+                    'content' => $msg['content'],
+                ];
+            }
+        }
+        $title = (isset($payload['title']) && (is_string($payload['title']) || is_null($payload['title']))) ? $payload['title'] : null;
+        $result = [];
+        $resultRaw = $payload['result'];
+        if (!is_array($resultRaw)) {
+            $resultRaw = [];
+        }
+        foreach ($resultRaw as $k => $v) {
+            if (is_string($k)) {
+                $result[$k] = $v;
+            }
+        }
+        $success = (isset($payload['success']) && is_bool($payload['success'])) ? $payload['success'] : true;
+        $statusCode = (isset($payload['status_code']) && is_int($payload['status_code'])) ? $payload['status_code'] : Command::SUCCESS;
+        $successMessage = (isset($payload['success_message']) && (is_string($payload['success_message']) || is_null($payload['success_message']))) ? $payload['success_message'] : null;
+        $errorMessage = (isset($payload['error']) && (is_string($payload['error']) || is_null($payload['error']))) ? $payload['error'] : null;
+        $executionTime = (isset($payload['execution_time']) && (is_float($payload['execution_time']) || is_int($payload['execution_time']))) ? (float) $payload['execution_time'] : null;
+        $headers = [];
+        $headersRaw = $payload['headers'] ?? [];
+        if (!is_array($headersRaw)) {
+            $headersRaw = [];
+        }
+        foreach ($headersRaw as $k => $v) {
+            if (is_string($k) && is_string($v)) {
+                $headers[$k] = $v;
+            }
+        }
+
         return new ConsoleOutput(
-            $payload['messages'] ?? [],
-            $payload['title'] ?? null,
-            $payload['result'] ?? [],
-            $payload['success'] ?? true,
-            $payload['status_code'] ?? Command::SUCCESS,
-            $payload['success_message'] ?? null,
-            $payload['error'] ?? null,
-            $payload['execution_time'] ?? null,
-            $payload['headers'] ?? []
+            $messages,
+            $title,
+            $result,
+            $success,
+            $statusCode,
+            $successMessage,
+            $errorMessage,
+            $executionTime,
+            $headers
         );
     }
 

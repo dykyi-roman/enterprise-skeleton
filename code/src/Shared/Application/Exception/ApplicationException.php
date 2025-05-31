@@ -9,14 +9,12 @@ namespace Shared\Application\Exception;
  */
 class ApplicationException extends \RuntimeException
 {
-    /**
-     * @var non-empty-string
-     */
     public string $useCaseName;
 
     /**
-     * @param non-empty-string $classPath
-     * @param T                $errorCode
+     * @param non-empty-string     $classPath
+     * @param string               $message
+     * @param array<string, mixed> $details
      */
     public function __construct(
         string $classPath,

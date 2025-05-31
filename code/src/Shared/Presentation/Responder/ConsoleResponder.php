@@ -22,7 +22,9 @@ final class ConsoleResponder extends AbstractResponder
     #[\Override]
     protected function createResponse(ResponderInterface $result): Response
     {
-        return new Response(json_encode($result->payload()), $result->statusCode(), $result->headers());
+        $json = json_encode($result->payload());
+
+        return new Response(is_string($json) ? $json : '', $result->statusCode(), $result->headers());
     }
 
     public function renderToConsole(ResponderInterface $result, OutputInterface $output, InputInterface $input): int
@@ -31,7 +33,7 @@ final class ConsoleResponder extends AbstractResponder
         $payload = $result->payload();
 
         // Add title if exists
-        if (isset($payload['title'])) {
+        if (isset($payload['title']) && is_string($payload['title'])) {
             $io->title($payload['title']);
         }
 
@@ -39,7 +41,7 @@ final class ConsoleResponder extends AbstractResponder
         if (isset($payload['messages']) && is_array($payload['messages'])) {
             foreach ($payload['messages'] as $message) {
                 // If array with type and content
-                if (is_array($message) && isset($message['type']) && isset($message['content'])) {
+                if (is_array($message) && isset($message['type'], $message['content']) && is_string($message['type']) && is_string($message['content'])) {
                     $this->renderMessageByType($message['type'], $message['content'], $io);
                 } elseif (is_string($message)) {
                     // Regular message without formatting
@@ -53,37 +55,44 @@ final class ConsoleResponder extends AbstractResponder
             $io->section('Result');
 
             if (isset($payload['result']['table']) && is_array($payload['result']['table'])) {
-                // If table data exists
                 $headers = $payload['result']['table']['headers'] ?? [];
                 $rows = $payload['result']['table']['rows'] ?? [];
-                $io->table($headers, $rows);
+                if (is_array($headers) && is_array($rows)) {
+                    $io->table($headers, $rows);
+                }
             } elseif (isset($payload['result']['data'])) {
-                // If other data exists
                 if (is_array($payload['result']['data'])) {
-                    $io->writeln(json_encode($payload['result']['data'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+                    $json = json_encode($payload['result']['data'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                    $io->writeln(is_string($json) ? $json : '');
                 } else {
-                    $io->text((string) $payload['result']['data']);
+                    $value = $payload['result']['data'];
+                    $io->text(is_scalar($value) ? (string) $value : '');
                 }
             }
         }
 
         // Show execution time if exists
-        if (isset($payload['result']['performance'])) {
-            $io->comment(sprintf('Execution time: %s seconds. Memory usage: %s. Peak memory: %s',
-                $payload['result']['performance']['execution_time'],
-                $payload['result']['performance']['memory_usage'],
-                $payload['result']['performance']['peak_memory'],
+        if (
+            isset($payload['result']) && is_array($payload['result'])
+            && isset($payload['result']['performance']) && is_array($payload['result']['performance'])
+        ) {
+            $perf = $payload['result']['performance'];
+            $io->comment(sprintf(
+                'Execution time: %s seconds. Memory usage: %s. Peak memory: %s',
+                isset($perf['execution_time']) && (is_scalar($perf['execution_time'])) ? (string) $perf['execution_time'] : 'N/A',
+                isset($perf['memory_usage']) && is_string($perf['memory_usage']) ? $perf['memory_usage'] : 'N/A',
+                isset($perf['peak_memory']) && is_string($perf['peak_memory']) ? $perf['peak_memory'] : 'N/A',
             ));
         }
 
         // Show execution status
         if (Command::SUCCESS === $result->statusCode()) {
-            if (isset($payload['success_message'])) {
+            if (isset($payload['success_message']) && is_string($payload['success_message'])) {
                 $io->success($payload['success_message']);
             } else {
                 $io->success('The command was successfully executed.');
             }
-        } elseif (isset($payload['error'])) {
+        } elseif (isset($payload['error']) && is_string($payload['error'])) {
             $io->error($payload['error']);
         } elseif (Command::SUCCESS !== $result->statusCode()) {
             $io->error('An error occurred while executing the command');

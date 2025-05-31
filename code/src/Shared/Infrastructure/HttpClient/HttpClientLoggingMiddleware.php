@@ -17,17 +17,21 @@ final readonly class HttpClientLoggingMiddleware
 
     public function __invoke(): callable
     {
-        return function (callable $handler) {
+        return function (callable $handler): callable {
             return function (RequestInterface $request, array $options) use ($handler) {
                 $this->logRequest($request);
+                $promise = $handler($request, $options);
+                if (is_object($promise) && method_exists($promise, 'then')) {
+                    return $promise->then(
+                        function (ResponseInterface $response) use ($request) {
+                            $this->logResponse($request, $response);
 
-                return $handler($request, $options)->then(
-                    function (ResponseInterface $response) use ($request) {
-                        $this->logResponse($request, $response);
+                            return $response;
+                        }
+                    );
+                }
 
-                        return $response;
-                    }
-                );
+                return $promise;
             };
         };
     }

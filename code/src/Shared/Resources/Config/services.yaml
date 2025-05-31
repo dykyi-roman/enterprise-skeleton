@@ -16,7 +16,7 @@ services:
             - '../../Application/**/*Command.php'
             - '../../Application/**/*Query.php'
             - '../../Application/{Exception}/'
-            - '../../DomainModel/*/{Dto,Event,Enum,Entity,Exception,ValueObject}/'
+            - '../../DomainModel/{Dto,Event,Enum,Entity,Exception,ValueObject}/'
             - '../../**/Tests/'
         tags: [ 'controller.service_arguments' ]
 
