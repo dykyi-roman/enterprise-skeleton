@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Shared\Presentation\Responder;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -26,9 +25,9 @@ final class ConsoleResponder extends AbstractResponder
         return new Response(json_encode($result->payload()), $result->statusCode(), $result->headers());
     }
 
-    public function renderToConsole(ResponderInterface $result, OutputInterface $output, ?InputInterface $input = null): int
+    public function renderToConsole(ResponderInterface $result, OutputInterface $output, InputInterface $input): int
     {
-        $io = new SymfonyStyle($input ?? $this->createEmptyInput(), $output);
+        $io = new SymfonyStyle($input, $output);
         $payload = $result->payload();
 
         // Add title if exists
@@ -109,84 +108,6 @@ final class ConsoleResponder extends AbstractResponder
             'note' => $io->note($message),
             'caution' => $io->caution($message),
             default => $io->text($message),
-        };
-    }
-
-    /**
-     * Creates an empty InputInterface for SymfonyStyle when no input is provided.
-     */
-    private function createEmptyInput(): InputInterface
-    {
-        return new class implements InputInterface {
-            public function getFirstArgument(): ?string
-            {
-                return null;
-            }
-
-            public function hasParameterOption(array|string $values, bool $onlyParams = false): bool
-            {
-                return false;
-            }
-
-            public function getParameterOption(array|string $values, mixed $default = false, bool $onlyParams = false): mixed
-            {
-                return $default;
-            }
-
-            public function bind(InputDefinition $definition): void
-            {
-            }
-
-            public function validate(): void
-            {
-            }
-
-            public function getArguments(): array
-            {
-                return [];
-            }
-
-            public function getArgument(string $name): mixed
-            {
-                return null;
-            }
-
-            public function setArgument(string $name, mixed $value): void
-            {
-            }
-
-            public function hasArgument(string $name): bool
-            {
-                return false;
-            }
-
-            public function getOptions(): array
-            {
-                return [];
-            }
-
-            public function getOption(string $name): mixed
-            {
-                return null;
-            }
-
-            public function setOption(string $name, mixed $value): void
-            {
-            }
-
-            public function hasOption(string $name): bool
-            {
-                return false;
-            }
-
-            public function isInteractive(): bool
-            {
-                return false;
-            }
-
-            public function setInteractive(bool $interactive): void
-            {
-            }
         };
     }
 }

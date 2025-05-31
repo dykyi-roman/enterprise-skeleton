@@ -129,6 +129,9 @@ final readonly class ConsoleOutput implements ResponderInterface
         );
     }
 
+    /**
+     * @return array{type: string, content: string}
+     */
     public static function formatMessage(string $content, string $type = 'info'): array
     {
         return ['type' => $type, 'content' => $content];
