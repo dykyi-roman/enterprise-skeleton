@@ -4,3 +4,16 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+
+    # Message buses configuration
+    command.bus:
+        class: Symfony\Component\Messenger\MessageBus
+        arguments:
+            - [ ]
+        tags: [ 'messenger.bus' ]
+
+    query.bus:
+        class: Symfony\Component\Messenger\MessageBus
+        arguments:
+            - [ ]
+        tags: [ 'messenger.bus' ]

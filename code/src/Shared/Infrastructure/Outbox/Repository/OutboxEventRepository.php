@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Shared\Infrastructure\Outbox;
+namespace Shared\Infrastructure\Outbox\Repository;
 
 use Doctrine\DBAL\Connection;
 use RuntimeException;
+use Shared\Infrastructure\Outbox\ValueObject\OutboxEvent;
 
 final readonly class OutboxEventRepository
 {

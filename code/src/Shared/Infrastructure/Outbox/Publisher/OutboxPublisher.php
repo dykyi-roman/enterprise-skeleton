@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Shared\Infrastructure\Outbox;
+namespace Shared\Infrastructure\Outbox\Publisher;
 
 use RuntimeException;
 use Shared\DomainModel\Event\DomainEventInterface;
+use Shared\Infrastructure\Outbox\Repository\OutboxEventRepository;
+use Shared\Infrastructure\Outbox\ValueObject\OutboxEvent;
 use Throwable;
 
 final readonly class OutboxPublisher implements OutboxPublisherInterface

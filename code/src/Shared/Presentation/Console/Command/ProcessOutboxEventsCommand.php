@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Shared\Presentation\Console\Command;
 
 use Psr\Log\LoggerInterface;
-use Shared\Infrastructure\Outbox\OutboxEventProcessor;
+use Shared\Infrastructure\Outbox\Service\OutboxEventProcessor;
 use Shared\Presentation\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;

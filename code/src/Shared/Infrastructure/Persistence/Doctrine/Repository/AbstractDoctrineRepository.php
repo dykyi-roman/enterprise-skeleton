@@ -7,7 +7,7 @@ namespace Shared\Infrastructure\Persistence\Doctrine\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Shared\DomainModel\Entity\AggregateRootInterface;
-use Shared\Infrastructure\Outbox\OutboxPublisherInterface;
+use Shared\Infrastructure\Outbox\Publisher\OutboxPublisherInterface;
 
 abstract readonly class AbstractDoctrineRepository
 {

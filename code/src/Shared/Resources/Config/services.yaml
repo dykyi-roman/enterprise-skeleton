@@ -16,13 +16,15 @@ services:
             - '../../Application/**/*Command.php'
             - '../../Application/**/*Query.php'
             - '../../Application/{Exception}/'
-            - '../../Infrastructure/Outbox/OutboxMessageEnvelope.php'
+            - '../../Infrastructure/Outbox/Command/OutboxMessageEnvelope.php'
+            - '../../Infrastructure/RateLimiting/{Configuration,Exception,Attribute}/'
+            - '../../Infrastructure/RateLimiting/RateLimiter.php'
             - '../../DomainModel/{Dto,Event,Enum,Entity,Specification,Exception,ValueObject}/'
             - '../../**/Tests/'
         tags: [ 'controller.service_arguments' ]
 
     # Commands and Query Handlers
-    Shared\Infrastructure\Outbox\OutboxMessageEnvelopeHandler:
+    Shared\Infrastructure\Outbox\Command\OutboxMessageEnvelopeHandler:
         tags: [{ name: messenger.message_handler, bus: command.bus }]
 
 
@@ -69,3 +71,39 @@ services:
             - { name: kernel.event_subscriber }
             
     Shared\Presentation\Responder\ConsoleResponder: ~
+
+    # Register cache storage for rate limits
+    Shared\Infrastructure\RateLimiting\Storage\CacheRateLimitStorage:
+        arguments:
+            $cache: '@cache.app'
+            $logger: '@logger'
+
+    # Define storage interface
+    Shared\Infrastructure\RateLimiting\Storage\RateLimitStorageInterface:
+        alias: Shared\Infrastructure\RateLimiting\Storage\CacheRateLimitStorage
+
+    # Register Fixed Window strategy
+    Shared\Infrastructure\RateLimiting\Strategy\FixedWindowStrategy:
+        arguments:
+            $storage: '@Shared\Infrastructure\RateLimiting\Storage\RateLimitStorageInterface'
+
+    # Register IP-based request identifier
+    Shared\Infrastructure\RateLimiting\Identifier\IpIdentifier: ~
+
+    # Define request identifier interface
+    Shared\Infrastructure\RateLimiting\Identifier\RequestIdentifierInterface:
+        alias: Shared\Infrastructure\RateLimiting\Identifier\IpIdentifier
+
+    # Register rate limiter factory
+    Shared\Infrastructure\RateLimiting\RateLimiterFactory:
+        arguments:
+            $storage: '@Shared\Infrastructure\RateLimiting\Storage\RateLimitStorageInterface'
+
+    # Register event listener
+    Shared\Infrastructure\RateLimiting\EventListener\RateLimitListener:
+        arguments:
+            $rateLimiterFactory: '@Shared\Infrastructure\RateLimiting\RateLimiterFactory'
+            $identifier: '@Shared\Infrastructure\RateLimiting\Identifier\RequestIdentifierInterface'
+            $logger: '@logger'
+        tags:
+            - { name: kernel.event_subscriber }

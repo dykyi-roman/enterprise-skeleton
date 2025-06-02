@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Shared\Infrastructure\Outbox;
+namespace Shared\Infrastructure\Outbox\Service;
 
 use Psr\Log\LoggerInterface;
 use Shared\DomainModel\Service\MessageBusInterface;
+use Shared\Infrastructure\Outbox\Command\OutboxMessageEnvelope;
+use Shared\Infrastructure\Outbox\Repository\OutboxEventRepository;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\LockInterface;
 

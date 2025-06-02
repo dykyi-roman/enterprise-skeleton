@@ -18,7 +18,6 @@ framework:
             sync: 'sync://'
 
         routing:
-            Shared\Infrastructure\Outbox\OutboxMessageEnvelope: sync
 
 # when@test:
 #    framework:

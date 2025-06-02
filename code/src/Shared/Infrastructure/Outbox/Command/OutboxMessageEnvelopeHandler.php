@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Shared\Infrastructure\Outbox;
+namespace Shared\Infrastructure\Outbox\Command;
 
 use Shared\DomainModel\Event\DomainEventInterface;
 use Shared\DomainModel\Service\MessageBusInterface;
