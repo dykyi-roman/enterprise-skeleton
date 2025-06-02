@@ -15,14 +15,13 @@ use Shared\Infrastructure\RateLimiting\Storage\RateLimitStorageInterface;
 final readonly class FixedWindowStrategy implements RateLimitStrategyInterface
 {
     public function __construct(
-        private RateLimitStorageInterface $storage
+        private RateLimitStorageInterface $storage,
     ) {
     }
 
     public function isLimitExceeded(string $key, string $resource, int $limit, int $windowSizeSeconds): bool
     {
         $count = $this->storage->increment($key, $resource, $windowSizeSeconds);
-
         return $count > $limit;
     }
 
@@ -31,13 +30,21 @@ final readonly class FixedWindowStrategy implements RateLimitStrategyInterface
         $count = $this->storage->get($key, $resource);
         $remaining = max(0, $limit - $count);
         
-        // Get the remaining time until the current window expires
         $ttl = $this->storage->getTimeToLive($key, $resource);
+
+        if ($ttl <= 0 && $count > 0) {
+            $this->storage->reset($key, $resource);
+            $count = 0;
+            $remaining = $limit;
+            $ttl = $windowSizeSeconds;
+        }
+        
+        $resetTimestamp = time() + $ttl;
         
         return [
             'limit' => $limit,
             'remaining' => $remaining,
-            'reset' => time() + $ttl,
+            'reset' => $resetTimestamp,
             'window_size' => $windowSizeSeconds,
         ];
     }

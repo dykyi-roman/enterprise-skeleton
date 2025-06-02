@@ -17,7 +17,7 @@ services:
             - '../../Application/**/*Query.php'
             - '../../Application/{Exception}/'
             - '../../Infrastructure/Outbox/Command/OutboxMessageEnvelope.php'
-            - '../../Infrastructure/RateLimiting/{Configuration,Exception,Attribute}/'
+            - '../../Infrastructure/RateLimiting/{Configuration,Exception,Attribute,Dto}/'
             - '../../Infrastructure/RateLimiting/RateLimiter.php'
             - '../../DomainModel/{Dto,Event,Enum,Entity,Specification,Exception,ValueObject}/'
             - '../../**/Tests/'
@@ -72,34 +72,28 @@ services:
             
     Shared\Presentation\Responder\ConsoleResponder: ~
 
-    # Register cache storage for rate limits
+    # Rate limits
     Shared\Infrastructure\RateLimiting\Storage\CacheRateLimitStorage:
         arguments:
-            $cache: '@cache.app'
+            $cache: '@rate_limiting.cache'
             $logger: '@logger'
 
-    # Define storage interface
     Shared\Infrastructure\RateLimiting\Storage\RateLimitStorageInterface:
         alias: Shared\Infrastructure\RateLimiting\Storage\CacheRateLimitStorage
 
-    # Register Fixed Window strategy
     Shared\Infrastructure\RateLimiting\Strategy\FixedWindowStrategy:
         arguments:
             $storage: '@Shared\Infrastructure\RateLimiting\Storage\RateLimitStorageInterface'
 
-    # Register IP-based request identifier
     Shared\Infrastructure\RateLimiting\Identifier\IpIdentifier: ~
 
-    # Define request identifier interface
     Shared\Infrastructure\RateLimiting\Identifier\RequestIdentifierInterface:
         alias: Shared\Infrastructure\RateLimiting\Identifier\IpIdentifier
 
-    # Register rate limiter factory
     Shared\Infrastructure\RateLimiting\RateLimiterFactory:
         arguments:
             $storage: '@Shared\Infrastructure\RateLimiting\Storage\RateLimitStorageInterface'
 
-    # Register event listener
     Shared\Infrastructure\RateLimiting\EventListener\RateLimitListener:
         arguments:
             $rateLimiterFactory: '@Shared\Infrastructure\RateLimiting\RateLimiterFactory'

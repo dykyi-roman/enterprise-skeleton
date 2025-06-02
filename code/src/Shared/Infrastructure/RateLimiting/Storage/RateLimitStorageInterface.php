@@ -45,12 +45,4 @@ interface RateLimitStorageInterface
      * @return bool True if reset was successful, false otherwise
      */
     public function reset(string $key, string $resource): bool;
-    
-    /**
-     * Resets all counters for the specified resource
-     *
-     * @param string $resource Resource ID
-     * @return bool True if reset was successful, false otherwise
-     */
-    public function resetAll(string $resource): bool;
 }

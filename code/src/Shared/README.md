@@ -1,65 +1,65 @@
-# Shared компоненты приложения
+# Shared application components
 
-Этот каталог содержит общие компоненты, которые используются во всех контекстах приложения.
+This directory contains shared components used across all application contexts.
 
 ## Rate Limiting
 
-Механизм ограничения частоты запросов для защиты API от перегрузки.
+A mechanism for request rate limiting to protect the API from overload.
 
-### Архитектура
+### Architecture
 
 ```
 Shared/
 ├── Infrastructure/
 │   └── RateLimiting/
-│       ├── Storage/           # Хранение данных о лимитах
-│       ├── Strategy/          # Стратегии ограничения
-│       ├── Identifier/        # Идентификация клиентов
-│       ├── Configuration/     # Конфигурация лимитов
-│       ├── Exception/         # Исключения
-│       └── EventListener/     # Интеграция с Symfony
+│       ├── Storage/           # Rate limit data storage
+│       ├── Strategy/          # Limiting strategies
+│       ├── Identifier/        # Client identification
+│       ├── Configuration/     # Rate limit configuration
+│       ├── Exception/         # Exceptions
+│       └── EventListener/     # Symfony integration
 └── Presentation/
     └── Http/
-        └── Attribute/         # PHP атрибуты для декларативного использования
+        └── Attribute/         # PHP attributes for declarative usage
 ```
 
-### Как это работает
+### How it works
 
-1. **Определение лимитов**: Лимиты задаются декларативно через PHP атрибут `RateLimit`.
-2. **Идентификация запросов**: Каждый запрос идентифицируется по IP-адресу клиента (по умолчанию).
-3. **Подсчет запросов**: Redis хранит счетчики запросов в ключах с автоматическим истечением срока действия.
-4. **Проверка лимитов**: EventListener перехватывает запросы и проверяет, не превышен ли лимит.
-5. **Обработка превышения**: При превышении лимита возвращается статус 429 и заголовки с информацией.
+1. **Limit definition**: Limits are set declaratively via the PHP attribute `RateLimit`.
+2. **Request identification**: Each request is identified by the client's IP address (by default).
+3. **Request counting**: Redis stores request counters in keys with automatic expiration.
+4. **Limit checking**: EventListener intercepts requests and checks if the limit is exceeded.
+5. **Limit exceeded handling**: On exceeding the limit, HTTP 429 is returned with headers containing info.
 
-### Использование
+### Usage
 
-Добавить ограничение частоты запросов к контроллеру или методу:
+Add a rate limit to a controller or method:
 
 ```php
-// Ограничить на уровне метода
+// Method-level limit
 #[Route('/api/payments/create', methods: ['POST'])]
-#[RateLimit(limit: 100, windowSizeSeconds: 60)] // 100 запросов в минуту
+#[RateLimit(limit: 100, windowSizeSeconds: 60)] // 100 requests per minute
 public function createPayment(Request $request): Response
 {
     // ...
 }
 
-// Или ограничить на уровне класса для всех методов
-#[RateLimit(limit: 1000, windowSizeSeconds: 3600)] // 1000 запросов в час
+// Or class-level limit for all methods
+#[RateLimit(limit: 1000, windowSizeSeconds: 3600)] // 1000 requests per hour
 final class PaymentController
 {
     // ...
 }
 ```
 
-### Ключевые особенности
+### Key features
 
-- **Гибкость**: Разные лимиты для разных эндпоинтов
-- **Масштабируемость**: Redis обеспечивает высокую производительность и работу в кластере
-- **Расширяемость**: Легко добавить новые стратегии и способы идентификации
-- **Стандартизация**: Используются стандартные HTTP-заголовки для клиентов
+- **Flexibility**: Different limits for different endpoints
+- **Scalability**: Redis provides high performance and cluster support
+- **Extensibility**: Easy to add new strategies and identification methods
+- **Standardization**: Standard HTTP headers are used for clients
 
-### Возвращаемый ответ при превышении лимита
+### Response when rate limit is exceeded
 
 ```json
 {
@@ -70,41 +70,41 @@ final class PaymentController
 }
 ```
 
-С HTTP-заголовками:
+With HTTP headers:
 - `X-RateLimit-Limit: 100`
 - `X-RateLimit-Remaining: 0`
 - `X-RateLimit-Reset: 1717133875` (Unix timestamp)
-- `Retry-After: 35` (секунды)
+- `Retry-After: 35` (seconds)
 
-### Конфигурация
+### Configuration
 
-Конфигурация сервисов находится в файле `src/Shared/Resources/config/rate_limiting.yaml`.
+Service configuration is in `src/Shared/Resources/config/rate_limiting.yaml`.
 
 ---
 
 ## Outbox Pattern
 
-Механизм надежной доставки доменных событий через асинхронные сообщения.
+A mechanism for reliable delivery of domain events via asynchronous messages.
 
-#### Архитектура
+#### Architecture
 
-- **OutboxEventProcessor**: Обрабатывает неотправленные события из хранилища
-- **OutboxMessageEnvelope**: Обертка для сообщений с метаданными
-- **OutboxMessageEnvelopeHandler**: Преобразует сообщения обратно в доменные события
+- **OutboxEventProcessor**: Processes unsent events from storage
+- **OutboxMessageEnvelope**: Envelope for messages with metadata
+- **OutboxMessageEnvelopeHandler**: Converts messages back to domain events
 
-#### Использование
+#### Usage
 
-Доменные события публикуются через абстрактный репозиторий:
+Domain events are published via the abstract repository:
 
 ```php
-// Изменения в домене автоматически регистрируют события
+// Domain changes automatically register events
 $aggregate->doSomething();
 
-// Сохранение агрегата через репозиторий публикует события
+// Saving the aggregate via repository publishes events
 $this->repository->save($aggregate);
 ```
 
-Обработка событий запускается командой:
+Event processing is started with the command:
 
 ```bash
 bin/console app:process-outbox
@@ -112,37 +112,37 @@ bin/console app:process-outbox
 
 ### CQRS
 
-Разделение операций чтения и записи через шаблон Command Query Responsibility Segregation.
+Separation of read and write operations using the Command Query Responsibility Segregation pattern.
 
-#### Архитектура
+#### Architecture
 
-- **CommandBus**: Шина команд для операций изменения состояния
-- **QueryBus**: Шина запросов для операций чтения
-- **ApplicationService**: Централизованный интерфейс для доступа к обеим шинам
+- **CommandBus**: Command bus for state-changing operations
+- **QueryBus**: Query bus for read operations
+- **ApplicationService**: Centralized interface for both buses
 
-#### Использование
+#### Usage
 
 ```php
-// Выполнение команды (изменение без возврата результата)
+// Execute a command (mutation, no return value)
 $this->applicationService->command(new CreatePaymentCommand($amount, $description));
 
-// Выполнение запроса (получение данных)
+// Execute a query (get data)
 $payment = $this->applicationService->query(new GetPaymentQuery($paymentId));
 ```
 
-### Спецификации
+### Specifications
 
-Комбинируемые спецификации для выражения бизнес-правил в виде составных логических выражений.
+Composable specifications for expressing business rules as logical expressions.
 
-#### Доступные операторы
+#### Available operators
 
-- **AndSpecification**: Логическое И (&&)
-- **OrSpecification**: Логическое ИЛИ (||)
-- **NotSpecification**: Логическое НЕ (!)
-- **AndNotSpecification**: Логическое И-НЕ (&& !)
-- **OrNotSpecification**: Логическое ИЛИ-НЕ (|| !)
+- **AndSpecification**: Logical AND (&&)
+- **OrSpecification**: Logical OR (||)
+- **NotSpecification**: Logical NOT (!)
+- **AndNotSpecification**: Logical AND-NOT (&& !)
+- **OrNotSpecification**: Logical OR-NOT (|| !)
 
-#### Использование
+#### Usage
 
 ```php
 $spec = new AndSpecification(
@@ -154,5 +154,5 @@ $spec = new AndSpecification(
 );
 
 if ($spec->isSatisfiedBy($customer)) {
-    // Действие, если спецификация выполняется
+    // Action if specification is satisfied
 }
