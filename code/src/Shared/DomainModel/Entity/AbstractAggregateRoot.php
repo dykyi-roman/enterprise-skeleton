@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace CoreDomain\DomainModel\Entity;
+namespace Shared\DomainModel\Entity;
 
-use Shared\DomainModel\Entity\AggregateRoot;
 use Shared\DomainModel\Event\DomainEventInterface;
 
 /**
- * @implements AggregateRoot<DomainEventInterface>
+ * @implements AggregateRootInterface<DomainEventInterface>
  */
-abstract class AbstractAggregateRoot implements AggregateRoot
+abstract class AbstractAggregateRoot implements AggregateRootInterface
 {
     /** @var DomainEventInterface[] */
     private array $domainEvents = [];

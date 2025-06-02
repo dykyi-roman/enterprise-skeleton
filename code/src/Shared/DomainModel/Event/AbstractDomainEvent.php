@@ -2,27 +2,25 @@
 
 declare(strict_types=1);
 
-namespace CoreDomain\DomainModel\Event;
-
-use Ramsey\Uuid\Uuid;
-use Shared\DomainModel\Event\DomainEventInterface;
+namespace Shared\DomainModel\Event;
 
 abstract readonly class AbstractDomainEvent implements DomainEventInterface
 {
-    private string $eventId;
-    private \DateTimeImmutable $occurredAt;
-
     public function __construct(
-        ?string $eventId = null,
-        ?\DateTimeImmutable $occurredAt = null,
+        private string $eventId,
+        private string $aggregateId,
+        private \DateTimeImmutable $occurredAt,
     ) {
-        $this->eventId = $eventId ?? Uuid::uuid4()->toString();
-        $this->occurredAt = $occurredAt ?? new \DateTimeImmutable();
     }
 
     public function getEventId(): string
     {
         return $this->eventId;
+    }
+
+    public function getAggregateId(): string
+    {
+        return $this->aggregateId;
     }
 
     public function getOccurredAt(): \DateTimeImmutable

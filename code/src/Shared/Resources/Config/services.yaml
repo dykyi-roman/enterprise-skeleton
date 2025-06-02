@@ -16,9 +16,15 @@ services:
             - '../../Application/**/*Command.php'
             - '../../Application/**/*Query.php'
             - '../../Application/{Exception}/'
-            - '../../DomainModel/{Dto,Event,Enum,Entity,Exception,ValueObject}/'
+            - '../../Infrastructure/Outbox/OutboxMessageEnvelope.php'
+            - '../../DomainModel/{Dto,Event,Enum,Entity,Specification,Exception,ValueObject}/'
             - '../../**/Tests/'
         tags: [ 'controller.service_arguments' ]
+
+    # Commands and Query Handlers
+    Shared\Infrastructure\Outbox\OutboxMessageEnvelopeHandler:
+        tags: [{ name: messenger.message_handler, bus: command.bus }]
+
 
     # HTTP Client Logging Middleware
     Shared\Infrastructure\HttpClient\HttpClientLoggingMiddleware:

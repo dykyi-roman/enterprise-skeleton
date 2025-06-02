@@ -7,7 +7,6 @@ namespace Healthcheck\Presentation\Console;
 use Psr\Log\LoggerInterface;
 use Shared\Presentation\Console\Command\AbstractConsoleCommand;
 use Shared\Presentation\Console\Output\ConsoleOutput;
-use Shared\Presentation\Responder\ConsoleResponder;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,9 +19,8 @@ final class LogHealthcheckCommand extends AbstractConsoleCommand
 {
     public function __construct(
         private readonly LoggerInterface $logger,
-        ConsoleResponder $responder,
     ) {
-        parent::__construct($responder);
+        parent::__construct();
     }
 
     /**

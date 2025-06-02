@@ -8,6 +8,8 @@ interface DomainEventInterface extends \JsonSerializable
 {
     public function getEventId(): string;
 
+    public function getAggregateId(): string;
+
     public function getOccurredAt(): \DateTimeImmutable;
 
     public function getEventName(): string;

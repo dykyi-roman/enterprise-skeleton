@@ -14,11 +14,13 @@ abstract class AbstractConsoleCommand extends Command
 {
     private float $startTime;
     private int $startMemory;
+    private ConsoleResponder $responder;
 
     public function __construct(
-        protected readonly ConsoleResponder $responder,
         ?string $name = null,
     ) {
+        $this->responder = new ConsoleResponder();
+
         parent::__construct($name);
     }
 
@@ -84,8 +86,8 @@ abstract class AbstractConsoleCommand extends Command
     protected function getPerformanceInfo(): array
     {
         $executionTime = round(microtime(true) - $this->startTime, 4);
-        $memoryUsage = $this->formatMemory(memory_get_usage(true) - $this->startMemory);
-        $peakMemory = $this->formatMemory(memory_get_peak_usage(true));
+        $memoryUsage = $this->formatBytes(memory_get_usage(true) - $this->startMemory);
+        $peakMemory = $this->formatBytes(memory_get_peak_usage(true));
 
         return [
             'execution_time' => $executionTime,
@@ -122,14 +124,18 @@ abstract class AbstractConsoleCommand extends Command
         foreach ($messagesRaw as $msg) {
             if (is_string($msg)) {
                 $messages[] = $msg;
-            } elseif (is_array($msg) && isset($msg['type'], $msg['content']) && is_string($msg['type']) && is_string($msg['content'])) {
+            } elseif (is_array($msg) && isset($msg['type'], $msg['content']) && is_string($msg['type']) && is_string(
+                    $msg['content']
+                )) {
                 $messages[] = [
                     'type' => $msg['type'],
                     'content' => $msg['content'],
                 ];
             }
         }
-        $title = (isset($payload['title']) && (is_string($payload['title']) || is_null($payload['title']))) ? $payload['title'] : null;
+        $title = (isset($payload['title']) && (is_string($payload['title']) || is_null(
+                    $payload['title']
+                ))) ? $payload['title'] : null;
         $result = [];
         $resultRaw = $payload['result'];
         if (!is_array($resultRaw)) {
@@ -141,10 +147,19 @@ abstract class AbstractConsoleCommand extends Command
             }
         }
         $success = (isset($payload['success']) && is_bool($payload['success'])) ? $payload['success'] : true;
-        $statusCode = (isset($payload['status_code']) && is_int($payload['status_code'])) ? $payload['status_code'] : Command::SUCCESS;
-        $successMessage = (isset($payload['success_message']) && (is_string($payload['success_message']) || is_null($payload['success_message']))) ? $payload['success_message'] : null;
-        $errorMessage = (isset($payload['error']) && (is_string($payload['error']) || is_null($payload['error']))) ? $payload['error'] : null;
-        $executionTime = (isset($payload['execution_time']) && (is_float($payload['execution_time']) || is_int($payload['execution_time']))) ? (float) $payload['execution_time'] : null;
+        $statusCode = (isset($payload['status_code']) && is_int(
+                $payload['status_code']
+            )) ? $payload['status_code'] : Command::SUCCESS;
+        $successMessage = (isset($payload['success_message']) && (is_string($payload['success_message']) || is_null(
+                    $payload['success_message']
+                ))) ? $payload['success_message'] : null;
+        $errorMessage = (isset($payload['error']) && (is_string($payload['error']) || is_null(
+                    $payload['error']
+                ))) ? $payload['error'] : null;
+        $executionTime = (isset($payload['execution_time']) && (is_float($payload['execution_time']) || is_int(
+                    $payload['execution_time']
+                ))) ? (float)$payload['execution_time'] : null;
+        /** @var array<string, string> $headers */
         $headers = [];
         $headersRaw = $payload['headers'] ?? [];
         if (!is_array($headersRaw)) {
@@ -169,19 +184,13 @@ abstract class AbstractConsoleCommand extends Command
         );
     }
 
-    /**
-     * Format memory to readable form (KB, MB, GB).
-     */
-    protected function formatMemory(int $bytes): string
+    protected function formatBytes(int $bytes): string
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        $pow = floor((float)($bytes ? log((float)$bytes) : 0) / log(1024));
+        $pow = (int)min($pow, count($units) - 1);
+        $bytes = (float)$bytes / (1024 ** $pow);
 
-        $bytes = max($bytes, 0);
-        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-        $pow = min($pow, count($units) - 1);
-
-        $bytes /= 1024 ** $pow;
-
-        return round($bytes, 2).' '.$units[$pow];
+        return round($bytes, 2) . ' ' . $units[$pow];
     }
 }

@@ -30,6 +30,7 @@ final class ConsoleResponder extends AbstractResponder
     public function renderToConsole(ResponderInterface $result, OutputInterface $output, InputInterface $input): int
     {
         $io = new SymfonyStyle($input, $output);
+        /** @var array<string, mixed> $payload */
         $payload = $result->payload();
 
         // Add title if exists
@@ -38,15 +39,15 @@ final class ConsoleResponder extends AbstractResponder
         }
 
         // Process messages based on their type
-        if (isset($payload['messages']) && is_array($payload['messages'])) {
-            foreach ($payload['messages'] as $message) {
-                // If array with type and content
-                if (is_array($message) && isset($message['type'], $message['content']) && is_string($message['type']) && is_string($message['content'])) {
-                    $this->renderMessageByType($message['type'], $message['content'], $io);
-                } elseif (is_string($message)) {
-                    // Regular message without formatting
-                    $io->text($message);
-                }
+        /** @var array<int, string|array{type: string, content: string}> $messages */
+        $messages = is_array($payload['messages'] ?? null) ? $payload['messages'] : [];
+        foreach ($messages as $message) {
+            // If array with type and content
+            if (is_array($message) && isset($message['type'], $message['content']) && is_string($message['type']) && is_string($message['content'])) {
+                $this->renderMessageByType($message['type'], $message['content'], $io);
+            } elseif (is_string($message)) {
+                // Regular message without formatting
+                $io->text($message);
             }
         }
 
@@ -55,17 +56,20 @@ final class ConsoleResponder extends AbstractResponder
             $io->section('Result');
 
             if (isset($payload['result']['table']) && is_array($payload['result']['table'])) {
-                $headers = $payload['result']['table']['headers'] ?? [];
-                $rows = $payload['result']['table']['rows'] ?? [];
+                /** @var array<string, mixed> $headers */
+                $headers = is_array($payload['result']['table']['headers'] ?? null) ? $payload['result']['table']['headers'] : [];
+                /** @var array<int, mixed> $rows */
+                $rows = is_array($payload['result']['table']['rows'] ?? null) ? $payload['result']['table']['rows'] : [];
                 if (is_array($headers) && is_array($rows)) {
                     $io->table($headers, $rows);
                 }
             } elseif (isset($payload['result']['data'])) {
-                if (is_array($payload['result']['data'])) {
-                    $json = json_encode($payload['result']['data'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                /** @var mixed $value */
+                $value = $payload['result']['data'] ?? null;
+                if (is_array($value)) {
+                    $json = json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
                     $io->writeln(is_string($json) ? $json : '');
                 } else {
-                    $value = $payload['result']['data'];
                     $io->text(is_scalar($value) ? (string) $value : '');
                 }
             }

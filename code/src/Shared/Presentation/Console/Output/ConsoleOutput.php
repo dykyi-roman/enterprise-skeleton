@@ -55,11 +55,13 @@ final readonly class ConsoleOutput implements ResponderInterface
         $this->headers = $headers;
     }
 
+    #[\Override]
     public function respond(): self
     {
         return $this;
     }
 
+    #[\Override]
     /**
      * @return array<string, mixed>
      */
@@ -94,11 +96,13 @@ final readonly class ConsoleOutput implements ResponderInterface
         return $payload;
     }
 
+    #[\Override]
     public function statusCode(): int
     {
         return $this->statusCode;
     }
 
+    #[\Override]
     /**
      * @return array<string, string>
      */

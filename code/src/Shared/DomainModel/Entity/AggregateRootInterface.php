@@ -9,7 +9,7 @@ use Shared\DomainModel\Event\DomainEventInterface;
 /**
  * @template T of DomainEventInterface
  */
-interface AggregateRoot
+interface AggregateRootInterface
 {
     /**
      * @param T $event
