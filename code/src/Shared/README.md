@@ -223,6 +223,18 @@ Shared/
            └── OutboxEventRepository.php         # Event Storage Implementation
 ```
 
+### Usage
+
+#### Saving Events via Repository
+
+```php
+// Domain changes automatically register events
+$aggregate->doSomething();
+
+// Saving the aggregate via repository save events
+$this->repository->save($aggregate, true, true);
+```
+
 ### Purpose
 
 The Event Store pattern serves several crucial purposes:
