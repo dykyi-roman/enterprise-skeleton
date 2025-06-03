@@ -206,6 +206,72 @@ Or via cron job:
 
 ---
 
+## EventStore Pattern
+
+### Overview
+
+Event Store is a pattern used in event-sourced systems to persist and retrieve domain events. Unlike traditional data storage that keeps only the current state, Event Store maintains a complete history of all events that have affected an aggregate. This approach enables robust event sourcing, providing a reliable audit log, enhanced debugging capabilities, and the ability to reconstruct the state of any aggregate at any point in time.
+
+### Architecture Implementation
+
+```
+Shared/
+└── Infrastructure/
+   └── EventStore
+       ├── EventStoreInterface.php               # Event Storage Interface               
+       └── Repository/                            
+           └── OutboxEventRepository.php         # Event Storage Implementation
+```
+
+### Purpose
+
+The Event Store pattern serves several crucial purposes:
+
+1. **Immutable Record of Changes**: Captures all domain events as an immutable log of every change in the system
+2. **Event Sourcing Support**: Enables rebuilding the state of any aggregate by replaying events
+3. **Historical Analysis**: Allows for temporal queries and analyzing how the system evolved
+4. **Audit Trail**: Provides a complete audit log for compliance and debugging
+5. **System Resilience**: Facilitates recovery scenarios by replaying events
+
+### Implementation Details
+
+In our system, the Event Store is implemented using a Doctrine-based approach:
+
+- **EventStoreInterface**: Defines the contract for storing and retrieving domain events
+- **DoctrineEventStore**: Implements the interface using Doctrine DBAL
+- **Database Structure**: Events are stored in a dedicated `event_store` table with the following schema:
+  - `event_id`: Unique identifier for each event
+  - `occurred_on`: Timestamp when the event occurred
+  - `event_type`: Fully qualified class name of the event
+  - `aggregate_id`: Identifier of the aggregate the event belongs to
+  - `event_data`: Serialized event data in JSON format
+
+### Event Store vs. Outbox Pattern
+
+While both patterns deal with domain events, they serve different purposes:
+
+- **Event Store**: Focuses on maintaining the complete history of domain events for event sourcing, allowing state reconstruction and historical analysis
+- **Outbox Pattern**: Ensures reliable event publishing in distributed systems by temporarily storing events before they are dispatched to external systems
+
+In some scenarios, both patterns can be used together - the Event Store maintains the complete event history, while the Outbox ensures reliable event delivery to external systems.
+
+### Benefits
+
+1. **Complete Audit Trail**: Every change to the domain is recorded and can be queried
+2. **Time Travel Debugging**: The ability to reconstruct the state at any point in time
+3. **Event Sourcing Support**: Enables advanced architectural patterns
+4. **Decoupled Event Consumption**: Events can be consumed by various components without affecting the source
+5. **Historical Analysis**: Enables business intelligence and analytics on historical data
+
+### Considerations
+
+1. **Performance**: Reading the current state requires replaying events, which can be optimized with snapshots
+2. **Storage Growth**: The event store continuously grows as new events are appended
+3. **Schema Evolution**: Care must be taken when changing event schemas to maintain backward compatibility
+4. **Query Complexity**: Historical queries may require specialized approaches
+
+---
+
 ## CQRS
 
 Separation of read and write operations using the Command Query Responsibility Segregation pattern.

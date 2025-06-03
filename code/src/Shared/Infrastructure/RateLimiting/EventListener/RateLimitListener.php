@@ -111,10 +111,13 @@ final readonly class RateLimitListener implements EventSubscriberInterface
 
             $response = new JsonResponse(
                 [
+                    'success' => false,
                     'status' => 'error',
-                    'code' => 101,
-                    'message' => $e->getMessage(),
-                    'wait_seconds' => $e->getWaitTimeSeconds(),
+                    'error' => [
+                        'code' => 101,
+                        'message' => $e->getMessage(),
+                        'wait_seconds' => $e->getWaitTimeSeconds(),
+                    ],
                 ],
                 Response::HTTP_TOO_MANY_REQUESTS
             );

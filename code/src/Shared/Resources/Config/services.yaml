@@ -39,15 +39,9 @@ services:
         arguments:
             $messageBus: '@command.bus'
 
-    Shared\Infrastructure\Outbox\Service\OutboxEventProcessor:
-        arguments:
-            $messageBus: '@event.bus.adapter'
-
-    Shared\Infrastructure\Outbox\Command\OutboxMessageEnvelopeHandler:
-        tags:
-            - { name: 'messenger.message_handler', bus: 'event.bus' }
-
-    # HTTP Client Logging Middleware
+    #############################################################################
+    # HTTP Client
+    #############################################################################
     Shared\Infrastructure\HttpClient\HttpClientLoggingMiddleware:
         arguments:
             $logger: '@logger'
@@ -60,7 +54,6 @@ services:
         class: Closure
         factory: ['@Shared\Infrastructure\HttpClient\HttpClientLoggingMiddlewareFactory', 'create']
 
-    # Define the HTTP client service
     GuzzleHttp\Client:
         class: GuzzleHttp\Client
         arguments:
@@ -75,12 +68,16 @@ services:
 
     Psr\Http\Client\ClientInterface: '@GuzzleHttp\Client'
 
+    #############################################################################
     # Global Assert Validation Error Handler
+    #############################################################################
     Shared\Infrastructure\ErrorHandler\GlobalErrorHandler:
         tags:
             - { name: kernel.event_subscriber }
 
+    #############################################################################
     # Responder
+    #############################################################################
     Shared\Presentation\Responder\JsonResponder:
         tags:
             - { name: kernel.event_subscriber }
@@ -91,7 +88,9 @@ services:
             
     Shared\Presentation\Responder\ConsoleResponder: ~
 
+    #############################################################################
     # Rate limits
+    #############################################################################
     Shared\Infrastructure\RateLimiting\Storage\CacheRateLimitStorage:
         arguments:
             $cache: '@rate_limiting.cache'
@@ -121,8 +120,27 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    #############################################################################
     # Outbox
-
+    #############################################################################
     Shared\Infrastructure\Outbox\Repository\OutboxEventRepository:
         arguments:
             $connection: '@doctrine.dbal.default_connection'
+
+    Shared\Infrastructure\Outbox\Service\OutboxEventProcessor:
+        arguments:
+            $messageBus: '@event.bus.adapter'
+
+    Shared\Infrastructure\Outbox\Command\OutboxMessageEnvelopeHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'event.bus' }
+
+    #############################################################################
+    # Event Store
+    #############################################################################
+    OrderContext\Infrastructure\EventStore\Repository\DoctrineEventStore:
+        arguments:
+            $connection: '@doctrine.dbal.default_connection'
+
+    OrderContext\Infrastructure\EventStore\EventStoreInterface:
+        alias: OrderContext\Infrastructure\EventStore\SqlEventStore

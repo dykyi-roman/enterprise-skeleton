@@ -79,6 +79,7 @@ final readonly class GlobalErrorHandler implements EventSubscriberInterface
     {
         $errorResponse = [
             'success' => false,
+            'status' => 'error',
             'error' => [
                 'type' => $this->getErrorType($exception),
                 'message' => $exception->getMessage(),
