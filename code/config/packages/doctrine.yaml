@@ -3,6 +3,9 @@ doctrine:
         url: '%env(resolve:DATABASE_URL)%'
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
+        types:
+            uuid: Symfony\Bridge\Doctrine\Types\UuidType
+            json: Doctrine\DBAL\Types\JsonType
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true

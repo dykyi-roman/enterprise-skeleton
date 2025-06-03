@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Shared\Infrastructure\EventStore;
+namespace Shared\DomainModel\Service;
 
 use Shared\DomainModel\Event\DomainEventInterface;
 

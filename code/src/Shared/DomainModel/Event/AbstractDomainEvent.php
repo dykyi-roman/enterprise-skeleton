@@ -10,7 +10,13 @@ abstract readonly class AbstractDomainEvent implements DomainEventInterface
         private string $eventId,
         private string $aggregateId,
         private \DateTimeImmutable $occurredAt,
+        private int $version = 1,
     ) {
+    }
+
+    public function getVersion(): int
+    {
+        return $this->version;
     }
 
     public function getEventId(): string
@@ -36,9 +42,11 @@ abstract readonly class AbstractDomainEvent implements DomainEventInterface
     public function jsonSerialize(): array
     {
         return [
-            'eventId' => $this->eventId,
-            'occurredAt' => $this->occurredAt->format(\DateTimeImmutable::ATOM),
-            'eventName' => $this->getEventName(),
+            'version' => $this->version,
+            'event_id' => $this->eventId,
+            'aggregate_id' => $this->aggregateId,
+            'occurred_at' => $this->occurredAt->format(\DateTimeImmutable::ATOM),
+            'event_name' => $this->getEventName(),
         ];
     }
 }

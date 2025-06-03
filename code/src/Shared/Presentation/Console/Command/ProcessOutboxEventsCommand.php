@@ -48,6 +48,12 @@ final class ProcessOutboxEventsCommand extends AbstractConsoleCommand
                 InputOption::VALUE_OPTIONAL,
                 'Delay in seconds between iterations',
                 5
+            )
+            ->addOption(
+                'daemon',
+                'D',
+                InputOption::VALUE_NONE,
+                'Run in daemon mode (continuously processing events)'
             );
     }
 
@@ -56,18 +62,31 @@ final class ProcessOutboxEventsCommand extends AbstractConsoleCommand
         $batchSize = (int) $input->getOption('batch-size');
         $iterations = (int) $input->getOption('iterations');
         $delay = (int) $input->getOption('delay');
+        $daemonMode = (bool) $input->getOption('daemon');
 
-        $this->logger->info('Starting outbox event processing', [
-            'batch_size' => $batchSize,
-            'iterations' => $iterations,
-            'delay' => $delay,
-        ]);
+        // In daemon mode, we run indefinitely
+        if ($daemonMode) {
+            $iterations = 0;
+            $this->logger->info('Starting outbox event processing in daemon mode', [
+                'batch_size' => $batchSize,
+                'delay' => $delay,
+            ]);
+        } else {
+            $this->logger->info('Starting outbox event processing', [
+                'batch_size' => $batchSize,
+                'iterations' => $iterations,
+                'delay' => $delay,
+            ]);
+        }
 
         $totalProcessed = 0;
         $iteration = 0;
         $messages = [];
 
-        $messages[] = ConsoleOutput::formatMessage('Starting outbox processing...', 'info');
+        $messages[] = ConsoleOutput::formatMessage(
+            $daemonMode ? 'Starting outbox processing in daemon mode...' : 'Starting outbox processing...',
+            'info'
+        );
 
         try {
             do {
@@ -89,6 +108,7 @@ final class ProcessOutboxEventsCommand extends AbstractConsoleCommand
                     'batch' => $iteration,
                     'processed' => $processed,
                     'total_processed' => $totalProcessed,
+                    'daemon_mode' => $daemonMode,
                 ]);
 
                 if (0 === $processed && (0 === $iterations || $iteration < $iterations)) {
@@ -100,7 +120,10 @@ final class ProcessOutboxEventsCommand extends AbstractConsoleCommand
                 }
             } while (0 === $iterations || $iteration < $iterations);
 
-            $this->logger->info('Outbox event processing completed', ['total_processed' => $totalProcessed]);
+            $this->logger->info('Outbox event processing completed', [
+                'total_processed' => $totalProcessed,
+                'daemon_mode' => $daemonMode,
+            ]);
 
             return ConsoleOutput::success(
                 $messages,
@@ -108,6 +131,7 @@ final class ProcessOutboxEventsCommand extends AbstractConsoleCommand
                 [
                     'processed_events' => $totalProcessed,
                     'iterations' => $iteration,
+                    'daemon_mode' => $daemonMode,
                 ],
                 sprintf('Outbox processing completed. Total processed: %d events', $totalProcessed),
             );
@@ -115,6 +139,7 @@ final class ProcessOutboxEventsCommand extends AbstractConsoleCommand
             $this->logger->error('Error processing outbox events', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
+                'daemon_mode' => $daemonMode,
             ]);
 
             $messages[] = ConsoleOutput::formatMessage(

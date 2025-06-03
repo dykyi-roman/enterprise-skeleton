@@ -51,7 +51,7 @@ help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*## .*$$' $(MAKEFILE_LIST) | grep -E '(copy-config|show-config)' | sort | awk 'BEGIN {FS = ":.*?## "}{printf "  $(GREEN)%-30s$(RESET) %s\n", $$1, $$2}'
 	@echo ""
 	@echo "$(BLUE)▶ 🐳 DOCKER MANAGEMENT$(RESET)"
-	@grep -E '^[a-zA-Z0-9_-]+:.*## .*$$' $(MAKEFILE_LIST) | grep -E '(install|up|down|start|stop|restart|build|prune|enter|console)' | sort | awk 'BEGIN {FS = ":.*?## "}{printf "  $(GREEN)%-30s$(RESET) %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9_-]+:.*## .*$$' $(MAKEFILE_LIST) | grep -E '(install|up|down|start|stop|restart|build|prune|enter|console|ps)' | sort | awk 'BEGIN {FS = ":.*?## "}{printf "  $(GREEN)%-30s$(RESET) %s\n", $$1, $$2}'
 	@echo ""
 	@echo "$(BLUE)▶ 📋 LOGS$(RESET)"
 	@grep -E '^[a-zA-Z0-9_-]+:.*## .*$$' $(MAKEFILE_LIST) | grep -E '(logs)' | sort | awk 'BEGIN {FS = ":.*?## "}{printf "  $(GREEN)%-30s$(RESET) %s\n", $$1, $$2}'
@@ -83,7 +83,7 @@ show-config: ## Display current configuration
 	@echo "$(GREEN)$(config)$(RESET)"
 
 ## 🐳 DOCKER MANAGEMENT
-.PHONY: install up down start stop restart build prune enter console
+.PHONY: install up down start stop restart build prune enter console ps
 
 install: ## Install project dependencies and set up Docker environment
 	$(call print_message,"Creating Docker network (if not exists)...")
@@ -114,6 +114,10 @@ down: ## Stop Docker containers
 start: up ## Alias for 'up' command
 
 stop: down ## Alias for 'down' command
+
+ps: ## Display Docker containers status
+	@echo "📊 Containers status:"
+	@export COMPOSE_PROFILES="$(config)" && cd $(workdir) && docker compose ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
 restart: ## Restart Docker containers
 	$(call print_message,"Restarting Docker containers...")

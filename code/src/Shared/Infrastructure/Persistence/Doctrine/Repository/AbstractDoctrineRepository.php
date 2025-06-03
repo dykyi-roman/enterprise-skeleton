@@ -7,8 +7,8 @@ namespace Shared\Infrastructure\Persistence\Doctrine\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Shared\DomainModel\Entity\AggregateRootInterface;
+use Shared\DomainModel\Service\EventStoreInterface;
 use Shared\DomainModel\Service\MessageBusInterface;
-use Shared\Infrastructure\EventStore\EventStoreInterface;
 use Shared\Infrastructure\Outbox\Publisher\OutboxPublisherInterface;
 
 abstract readonly class AbstractDoctrineRepository
@@ -34,7 +34,7 @@ abstract readonly class AbstractDoctrineRepository
         AggregateRootInterface $entity,
         bool $outbox = false,
         bool $events = false,
-        bool $flush = true
+        bool $flush = true,
     ): void {
         $this->entityManager->persist($entity);
 
@@ -46,7 +46,7 @@ abstract readonly class AbstractDoctrineRepository
                     $this->eventStore->append($event);
                 }
             } catch (\Throwable $exception) {
-                throw new \RuntimeException(sprintf('Failed to publish event "%s"', $event::class), 0, $exception);
+                throw new \RuntimeException(sprintf('Failed to process event "%s"', $event::class), 0, $exception);
             }
         }
 

@@ -22,12 +22,7 @@ final class RateLimitExceededException extends \RuntimeException
         private readonly array $context = [],
     ) {
         parent::__construct(
-            sprintf(
-                'Rate limit exceeded for resource "%s". Limit: %d. Wait %d seconds before retrying.',
-                $resource,
-                $limitValue,
-                $waitTimeSeconds
-            ),
+            sprintf('Rate limit exceeded for resource "%s"', $resource),
             429 // HTTP 429 Too Many Requests
         );
     }

@@ -39,6 +39,13 @@ services:
         arguments:
             $messageBus: '@command.bus'
 
+    # Services
+    Shared\Application\Service\ApplicationService:
+        arguments:
+            $commandBus: '@command.bus.adapter'
+            $queryBus: '@query.bus.adapter'
+            $logger: '@logger'
+
     #############################################################################
     # HTTP Client
     #############################################################################
@@ -129,18 +136,20 @@ services:
 
     Shared\Infrastructure\Outbox\Service\OutboxEventProcessor:
         arguments:
-            $messageBus: '@event.bus.adapter'
+            $eventBus: '@event.bus.adapter'
 
     Shared\Infrastructure\Outbox\Command\OutboxMessageEnvelopeHandler:
+        arguments:
+            $eventBus: '@event.bus.adapter'
         tags:
             - { name: 'messenger.message_handler', bus: 'event.bus' }
 
     #############################################################################
     # Event Store
     #############################################################################
-    OrderContext\Infrastructure\EventStore\Repository\DoctrineEventStore:
+    Shared\Infrastructure\EventStore\Repository\DoctrineEventStore:
         arguments:
             $connection: '@doctrine.dbal.default_connection'
 
-    OrderContext\Infrastructure\EventStore\EventStoreInterface:
-        alias: OrderContext\Infrastructure\EventStore\SqlEventStore
+    Shared\DomainModel\Service\EventStoreInterface:
+        class: Shared\Infrastructure\EventStore\Repository\DoctrineEventStore

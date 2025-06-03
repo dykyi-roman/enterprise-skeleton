@@ -6,7 +6,8 @@ framework:
         # Defining message buses (CQRS)
         default_bus: command.bus
         buses:
-            event.bus: ~
+            event.bus:
+                default_middleware: allow_no_handlers
             command.bus: ~
             query.bus: ~
             messenger.bus.default: ~

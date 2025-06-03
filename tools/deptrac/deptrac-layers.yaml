@@ -4,6 +4,7 @@ parameters:
   exclude_files:
     - '#.*test.*#'
     - '#vendor#'
+    - '#src/Shared/#'
   layers:
     - name: Presentation
       collectors:
@@ -36,4 +37,5 @@ parameters:
     Application:
       - DomainModel
     DomainModel: ~
-    Infrastructure: ~
+    Infrastructure:
+      - DomainModel  # Infrastructure can use  DomainModel{Dto, ValueObject, Entity, Enum, Exception}

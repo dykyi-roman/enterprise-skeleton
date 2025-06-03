@@ -19,17 +19,18 @@ final class Version20250527092424 extends AbstractMigration
         // Drop old table if exists
         $this->addSql('DROP TABLE IF EXISTS event_store');
 
-        $this->addSql('CREATE TABLE event_store (
+        $this->addSql(
+            'CREATE TABLE event_store (
             id UUID PRIMARY KEY,
-            aggregate_id UUID NOT NULL,
-            aggregate_type VARCHAR(255) NOT NULL,
+            event_id VARCHAR(36) NOT NULL,
+            aggregate_id VARCHAR(36) NOT NULL,
             event_type VARCHAR(255) NOT NULL,
-            event_data JSONB NOT NULL,
-            event_metadata JSONB,
+            payload TEXT NOT NULL,
             version INTEGER NOT NULL,
             occurred_at TIMESTAMP WITH TIME ZONE NOT NULL,
-            recorded_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-        )');
+            created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+        )'
+        );
 
         // Unique index to prevent duplicate events for one version of an aggregate
         $this->addSql('CREATE UNIQUE INDEX idx_event_store_aggregate_version ON event_store (aggregate_id, version)');

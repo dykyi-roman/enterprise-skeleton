@@ -1,4 +1,0 @@
-# Context Map
-
-| Context | Description |
-|---------|-------------|

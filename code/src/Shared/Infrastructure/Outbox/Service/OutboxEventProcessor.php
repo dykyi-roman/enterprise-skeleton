@@ -15,7 +15,7 @@ final readonly class OutboxEventProcessor
 {
     public function __construct(
         private OutboxEventRepository $outboxRepository,
-        private MessageBusInterface $messageBus,
+        private MessageBusInterface $eventBus,
         private LockFactory $lockFactory,
         private LoggerInterface $logger,
         private string $exchangeName = 'order_events',
@@ -68,7 +68,7 @@ final readonly class OutboxEventProcessor
                         ]
                     );
 
-                    $this->messageBus->dispatch($messageEnvelope);
+                    $this->eventBus->dispatch($messageEnvelope);
 
                     $event->markAsProcessed();
                     $this->outboxRepository->update($event);

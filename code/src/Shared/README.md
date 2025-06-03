@@ -2,11 +2,11 @@
 
 This directory contains shared components used across all application contexts.
 
-## Rate Limiting
+# Rate Limiting
 
 A mechanism for request rate limiting to protect the API from overload.
 
-### Architecture
+## Architecture
 
 ```
 Shared/
@@ -23,7 +23,7 @@ Shared/
         └── Attribute/         # PHP attributes for declarative usage
 ```
 
-### How it works
+## How it works
 
 1. **Limit definition**: Limits are set declaratively via the PHP attribute `RateLimit`.
 2. **Request identification**: Each request is identified by the client's IP address (by default).
@@ -31,7 +31,7 @@ Shared/
 4. **Limit checking**: EventListener intercepts requests and checks if the limit is exceeded.
 5. **Limit exceeded handling**: On exceeding the limit, HTTP 429 is returned with headers containing info.
 
-### Usage
+## Usage
 
 Add a rate limit to a controller or method:
 
@@ -52,43 +52,49 @@ final class PaymentController
 }
 ```
 
-### Key features
+## Key features
 
 - **Flexibility**: Different limits for different endpoints
 - **Scalability**: Redis provides high performance and cluster support
 - **Extensibility**: Easy to add new strategies and identification methods
 - **Standardization**: Standard HTTP headers are used for clients
 
-### Response when rate limit is exceeded
+## Response when rate limit is exceeded
 
 ```json
 {
-    "status": "error",
+  "success": false,
+  "status": "error",
+  "errors": {
     "code": 101,
-    "message": "Rate limit exceeded for resource 'api_route:create_payment'. Limit: 100. Wait 35 seconds before retrying.",
-    "wait_seconds": 35
+    "message": "Rate limit exceeded for resource 'api_route:create_payment'",
+  }
 }
 ```
 
 With HTTP headers:
+
 - `X-RateLimit-Limit: 100`
 - `X-RateLimit-Remaining: 0`
 - `X-RateLimit-Reset: 1717133875` (Unix timestamp)
 - `Retry-After: 35` (seconds)
 
-### Configuration
+## Configuration
 
 Service configuration is in `src/Shared/Resources/config/rate_limiting.yaml`.
 
 ---
 
-## Outbox Pattern
+# Outbox Pattern
 
-### Overview
+## Overview
 
-The Outbox Pattern is an architectural pattern that ensures reliable delivery of domain events through asynchronous messaging, guaranteeing data consistency between different services in a distributed system. The main purpose of this pattern is to solve the "dual write" problem, ensuring that events are not lost in case of failures between their creation and publication.
+The Outbox Pattern is an architectural pattern that ensures reliable delivery of domain events through asynchronous
+messaging, guaranteeing data consistency between different services in a distributed system. The main purpose of this
+pattern is to solve the "dual write" problem, ensuring that events are not lost in case of failures between their
+creation and publication.
 
-### Why Outbox Pattern
+## Why Outbox Pattern
 
 1. **Atomicity** — Domain events and business data are stored in a single transaction
 2. **Reliability** — Events are not lost even if the messaging system fails
@@ -96,7 +102,7 @@ The Outbox Pattern is an architectural pattern that ensures reliable delivery of
 4. **Isolation** — Event processing happens asynchronously and doesn't block the main execution flow
 5. **Idempotence** — The system can process the same event multiple times without side effects
 
-### Architecture Implementation
+## Architecture Implementation
 
 ```
 Shared/
@@ -120,17 +126,20 @@ Shared/
             └── ProcessOutboxEventsCommand.php    # Event processing command
 ```
 
-### How It Works
+## How It Works
 
-1. **Event Storage** — When the domain creates an event, it's serialized and stored in the `outbox_events` table along with business data transaction
-2. **Event Processing** — A background process `OutboxEventProcessor` periodically polls the table for unprocessed events
+1. **Event Storage** — When the domain creates an event, it's serialized and stored in the `outbox_events` table along
+   with business data transaction
+2. **Event Processing** — A background process `OutboxEventProcessor` periodically polls the table for unprocessed
+   events
 3. **Envelope Creation** — Events are wrapped in an `OutboxMessageEnvelope` with metadata and payload
 4. **Message Dispatch** — Envelopes are sent through a message bus (in our case, Symfony Messenger)
 5. **Message Handling** — Events are processed by appropriate handlers in the system
-6. **Event Deserialization** — `OutboxMessageEnvelopeHandler` deserializes the event payload from JSON using the static `fromArray()` method from the `DomainEventInterface`
+6. **Event Deserialization** — `OutboxMessageEnvelopeHandler` deserializes the event payload from JSON using the static
+   `fromArray()` method from the `DomainEventInterface`
 7. **Event Bus Dispatch** — The deserialized domain event is dispatched to the event bus for further processing
 
-### Implementation Benefits
+## Implementation Benefits
 
 1. **No Reflection** — We use the static `fromArray()` method for event deserialization without reflection
 2. **Type Safety** — All events are strongly typed and implement a common interface
@@ -138,9 +147,9 @@ Shared/
 4. **Retry Mechanism** — Retry logic for events that failed to process
 5. **Monitoring** — Tracking of processing success and errors
 
-### Usage
+## Usage
 
-#### Publishing Events via Repository
+### Publishing Events via Repository
 
 ```php
 // Domain changes automatically register events
@@ -151,7 +160,7 @@ $aggregate->doSomething();
 $this->repository->save($aggregate, true);
 ```
 
-#### Manual Event Publication
+### Manual Event Publication
 
 ```php
 // Create domain event
@@ -161,7 +170,7 @@ $event = PaymentCompletedEvent::create($paymentId, $amount);
 $this->outboxPublisher->publish($event);
 ```
 
-#### Processing Outgoing Events
+### Processing Outgoing Events
 
 Starting the processing via console command:
 
@@ -169,21 +178,16 @@ Starting the processing via console command:
 bin/console app:process-outbox
 ```
 
-Or via cron job:
+## Event Processing Flows
 
-```
-* * * * * /path/to/project/bin/console app:process-outbox
-```
-### Event Processing Flows
-
-#### Sending Event to Outbox
+### Sending Event to Outbox
 
 1. Aggregate creates domain event
 2. Repository saves the aggregate and its events
 3. `OutboxPublisher` serializes each event to JSON
 4. Events are stored in `outbox_events` table with `is_processed = false`
 
-#### Processing Event from Outbox
+### Processing Event from Outbox
 
 1. `OutboxEventProcessor` finds unprocessed events
 2. Creates `OutboxMessageEnvelope` with metadata and payload
@@ -192,13 +196,13 @@ Or via cron job:
 5. Event is sent to event bus for further processing
 6. Outbox event is marked as processed
 
-### Error Handling
+## Error Handling
 
 1. **Retry Mechanism** — If an error occurs during processing, the `retry_count` is increased
 2. **Delayed Processing** — Events with errors can be processed later
 3. **Error Logging** — Error description is saved in the `error` field
 
-### Optimizations
+## Optimizations
 
 1. **Row Locking** — Used to prevent parallel processing of the same event
 2. **Batch Processing** — Events are processed in batches for better performance
@@ -206,26 +210,31 @@ Or via cron job:
 
 ---
 
-## EventStore Pattern
+# EventStore Pattern
 
-### Overview
+## Overview
 
-Event Store is a pattern used in event-sourced systems to persist and retrieve domain events. Unlike traditional data storage that keeps only the current state, Event Store maintains a complete history of all events that have affected an aggregate. This approach enables robust event sourcing, providing a reliable audit log, enhanced debugging capabilities, and the ability to reconstruct the state of any aggregate at any point in time.
+Event Store is a pattern used in event-sourced systems to persist and retrieve domain events. Unlike traditional data
+storage that keeps only the current state, Event Store maintains a complete history of all events that have affected an
+aggregate. This approach enables robust event sourcing, providing a reliable audit log, enhanced debugging capabilities,
+and the ability to reconstruct the state of any aggregate at any point in time.
 
-### Architecture Implementation
+## Architecture Implementation
 
 ```
 Shared/
+└── DomainModel/
+    └── Service/
+        └── EventStoreInterface.php              # Event Storage Interface
 └── Infrastructure/
    └── EventStore
-       ├── EventStoreInterface.php               # Event Storage Interface               
        └── Repository/                            
            └── OutboxEventRepository.php         # Event Storage Implementation
 ```
 
-### Usage
+## Usage
 
-#### Saving Events via Repository
+### Saving Events via Repository
 
 ```php
 // Domain changes automatically register events
@@ -235,7 +244,7 @@ $aggregate->doSomething();
 $this->repository->save($aggregate, true, true);
 ```
 
-### Purpose
+## Purpose
 
 The Event Store pattern serves several crucial purposes:
 
@@ -245,29 +254,32 @@ The Event Store pattern serves several crucial purposes:
 4. **Audit Trail**: Provides a complete audit log for compliance and debugging
 5. **System Resilience**: Facilitates recovery scenarios by replaying events
 
-### Implementation Details
+## Implementation Details
 
 In our system, the Event Store is implemented using a Doctrine-based approach:
 
 - **EventStoreInterface**: Defines the contract for storing and retrieving domain events
 - **DoctrineEventStore**: Implements the interface using Doctrine DBAL
 - **Database Structure**: Events are stored in a dedicated `event_store` table with the following schema:
-  - `event_id`: Unique identifier for each event
-  - `occurred_on`: Timestamp when the event occurred
-  - `event_type`: Fully qualified class name of the event
-  - `aggregate_id`: Identifier of the aggregate the event belongs to
-  - `event_data`: Serialized event data in JSON format
+    - `event_id`: Unique identifier for each event
+    - `occurred_at`: Timestamp when the event occurred
+    - `event_type`: Fully qualified class name of the event
+    - `aggregate_id`: Identifier of the aggregate the event belongs to
+    - `event_data`: Serialized event data in JSON format
 
-### Event Store vs. Outbox Pattern
+## Event Store vs. Outbox Pattern
 
 While both patterns deal with domain events, they serve different purposes:
 
-- **Event Store**: Focuses on maintaining the complete history of domain events for event sourcing, allowing state reconstruction and historical analysis
-- **Outbox Pattern**: Ensures reliable event publishing in distributed systems by temporarily storing events before they are dispatched to external systems
+- **Event Store**: Focuses on maintaining the complete history of domain events for event sourcing, allowing state
+  reconstruction and historical analysis
+- **Outbox Pattern**: Ensures reliable event publishing in distributed systems by temporarily storing events before they
+  are dispatched to external systems
 
-In some scenarios, both patterns can be used together - the Event Store maintains the complete event history, while the Outbox ensures reliable event delivery to external systems.
+In some scenarios, both patterns can be used together - the Event Store maintains the complete event history, while the
+Outbox ensures reliable event delivery to external systems.
 
-### Benefits
+## Benefits
 
 1. **Complete Audit Trail**: Every change to the domain is recorded and can be queried
 2. **Time Travel Debugging**: The ability to reconstruct the state at any point in time
@@ -275,7 +287,7 @@ In some scenarios, both patterns can be used together - the Event Store maintain
 4. **Decoupled Event Consumption**: Events can be consumed by various components without affecting the source
 5. **Historical Analysis**: Enables business intelligence and analytics on historical data
 
-### Considerations
+## Considerations
 
 1. **Performance**: Reading the current state requires replaying events, which can be optimized with snapshots
 2. **Storage Growth**: The event store continuously grows as new events are appended
@@ -284,31 +296,12 @@ In some scenarios, both patterns can be used together - the Event Store maintain
 
 ---
 
-## CQRS
+# Specifications
 
-Separation of read and write operations using the Command Query Responsibility Segregation pattern.
+Composable specifications for expressing business rules as logical expressions.
+Read: https://www.martinfowler.com/apsupp/spec.pdf
 
-#### Architecture
-
-- **CommandBus**: Command bus for state-changing operations
-- **QueryBus**: Query bus for read operations
-- **ApplicationService**: Centralized interface for both buses
-
-#### Usage
-
-```php
-// Execute a command (mutation, no return value)
-$this->applicationService->command(new CreatePaymentCommand($amount, $description));
-
-// Execute a query (get data)
-$payment = $this->applicationService->query(new GetPaymentQuery($paymentId));
-```
-
-### Specifications
-
-Composable specifications for expressing business rules as logical expressions. Read: https://www.martinfowler.com/apsupp/spec.pdf
-
-#### Available operators
+### Available operators
 
 - **AndSpecification**: Logical AND (&&)
 - **OrSpecification**: Logical OR (||)
@@ -316,7 +309,7 @@ Composable specifications for expressing business rules as logical expressions. 
 - **AndNotSpecification**: Logical AND-NOT (&& !)
 - **OrNotSpecification**: Logical OR-NOT (|| !)
 
-#### Usage
+### Usage
 
 ```php
 $spec = new AndSpecification(
@@ -330,3 +323,113 @@ $spec = new AndSpecification(
 if ($spec->isSatisfiedBy($customer)) {
     // Action if specification is satisfied
 }
+```
+
+---
+
+# ACID Transaction Support
+
+## Overview
+
+Our application implements robust transaction management following the ACID principles:
+- **Atomicity**: Transactions are fully completed or fully rolled back
+- **Consistency**: The database remains in a consistent state before and after transactions
+- **Isolation**: Transactions are isolated from the effects of other concurrent transactions
+- **Durability**: Once committed, transaction results are permanent
+
+## Architecture
+
+```
+Shared/
+├── DomainModel/
+│   └── Service/
+│       └── TransactionServiceInterface.php    # Transaction service contract
+└── Infrastructure/
+    └── Persistence/
+        └── Doctrine/
+            ├── Repository/
+            │   └── AbstractDoctrineRepository.php # Repository with transaction support
+            └── Transaction/
+                └── DoctrineTransactionService.php # Transaction implementation
+```
+
+## Implementation Features
+
+1. **Transaction Service Interface**: Domain-layer abstraction for transaction management
+2. **Doctrine Transaction Service**: Infrastructure implementation using Doctrine DBAL
+3. **Configurable Isolation Levels**: Support for different transaction isolation levels
+4. **Retry Mechanism**: Automatic retry for deadlocks or concurrency conflicts
+5. **Nested Transaction Support**: Recognition and proper handling of nested transactions
+
+## Isolation Levels
+
+The transaction service supports all standard database isolation levels:
+
+- **READ UNCOMMITTED**: Lowest isolation, allows dirty reads but highest concurrency
+- **READ COMMITTED**: Prevents dirty reads, moderate isolation
+- **REPEATABLE READ**: Prevents non-repeatable reads, higher isolation
+- **SERIALIZABLE**: Complete isolation, prevents all concurrency anomalies but lowest throughput
+
+## Usage Examples
+
+### Basic Transaction
+
+```php
+// Simple transaction with automatic commit/rollback
+$this->transactionService->execute(function () {
+    $this->userRepository->save($user);
+    $this->walletRepository->save($wallet);
+    
+    return $user->getId();
+});
+```
+
+### Transaction with Custom Isolation Level
+
+```php
+use Doctrine\DBAL\TransactionIsolationLevel;
+
+// Execute with serializable isolation for critical operations
+$this->transactionService->executeWithIsolationLevel(
+    function () {
+        $account->withdraw($amount);
+        $this->accountRepository->save($account);
+    },
+    TransactionIsolationLevel::SERIALIZABLE
+);
+```
+
+### Transaction with Retry for Deadlocks
+
+```php
+// Automatically retry up to 3 times if deadlocks occur
+$this->transactionService->executeWithRetry(
+    function () {
+        $product->decreaseStock($quantity);
+        $this->productRepository->save($product);
+    },
+    3, // max retries
+    200 // delay in milliseconds between retries
+);
+```
+
+## Advanced Features
+
+1. **Deadlock Detection**: Automatic detection and handling of database deadlocks
+2. **Optimistic Locking**: Version fields to detect concurrent modifications
+3. **Transaction Boundary Control**: Explicit transaction management or automatic through repositories
+
+## Benefits of Our ACID Implementation
+
+1. **Data Integrity**: Guaranteed consistency even during failures or concurrent operations
+2. **Error Recovery**: Automatic rollback of failed transactions preserves system state
+3. **Concurrency Control**: Proper isolation prevents issues with concurrent access
+4. **Scalability**: Configurable isolation levels allow balancing consistency and performance
+
+## Best Practices
+
+1. Keep transactions as short as possible to minimize lock contention
+2. Choose the appropriate isolation level based on business requirements
+3. Use the Outbox pattern for reliable event publication within transactions
+4. Implement optimistic locking for entities where appropriate
+5. Consider using sagas for long-running business transactions across bounded contexts
