@@ -7,7 +7,7 @@ namespace Shared\DomainModel\Specification;
 /**
  * Interface for the Specification pattern.
  * Specifications allow encapsulation of business rules that can be combined using logical operators.
- * 
+ *
  * @template T
  */
 interface SpecificationInterface
@@ -23,6 +23,7 @@ interface SpecificationInterface
      * Combine this specification with another using AND.
      *
      * @param SpecificationInterface<T> $other
+     *
      * @return SpecificationInterface<T>
      */
     public function and(self $other): self;
@@ -31,6 +32,7 @@ interface SpecificationInterface
      * Combine this specification with another using OR.
      *
      * @param SpecificationInterface<T> $other
+     *
      * @return SpecificationInterface<T>
      */
     public function or(self $other): self;

@@ -64,7 +64,6 @@ final class ConsoleResponder extends AbstractResponder
                     $io->table($headers, $rows);
                 }
             } elseif (isset($payload['result']['data'])) {
-                /** @var mixed $value */
                 $value = $payload['result']['data'] ?? null;
                 if (is_array($value)) {
                     $json = json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

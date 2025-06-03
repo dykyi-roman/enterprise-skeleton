@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace Shared\Infrastructure\Outbox\ValueObject;
 
-use DateTimeImmutable;
-
 final class OutboxEvent
 {
     /**
-     * @param string $id Unique identifier of the record
-     * @param string $eventId Event identifier
-     * @param string $eventType Event type
-     * @param string $aggregateId Aggregate identifier
-     * @param string $payload Serialized event data
-     * @param DateTimeImmutable $createdAt Date and time of record creation
-     * @param DateTimeImmutable|null $processedAt Date and time of record processing
-     * @param bool $isProcessed Processing status
-     * @param int $retryCount Number of processing attempts
-     * @param string|null $error Description of the error during the last processing attempt
+     * @param string                  $id          Unique identifier of the record
+     * @param string                  $eventId     Event identifier
+     * @param string                  $eventType   Event type
+     * @param string                  $aggregateId Aggregate identifier
+     * @param string                  $payload     Serialized event data
+     * @param \DateTimeImmutable      $createdAt   Date and time of record creation
+     * @param \DateTimeImmutable|null $processedAt Date and time of record processing
+     * @param bool                    $isProcessed Processing status
+     * @param int                     $retryCount  Number of processing attempts
+     * @param string|null             $error       Description of the error during the last processing attempt
      */
     public function __construct(
         private readonly string $id,
@@ -26,11 +24,12 @@ final class OutboxEvent
         private readonly string $eventType,
         private readonly string $aggregateId,
         private readonly string $payload,
-        private readonly DateTimeImmutable $createdAt,
-        public ?DateTimeImmutable $processedAt = null {
-            get {
-                return $this->processedAt;
-            }
+        private readonly \DateTimeImmutable $createdAt,
+        public ?\DateTimeImmutable $processedAt = null {
+            get
+    {
+        return $this->processedAt;
+    }
         },
         public bool $isProcessed = false {
             get {
@@ -46,7 +45,7 @@ final class OutboxEvent
             get {
                 return $this->error;
             }
-        }
+        },
     ) {
     }
 
@@ -58,19 +57,19 @@ final class OutboxEvent
             $eventType,
             $aggregateId,
             $payload,
-            new DateTimeImmutable()
+            new \DateTimeImmutable()
         );
     }
 
     public function markAsProcessed(): void
     {
         $this->isProcessed = true;
-        $this->processedAt = new DateTimeImmutable();
+        $this->processedAt = new \DateTimeImmutable();
     }
 
     public function increaseRetryCount(string $error): void
     {
-        $this->retryCount++;
+        ++$this->retryCount;
         $this->error = $error;
     }
 
@@ -99,9 +98,8 @@ final class OutboxEvent
         return $this->payload;
     }
 
-    public function getCreatedAt(): DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
-
 }

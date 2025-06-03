@@ -9,6 +9,7 @@ namespace Shared\DomainModel\Specification;
  * Satisfied if both conditions are satisfied.
  *
  * @template T
+ *
  * @extends AbstractSpecification<T>
  */
 final readonly class AndSpecification extends AbstractSpecification

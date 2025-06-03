@@ -9,13 +9,13 @@ use Shared\Infrastructure\RateLimiting\Exception\RateLimitExceededException;
 use Shared\Infrastructure\RateLimiting\Strategy\RateLimitStrategyInterface;
 
 /**
- * Main RateLimiter implementation, responsible for checking request limits
+ * Main RateLimiter implementation, responsible for checking request limits.
  */
 final readonly class RateLimiter implements RateLimiterInterface
 {
     /**
-     * @param RateLimitStrategyInterface $strategy Rate limiting strategy
-     * @param RateLimitConfiguration $configuration Configuration with limits
+     * @param RateLimitStrategyInterface $strategy      Rate limiting strategy
+     * @param RateLimitConfiguration     $configuration Configuration with limits
      */
     public function __construct(
         private RateLimitStrategyInterface $strategy,
@@ -24,10 +24,11 @@ final readonly class RateLimiter implements RateLimiterInterface
     }
 
     /**
-     * Checks if a request can be processed given the rate limits
+     * Checks if a request can be processed given the rate limits.
      *
-     * @param string $key Request identifier (IP, API key, etc.)
+     * @param string $key      Request identifier (IP, API key, etc.)
      * @param string $resource Resource identifier, optional parameter
+     *
      * @throws RateLimitExceededException if the limit is exceeded
      */
     public function check(string $key, string $resource = ''): void
@@ -40,23 +41,16 @@ final readonly class RateLimiter implements RateLimiterInterface
             $limitInfo = $this->strategy->getLimitInfo($key, $actualResource, $limit, $windowSize);
             $waitTime = max(1, $limitInfo['reset'] - time());
 
-            throw new RateLimitExceededException(
-                $actualResource,
-                $limit,
-                $waitTime,
-                [
-                    'key' => $key,
-                    'limit_info' => $limitInfo
-                ]
-            );
+            throw new RateLimitExceededException($actualResource, $limit, $waitTime, ['key' => $key, 'limit_info' => $limitInfo]);
         }
     }
 
     /**
-     * Returns information about the current limit state
+     * Returns information about the current limit state.
      *
-     * @param string $key Request identifier
+     * @param string $key      Request identifier
      * @param string $resource Resource identifier, optional parameter
+     *
      * @return array<string,mixed> Limit information
      */
     public function getLimitInfo(string $key, string $resource = ''): array
@@ -69,9 +63,9 @@ final readonly class RateLimiter implements RateLimiterInterface
     }
 
     /**
-     * Resets the counter for the specified key and resource
+     * Resets the counter for the specified key and resource.
      *
-     * @param string $key Request identifier
+     * @param string $key      Request identifier
      * @param string $resource Resource identifier, optional parameter
      */
     public function reset(string $key, string $resource = ''): void

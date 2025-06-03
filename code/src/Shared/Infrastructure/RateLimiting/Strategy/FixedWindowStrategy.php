@@ -7,7 +7,7 @@ namespace Shared\Infrastructure\RateLimiting\Strategy;
 use Shared\Infrastructure\RateLimiting\Storage\RateLimitStorageInterface;
 
 /**
- * Fixed Window Rate Limiting Strategy
+ * Fixed Window Rate Limiting Strategy.
  *
  * This strategy counts requests in fixed time windows (e.g. 60 seconds).
  * When a window expires, the counter resets to zero.
@@ -22,6 +22,7 @@ final readonly class FixedWindowStrategy implements RateLimitStrategyInterface
     public function isLimitExceeded(string $key, string $resource, int $limit, int $windowSizeSeconds): bool
     {
         $count = $this->storage->increment($key, $resource, $windowSizeSeconds);
+
         return $count > $limit;
     }
 
@@ -29,7 +30,7 @@ final readonly class FixedWindowStrategy implements RateLimitStrategyInterface
     {
         $count = $this->storage->get($key, $resource);
         $remaining = max(0, $limit - $count);
-        
+
         $ttl = $this->storage->getTimeToLive($key, $resource);
 
         if ($ttl <= 0 && $count > 0) {
@@ -38,9 +39,9 @@ final readonly class FixedWindowStrategy implements RateLimitStrategyInterface
             $remaining = $limit;
             $ttl = $windowSizeSeconds;
         }
-        
+
         $resetTimestamp = time() + $ttl;
-        
+
         return [
             'limit' => $limit,
             'remaining' => $remaining,

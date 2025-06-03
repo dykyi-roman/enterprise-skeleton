@@ -7,15 +7,15 @@ namespace Shared\Infrastructure\RateLimiting\Attribute;
 use Attribute;
 
 /**
- * Attribute for applying rate limiting to API controllers and methods
+ * Attribute for applying rate limiting to API controllers and methods.
  */
-#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
 final class RateLimit
 {
     /**
-     * @param int $limit Maximum number of requests allowed
-     * @param int $windowSizeSeconds Time window size in seconds
-     * @param string|null $key Custom key for rate limiting (optional, defaults to IP)
+     * @param int         $limit             Maximum number of requests allowed
+     * @param int         $windowSizeSeconds Time window size in seconds
+     * @param string|null $key               Custom key for rate limiting (optional, defaults to IP)
      */
     public function __construct(
         private readonly int $limit,

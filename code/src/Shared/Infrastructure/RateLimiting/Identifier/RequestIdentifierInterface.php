@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 interface RequestIdentifierInterface
 {
     /**
-     * Extract client IP as request identifier
+     * Extract client IP as request identifier.
      */
     public function getIdentifier(Request $request): string;
 }

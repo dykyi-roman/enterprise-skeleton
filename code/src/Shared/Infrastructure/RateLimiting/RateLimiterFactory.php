@@ -12,22 +12,21 @@ use Shared\Infrastructure\RateLimiting\Strategy\RateLimitStrategyInterface;
 final readonly class RateLimiterFactory
 {
     public function __construct(
-        private RateLimitStorageInterface $storage
+        private RateLimitStorageInterface $storage,
     ) {
     }
 
     /**
-     * @param string $resource Resource identifier
-     * @param int $limit Maximum number of requests
-     * @param int $windowSizeSeconds Time window size in seconds
-     * @param RateLimitStrategyInterface|null $strategy Rate limiting strategy (optional)
-     * @return RateLimiter
+     * @param string                          $resource          Resource identifier
+     * @param int                             $limit             Maximum number of requests
+     * @param int                             $windowSizeSeconds Time window size in seconds
+     * @param RateLimitStrategyInterface|null $strategy          Rate limiting strategy (optional)
      */
     public function create(
         string $resource,
         int $limit,
         int $windowSizeSeconds,
-        ?RateLimitStrategyInterface $strategy = null
+        ?RateLimitStrategyInterface $strategy = null,
     ): RateLimiter {
         $configuration = new RateLimitConfiguration(
             $limit,
@@ -41,16 +40,15 @@ final readonly class RateLimiterFactory
     }
 
     /**
-     * Creates a RateLimiter for an API route
+     * Creates a RateLimiter for an API route.
      *
-     * @param string $routeName API route name
-     * @param int $limit Maximum number of requests
-     * @param int $windowSizeSeconds Time window size in seconds
-     * @return RateLimiter
+     * @param string $routeName         API route name
+     * @param int    $limit             Maximum number of requests
+     * @param int    $windowSizeSeconds Time window size in seconds
      */
     public function createForApiRoute(string $routeName, int $limit, int $windowSizeSeconds): RateLimiter
     {
-        $resource = 'api_route:' . $routeName;
+        $resource = 'api_route:'.$routeName;
 
         return $this->create($resource, $limit, $windowSizeSeconds);
     }

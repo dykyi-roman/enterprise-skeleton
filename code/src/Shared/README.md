@@ -84,33 +84,129 @@ Service configuration is in `src/Shared/Resources/config/rate_limiting.yaml`.
 
 ## Outbox Pattern
 
-A mechanism for reliable delivery of domain events via asynchronous messages.
+### Overview
 
-#### Architecture
+The Outbox Pattern is an architectural pattern that ensures reliable delivery of domain events through asynchronous messaging, guaranteeing data consistency between different services in a distributed system. The main purpose of this pattern is to solve the "dual write" problem, ensuring that events are not lost in case of failures between their creation and publication.
 
-- **OutboxEventProcessor**: Processes unsent events from storage
-- **OutboxMessageEnvelope**: Envelope for messages with metadata
-- **OutboxMessageEnvelopeHandler**: Converts messages back to domain events
+### Why Outbox Pattern
 
-#### Usage
+1. **Atomicity** — Domain events and business data are stored in a single transaction
+2. **Reliability** — Events are not lost even if the messaging system fails
+3. **Consistency** — The system maintains consistency between domain state and published events
+4. **Isolation** — Event processing happens asynchronously and doesn't block the main execution flow
+5. **Idempotence** — The system can process the same event multiple times without side effects
 
-Domain events are published via the abstract repository:
+### Architecture Implementation
+
+```
+Shared/
+├── Infrastructure/
+│   └── Outbox/
+│       ├── Command/                              
+│       │   ├── OutboxMessageEnvelope.php         # Message envelope
+│       │   └── OutboxMessageEnvelopeHandler.php  # Envelope handler
+│       ├── Publisher/                            
+│       │   ├── OutboxPublisher.php               # Publisher implementation
+│       │   └── OutboxPublisherInterface.php      # Publisher interface
+│       ├── Repository/                           # Outbox storage operations
+│       │   └── OutboxEventRepository.php         # Event repository
+│       ├── Service/                              
+│       │   └── OutboxEventProcessor.php          # Event processing service
+│       └── ValueObject/                          
+│           └── OutboxEvent.php                   # Outbox event class
+└── Presentation/
+    └── Console/
+        └── Command/                 
+            └── ProcessOutboxEventsCommand.php    # Event processing command
+```
+
+### How It Works
+
+1. **Event Storage** — When the domain creates an event, it's serialized and stored in the `outbox_events` table along with business data transaction
+2. **Event Processing** — A background process `OutboxEventProcessor` periodically polls the table for unprocessed events
+3. **Envelope Creation** — Events are wrapped in an `OutboxMessageEnvelope` with metadata and payload
+4. **Message Dispatch** — Envelopes are sent through a message bus (in our case, Symfony Messenger)
+5. **Message Handling** — Events are processed by appropriate handlers in the system
+6. **Event Deserialization** — `OutboxMessageEnvelopeHandler` deserializes the event payload from JSON using the static `fromArray()` method from the `DomainEventInterface`
+7. **Event Bus Dispatch** — The deserialized domain event is dispatched to the event bus for further processing
+
+### Implementation Benefits
+
+1. **No Reflection** — We use the static `fromArray()` method for event deserialization without reflection
+2. **Type Safety** — All events are strongly typed and implement a common interface
+3. **Scalability** — Events can be processed in batches and in parallel
+4. **Retry Mechanism** — Retry logic for events that failed to process
+5. **Monitoring** — Tracking of processing success and errors
+
+### Usage
+
+#### Publishing Events via Repository
 
 ```php
 // Domain changes automatically register events
 $aggregate->doSomething();
 
 // Saving the aggregate via repository publishes events
-$this->repository->save($aggregate);
+// The second parameter (true) indicates that events should be saved to the outbox
+$this->repository->save($aggregate, true);
 ```
 
-Event processing is started with the command:
+#### Manual Event Publication
+
+```php
+// Create domain event
+$event = PaymentCompletedEvent::create($paymentId, $amount);
+
+// Publish event through outbox
+$this->outboxPublisher->publish($event);
+```
+
+#### Processing Outgoing Events
+
+Starting the processing via console command:
 
 ```bash
 bin/console app:process-outbox
 ```
 
-### CQRS
+Or via cron job:
+
+```
+* * * * * /path/to/project/bin/console app:process-outbox
+```
+### Event Processing Flows
+
+#### Sending Event to Outbox
+
+1. Aggregate creates domain event
+2. Repository saves the aggregate and its events
+3. `OutboxPublisher` serializes each event to JSON
+4. Events are stored in `outbox_events` table with `is_processed = false`
+
+#### Processing Event from Outbox
+
+1. `OutboxEventProcessor` finds unprocessed events
+2. Creates `OutboxMessageEnvelope` with metadata and payload
+3. Sends envelope through message bus
+4. `OutboxMessageEnvelopeHandler` deserializes event from JSON
+5. Event is sent to event bus for further processing
+6. Outbox event is marked as processed
+
+### Error Handling
+
+1. **Retry Mechanism** — If an error occurs during processing, the `retry_count` is increased
+2. **Delayed Processing** — Events with errors can be processed later
+3. **Error Logging** — Error description is saved in the `error` field
+
+### Optimizations
+
+1. **Row Locking** — Used to prevent parallel processing of the same event
+2. **Batch Processing** — Events are processed in batches for better performance
+3. **Table Cleanup** — Processed events can be periodically archived or deleted
+
+---
+
+## CQRS
 
 Separation of read and write operations using the Command Query Responsibility Segregation pattern.
 
@@ -132,7 +228,7 @@ $payment = $this->applicationService->query(new GetPaymentQuery($paymentId));
 
 ### Specifications
 
-Composable specifications for expressing business rules as logical expressions.
+Composable specifications for expressing business rules as logical expressions. Read: https://www.martinfowler.com/apsupp/spec.pdf
 
 #### Available operators
 

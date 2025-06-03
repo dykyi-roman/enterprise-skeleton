@@ -9,12 +9,13 @@ namespace Shared\DomainModel\Specification;
  * Useful for building complex business rules from smaller, reusable components.
  *
  * @template T
+ *
  * @extends AbstractSpecification<T>
  */
 final readonly class CompositeSpecification extends AbstractSpecification
 {
-    /** 
-     * @var array<SpecificationInterface<T>> 
+    /**
+     * @var array<SpecificationInterface<T>>
      */
     private array $specifications;
 
@@ -30,13 +31,14 @@ final readonly class CompositeSpecification extends AbstractSpecification
      * Add a specification to the composite.
      *
      * @param SpecificationInterface<T> $specification
+     *
      * @return self<T>
      */
     public function addSpecification(SpecificationInterface $specification): self
     {
         $specs = $this->specifications;
         $specs[] = $specification;
-        
+
         return new self($specs);
     }
 
@@ -48,6 +50,6 @@ final readonly class CompositeSpecification extends AbstractSpecification
      */
     public function isSatisfiedBy(mixed $candidate): bool
     {
-        return array_all($this->specifications, fn($specification) => $specification->isSatisfiedBy($candidate));
+        return array_all($this->specifications, fn ($specification) => $specification->isSatisfiedBy($candidate));
     }
 }

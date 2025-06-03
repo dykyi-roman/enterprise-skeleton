@@ -7,6 +7,7 @@ namespace Shared\Infrastructure\Persistence\Doctrine\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Shared\DomainModel\Entity\AggregateRootInterface;
+use Shared\DomainModel\Service\MessageBusInterface;
 use Shared\Infrastructure\Outbox\Publisher\OutboxPublisherInterface;
 
 abstract readonly class AbstractDoctrineRepository
@@ -19,6 +20,7 @@ abstract readonly class AbstractDoctrineRepository
     public function __construct(
         protected EntityManagerInterface $entityManager,
         protected OutboxPublisherInterface $outboxPublisher,
+        protected MessageBusInterface $messageBus,
     ) {
         $this->repository = $entityManager->getRepository($this->entityClass());
     }
@@ -26,11 +28,16 @@ abstract readonly class AbstractDoctrineRepository
     /**
      * @throws \RuntimeException
      */
-    public function save(AggregateRootInterface $entity, bool $flush = true): void
+    public function save(AggregateRootInterface $entity, bool $outbox = false, bool $flush = true): void
     {
         $this->entityManager->persist($entity);
+
         foreach ($entity->releaseEvents() as $event) {
-            $this->outboxPublisher->publish($event);
+            try {
+                $outbox ? $this->outboxPublisher->publish($event) : $this->messageBus->dispatch($event);
+            } catch (\Throwable $exception) {
+                throw new \RuntimeException(sprintf('Failed to publish event "%s"', $event::class), 0, $exception);
+            }
         }
 
         if ($flush) {

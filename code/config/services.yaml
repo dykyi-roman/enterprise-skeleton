@@ -17,3 +17,9 @@ services:
         arguments:
             - [ ]
         tags: [ 'messenger.bus' ]
+
+    event.bus:
+        class: Symfony\Component\Messenger\MessageBus
+        arguments:
+            - [ ]
+        tags: [ 'messenger.bus' ]

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CoreDomain\Presentation\Api\Action;
 
+use Shared\Infrastructure\Outbox\Publisher\OutboxPublisherInterface;
 use Shared\Infrastructure\RateLimiting\Attribute\RateLimit;
 use Shared\Presentation\Api\AbstractApiAction;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,8 +13,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class RateLimitTestController extends AbstractApiAction
 {
+    public function __construct(
+        private readonly OutboxPublisherInterface $outboxPublisher,
+    ) {
+    }
+
     /**
-     * Test endpoint with strict rate limits - only 3 requests per 10 seconds
+     * Test endpoint with strict rate limits - only 3 requests per 10 seconds.
      *
      * @return Response JSON response with timestamp and request count data
      */
@@ -28,7 +34,7 @@ final class RateLimitTestController extends AbstractApiAction
     }
 
     /**
-     * Test endpoint with no specific rate limit - will use default if configured globally
+     * Test endpoint with no specific rate limit - will use default if configured globally.
      *
      * @return Response JSON response with timestamp
      */

@@ -13,9 +13,6 @@ abstract readonly class AbstractValueObject implements \JsonSerializable, \Strin
 
     abstract public function __toString(): string;
 
-    /**
-     * @return mixed
-     */
     abstract public function jsonSerialize(): mixed;
 
     /**

@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Shared\Infrastructure\RateLimiting\Exception;
 
-use RuntimeException;
-
 /**
- * Exception thrown when rate limit is exceeded
+ * Exception thrown when rate limit is exceeded.
  */
-final class RateLimitExceededException extends RuntimeException
+final class RateLimitExceededException extends \RuntimeException
 {
     /**
-     * @param string $resource The resource that was rate limited
-     * @param int $limitValue The rate limit value that was exceeded
-     * @param int $waitTimeSeconds The time in seconds until the rate limit resets
-     * @param array<string, mixed> $context Additional context information
+     * @param string               $resource        The resource that was rate limited
+     * @param int                  $limitValue      The rate limit value that was exceeded
+     * @param int                  $waitTimeSeconds The time in seconds until the rate limit resets
+     * @param array<string, mixed> $context         Additional context information
      */
     public function __construct(
         private readonly string $resource,

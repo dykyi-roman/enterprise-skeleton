@@ -4,19 +4,14 @@ declare(strict_types=1);
 
 namespace Shared\Infrastructure\Outbox\Publisher;
 
-use RuntimeException;
 use Shared\DomainModel\Event\DomainEventInterface;
 use Shared\Infrastructure\Outbox\Repository\OutboxEventRepository;
 use Shared\Infrastructure\Outbox\ValueObject\OutboxEvent;
-use Throwable;
 
 final readonly class OutboxPublisher implements OutboxPublisherInterface
 {
-    /**
-     * @param OutboxEventRepository $outboxRepository
-     */
     public function __construct(
-        private OutboxEventRepository $outboxRepository
+        private OutboxEventRepository $outboxRepository,
     ) {
     }
 
@@ -34,12 +29,8 @@ final readonly class OutboxPublisher implements OutboxPublisherInterface
                     json_encode($event->jsonSerialize(), JSON_THROW_ON_ERROR),
                 ),
             );
-        } catch (Throwable $exception) {
-            throw new RuntimeException(
-                sprintf('Error publishing event to outbox: %s', $exception->getMessage()),
-                0,
-                $exception,
-            );
+        } catch (\Throwable $exception) {
+            throw new \RuntimeException(sprintf('Error publishing event to outbox: %s', $exception->getMessage()), 0, $exception);
         }
     }
 }

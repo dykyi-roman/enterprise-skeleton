@@ -9,6 +9,7 @@ namespace Shared\DomainModel\Specification;
  * Satisfied if the left condition is satisfied OR the right condition is NOT satisfied.
  *
  * @template T
+ *
  * @extends AbstractSpecification<T>
  */
 final readonly class OrNotSpecification extends AbstractSpecification

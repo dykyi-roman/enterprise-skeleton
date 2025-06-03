@@ -53,9 +53,9 @@ final class ProcessOutboxEventsCommand extends AbstractConsoleCommand
 
     protected function executeCommand(InputInterface $input, OutputInterface $output): ConsoleOutput
     {
-        $batchSize = (int)$input->getOption('batch-size');
-        $iterations = (int)$input->getOption('iterations');
-        $delay = (int)$input->getOption('delay');
+        $batchSize = (int) $input->getOption('batch-size');
+        $iterations = (int) $input->getOption('iterations');
+        $delay = (int) $input->getOption('delay');
 
         $this->logger->info('Starting outbox event processing', [
             'batch_size' => $batchSize,
@@ -66,12 +66,12 @@ final class ProcessOutboxEventsCommand extends AbstractConsoleCommand
         $totalProcessed = 0;
         $iteration = 0;
         $messages = [];
-        
+
         $messages[] = ConsoleOutput::formatMessage('Starting outbox processing...', 'info');
 
         try {
             do {
-                $iteration++;
+                ++$iteration;
                 $messages[] = ConsoleOutput::formatMessage(
                     sprintf('Processing batch %d...', $iteration),
                     'comment'
@@ -84,21 +84,21 @@ final class ProcessOutboxEventsCommand extends AbstractConsoleCommand
                     sprintf('Processed %d events in batch %d', $processed, $iteration),
                     'info'
                 );
-                
+
                 $this->logger->info('Processed events batch', [
                     'batch' => $iteration,
                     'processed' => $processed,
                     'total_processed' => $totalProcessed,
                 ]);
 
-                if ($processed === 0 && ($iterations === 0 || $iteration < $iterations)) {
+                if (0 === $processed && (0 === $iterations || $iteration < $iterations)) {
                     $messages[] = ConsoleOutput::formatMessage(
                         sprintf('No events to process, waiting for %d seconds...', $delay),
                         'comment'
                     );
                     sleep($delay);
                 }
-            } while ($iterations === 0 || $iteration < $iterations);
+            } while (0 === $iterations || $iteration < $iterations);
 
             $this->logger->info('Outbox event processing completed', ['total_processed' => $totalProcessed]);
 

@@ -18,4 +18,9 @@ interface DomainEventInterface extends \JsonSerializable
      * @return array<string, mixed>
      */
     public function jsonSerialize(): array;
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public static function fromArray(array $data): static;
 }

@@ -125,8 +125,8 @@ abstract class AbstractConsoleCommand extends Command
             if (is_string($msg)) {
                 $messages[] = $msg;
             } elseif (is_array($msg) && isset($msg['type'], $msg['content']) && is_string($msg['type']) && is_string(
-                    $msg['content']
-                )) {
+                $msg['content']
+            )) {
                 $messages[] = [
                     'type' => $msg['type'],
                     'content' => $msg['content'],
@@ -134,8 +134,8 @@ abstract class AbstractConsoleCommand extends Command
             }
         }
         $title = (isset($payload['title']) && (is_string($payload['title']) || is_null(
-                    $payload['title']
-                ))) ? $payload['title'] : null;
+            $payload['title']
+        ))) ? $payload['title'] : null;
         $result = [];
         $resultRaw = $payload['result'];
         if (!is_array($resultRaw)) {
@@ -148,17 +148,17 @@ abstract class AbstractConsoleCommand extends Command
         }
         $success = (isset($payload['success']) && is_bool($payload['success'])) ? $payload['success'] : true;
         $statusCode = (isset($payload['status_code']) && is_int(
-                $payload['status_code']
-            )) ? $payload['status_code'] : Command::SUCCESS;
+            $payload['status_code']
+        )) ? $payload['status_code'] : Command::SUCCESS;
         $successMessage = (isset($payload['success_message']) && (is_string($payload['success_message']) || is_null(
-                    $payload['success_message']
-                ))) ? $payload['success_message'] : null;
+            $payload['success_message']
+        ))) ? $payload['success_message'] : null;
         $errorMessage = (isset($payload['error']) && (is_string($payload['error']) || is_null(
-                    $payload['error']
-                ))) ? $payload['error'] : null;
+            $payload['error']
+        ))) ? $payload['error'] : null;
         $executionTime = (isset($payload['execution_time']) && (is_float($payload['execution_time']) || is_int(
-                    $payload['execution_time']
-                ))) ? (float)$payload['execution_time'] : null;
+            $payload['execution_time']
+        ))) ? (float) $payload['execution_time'] : null;
         /** @var array<string, string> $headers */
         $headers = [];
         $headersRaw = $payload['headers'] ?? [];
@@ -187,10 +187,10 @@ abstract class AbstractConsoleCommand extends Command
     protected function formatBytes(int $bytes): string
     {
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-        $pow = floor((float)($bytes ? log((float)$bytes) : 0) / log(1024));
-        $pow = (int)min($pow, count($units) - 1);
-        $bytes = (float)$bytes / (1024 ** $pow);
+        $pow = floor((float) ($bytes ? log((float) $bytes) : 0) / log(1024));
+        $pow = (int) min($pow, count($units) - 1);
+        $bytes = (float) $bytes / (1024 ** $pow);
 
-        return round($bytes, 2) . ' ' . $units[$pow];
+        return round($bytes, 2).' '.$units[$pow];
     }
 }

@@ -9,6 +9,7 @@ namespace Shared\DomainModel\Specification;
  * Satisfied if the original condition is not satisfied.
  *
  * @template T
+ *
  * @extends AbstractSpecification<T>
  */
 final readonly class NotSpecification extends AbstractSpecification

@@ -6,17 +6,19 @@ namespace Shared\Infrastructure\Outbox\Command;
 
 /**
  * Envelope for message that wraps the payload and metadata
- * This class provides a clean abstraction between domain events and infrastructure
+ * This class provides a clean abstraction between domain events and infrastructure.
+ *
+ * @see OutboxMessageEnvelopeHandler
  */
 final readonly class OutboxMessageEnvelope implements \JsonSerializable
 {
     /**
-     * @param string $payload JSON serialized message content
+     * @param string               $payload  JSON serialized message content
      * @param array<string, mixed> $metadata Message metadata
      */
     public function __construct(
         private string $payload,
-        private array $metadata = []
+        private array $metadata = [],
     ) {
     }
 
