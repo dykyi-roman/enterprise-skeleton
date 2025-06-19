@@ -20,19 +20,19 @@
         "psr/http-client": "^1.0",
         "psr/log": "^3.0",
         "sentry/sentry": "^4.0",
-        "symfony/console": "7.2.*",
-        "symfony/dotenv": "7.2.*",
+        "symfony/console": "7.3.*",
+        "symfony/dotenv": "7.3.*",
         "symfony/flex": "^2",
-        "symfony/framework-bundle": "7.2.*",
-        "symfony/lock": "7.2.*",
-        "symfony/messenger": "7.2.*",
+        "symfony/framework-bundle": "7.3.*",
+        "symfony/lock": "7.3.*",
+        "symfony/messenger": "7.3.*",
         "symfony/monolog-bundle": "^3.10",
-        "symfony/property-access": "7.2.*",
-        "symfony/runtime": "7.2.*",
-        "symfony/serializer": "7.2.*",
-        "symfony/uid": "7.2.*",
-        "symfony/validator": "7.2.*",
-        "symfony/yaml": "7.2.*",
+        "symfony/property-access": "7.3.*",
+        "symfony/runtime": "7.3.*",
+        "symfony/serializer": "7.3.*",
+        "symfony/uid": "7.3.*",
+        "symfony/validator": "7.3.*",
+        "symfony/yaml": "7.3.*",
         "zircote/swagger-php": "^5.1"
     },
     "config": {
@@ -89,7 +89,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "7.2.*"
+            "require": "7.3.*"
         }
     },
     "require-dev": {

@@ -15,12 +15,14 @@ interface EventStoreInterface
 
     /**
      * @return array<DomainEventInterface>
+     *
      * @throws \RuntimeException
      */
     public function getEventsForAggregate(mixed $aggregateId): array;
-    
+
     /**
      * @return array<DomainEventInterface>
+     *
      * @throws \RuntimeException
      */
     public function getEventsByType(string $eventType): array;

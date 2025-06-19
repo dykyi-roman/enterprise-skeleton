@@ -66,7 +66,7 @@ final readonly class DoctrineTransactionService implements TransactionServiceInt
                 return $this->execute($callback);
             } catch (\PDOException $e) {
                 if ($this->isDeadlockException($e) && $attempt < $maxRetries) {
-                    $attempt++;
+                    ++$attempt;
                     usleep($delay * 1000 * $attempt);
 
                     continue;
@@ -81,8 +81,8 @@ final readonly class DoctrineTransactionService implements TransactionServiceInt
     private function isDeadlockException(\PDOException $e): bool
     {
         // MySQL deadlock error codes
-        return in_array($e->getCode(), [1213, 1205], true) ||
-            str_contains($e->getMessage(), 'deadlock') ||
-            str_contains($e->getMessage(), 'lock timeout');
+        return in_array($e->getCode(), [1213, 1205], true)
+            || str_contains($e->getMessage(), 'deadlock')
+            || str_contains($e->getMessage(), 'lock timeout');
     }
 }
