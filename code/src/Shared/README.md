@@ -327,6 +327,36 @@ if ($spec->isSatisfiedBy($customer)) {
 
 ---
 
+# Request ID System
+
+Request ID management system for tracking web and API requests.
+
+## Features
+
+- **Automatic generation** of RequestId for all HTTP requests
+- **Extract RequestId** from the `X-Request-ID` header of incoming requests
+- **Automatic addition** of RequestId to response headers
+- **Logging integration** - RequestId is automatically added to all logs
+- **Exception tracing** with RequestId in logs
+
+## Architecture
+
+### Domain Layer
+- `RequestId` - Value Object for type-safe ID handling
+- `RequestIdServiceInterface` - service interface for RequestId management
+
+### Infrastructure Layer
+- `RequestIdService` - main service implementation
+- `RequestIdMiddleware` - HTTP request middleware
+- `RequestIdProcessor` - Monolog processor for logs
+
+## HTTP Headers
+
+- **Incoming request**: `X-Request-ID` (optional)
+- **Outgoing response**: `X-Request-ID` (always present)
+
+---
+
 # ACID Transaction Support
 
 ## Overview

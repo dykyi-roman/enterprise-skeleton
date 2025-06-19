@@ -145,6 +145,27 @@ services:
             - { name: 'messenger.message_handler', bus: 'event.bus' }
 
     #############################################################################
+    # Request ID
+    #############################################################################
+    Shared\DomainModel\Service\RequestIdServiceInterface:
+        class: Shared\Infrastructure\RequestId\RequestIdService
+
+    Shared\Infrastructure\RequestId\RequestIdService: ~
+
+    Shared\Infrastructure\RequestId\Middleware\RequestIdMiddleware:
+        arguments:
+            - '@Shared\DomainModel\Service\RequestIdServiceInterface'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 1000 }
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: -1000 }
+
+    Shared\Infrastructure\RequestId\Logger\RequestIdProcessor:
+        arguments:
+            - '@Shared\DomainModel\Service\RequestIdServiceInterface'
+        tags:
+            - { name: monolog.processor }
+
+    #############################################################################
     # Event Store
     #############################################################################
     Shared\Infrastructure\EventStore\Repository\DoctrineEventStore:
