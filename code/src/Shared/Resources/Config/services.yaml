@@ -20,6 +20,7 @@ services:
             - '../../Infrastructure/RateLimiting/{Configuration,Exception,Attribute,Dto}/'
             - '../../Infrastructure/RateLimiting/RateLimiter.php'
             - '../../Infrastructure/Outbox/{ValueObject}/'
+            - '../../Infrastructure/Persistence/Doctrine/Repository/Pagination/'
             - '../../DomainModel/{Dto,Event,Enum,Entity,Specification,Exception,ValueObject}/'
             - '../../**/Tests/'
         tags: [ 'controller.service_arguments' ]

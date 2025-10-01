@@ -26,7 +26,7 @@ final class TestAction extends AbstractApiAction
         TestJsonResponse $response,
     ): TestJsonResponse {
         try {
-            return $response->success('Success!')->respond();
+            return $response->success('Ok')->respond();
         } catch (\Throwable $exception) {
             return $response->error($exception->getMessage())->respond();
         }
