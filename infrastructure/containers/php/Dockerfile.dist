@@ -54,18 +54,18 @@ RUN apt-get update && apt-get install -y \
     # GeoIP support
     libgeoip-dev \
     && rm -rf /var/lib/apt/lists/* \
-    && docker-php-ext-configure intl \
+    && apt-get clean
+
+# Configure and install PHP extensions
+RUN docker-php-ext-configure intl \
     && docker-php-ext-install -j$(nproc) \
         bcmath \
-        iconv \
         intl \
-        mbstring \
-        opcache \
         pcntl \
         sockets \
-        zip \
     && docker-php-ext-configure gd \
-    && docker-php-ext-install -j$(nproc) gd
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install -j$(nproc) zip
 
 # <<<mailhog,papercut<<<
 #RUN apt-get update && apt-get install -y \

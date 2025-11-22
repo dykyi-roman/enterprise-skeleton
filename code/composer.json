@@ -6,7 +6,7 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.5",
         "chrisguitarguy/request-id-bundle": "^6.0",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
