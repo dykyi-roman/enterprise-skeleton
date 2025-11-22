@@ -6,7 +6,7 @@ A comprehensive project skeleton for enterprise applications with integrated sup
 
 ## Features
 
-- 🚀 Modern PHP 8.4
+- 🚀 Modern PHP 8.5
 - 🛠 Multiple web servers (Nginx, Apache)
 - 📊 SQL & NoSQL databases
 - 💾 Caching solutions
