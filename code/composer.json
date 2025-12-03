@@ -11,8 +11,7 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-sockets": "*",
-        "chrisguitarguy/request-id-bundle": "^6.0",
-        "doctrine/doctrine-bundle": "^2.13",
+        "doctrine/doctrine-bundle": "3.*",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.3",
         "guzzlehttp/guzzle": "^7.9",
@@ -20,20 +19,31 @@
         "psr/http-client": "^1.0",
         "psr/log": "^3.0",
         "sentry/sentry": "^4.0",
-        "symfony/console": "7.3.*",
-        "symfony/dotenv": "7.3.*",
+        "symfony/console": "8.0.*",
+        "symfony/dotenv": "8.0.*",
         "symfony/flex": "^2",
-        "symfony/framework-bundle": "7.3.*",
-        "symfony/lock": "7.3.*",
-        "symfony/messenger": "7.3.*",
-        "symfony/monolog-bundle": "^3.10",
-        "symfony/property-access": "7.3.*",
-        "symfony/runtime": "7.3.*",
-        "symfony/serializer": "7.3.*",
-        "symfony/uid": "7.3.*",
-        "symfony/validator": "7.3.*",
-        "symfony/yaml": "7.3.*",
+        "symfony/framework-bundle": "8.0.*",
+        "symfony/lock": "8.0.*",
+        "symfony/messenger": "8.0.*",
+        "symfony/monolog-bundle": "*",
+        "symfony/property-access": "8.0.*",
+        "symfony/runtime": "8.0.*",
+        "symfony/serializer": "8.0.*",
+        "symfony/uid": "8.0.*",
+        "symfony/validator": "8.0.*",
+        "symfony/yaml": "8.0.*",
         "zircote/swagger-php": "^5.1"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.49",
+        "maglnet/composer-require-checker": "^4.14",
+        "phpmetrics/phpmetrics": "3.0.0-rc8",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-symfony": "^2.0",
+        "phpunit/phpunit": "^12.1",
+        "psalm/plugin-symfony": "^5.2",
+        "qossmic/deptrac": "^2.0",
+        "vimeo/psalm": "dev-master"
     },
     "config": {
         "allow-plugins": {
@@ -90,18 +100,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "7.3.*"
+            "require": "8.0.*"
         }
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.49",
-        "maglnet/composer-require-checker": "^4.14",
-        "phpmetrics/phpmetrics": "3.0.0-rc8",
-        "phpstan/phpstan": "^2.1",
-        "phpstan/phpstan-symfony": "^2.0",
-        "phpunit/phpunit": "^12.1",
-        "psalm/plugin-symfony": "^5.2",
-        "qossmic/deptrac": "^2.0",
-        "vimeo/psalm": "dev-master"
     }
 }

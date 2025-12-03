@@ -7,6 +7,7 @@ namespace Shared\Infrastructure\Persistence\Doctrine\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Shared\DomainModel\Entity\AggregateRootInterface;
+use Shared\DomainModel\Event\DomainEventInterface;
 use Shared\DomainModel\Service\EventStoreInterface;
 use Shared\DomainModel\Service\MessageBusInterface;
 use Shared\Infrastructure\Outbox\Publisher\OutboxPublisherInterface;
@@ -28,6 +29,8 @@ abstract readonly class AbstractDoctrineRepository
     }
 
     /**
+     * @param AggregateRootInterface<DomainEventInterface> $entity
+     *
      * @throws \RuntimeException
      */
     public function save(
@@ -55,6 +58,9 @@ abstract readonly class AbstractDoctrineRepository
         }
     }
 
+    /**
+     * @param AggregateRootInterface<DomainEventInterface> $entity
+     */
     public function remove(AggregateRootInterface $entity, bool $flush = true): void
     {
         $this->entityManager->remove($entity);

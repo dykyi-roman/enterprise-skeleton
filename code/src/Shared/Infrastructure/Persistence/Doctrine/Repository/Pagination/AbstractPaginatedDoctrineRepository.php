@@ -24,9 +24,12 @@ abstract readonly class AbstractPaginatedDoctrineRepository extends AbstractDoct
         $paginator = new Paginator($queryBuilder->getQuery(), fetchJoinCollection: true);
         $totalItems = count($paginator);
 
+        /** @var array<int, object> $items */
         $items = [];
         foreach ($paginator as $item) {
-            $items[] = $item;
+            if (is_object($item)) {
+                $items[] = $item;
+            }
         }
 
         return PaginationResult::create(

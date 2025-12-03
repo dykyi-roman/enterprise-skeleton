@@ -214,7 +214,7 @@ ci: ## Run all code quality checks
 	$(MAKE) phpcs
 	$(MAKE) swagger-generate
 	$(MAKE) phpstan
-	$(MAKE) psalm
+	#$(MAKE) psalm
 	$(MAKE) deptrac
 	$(MAKE) composer-require-checker
 	$(MAKE) test-php

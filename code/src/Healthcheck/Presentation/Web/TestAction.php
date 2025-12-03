@@ -7,7 +7,7 @@ namespace Healthcheck\Presentation\Web;
 use Healthcheck\Presentation\Web\Request\TestRequest;
 use Healthcheck\Presentation\Web\Resonse\TestHtmlResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 final class TestAction
 {

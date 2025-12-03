@@ -119,17 +119,21 @@ final readonly class OutboxEventRepository
      */
     private function hydrateOutboxEvent(array $data): OutboxEvent
     {
+        $processedAt = isset($data['processed_at']) && is_string($data['processed_at'])
+            ? new \DateTimeImmutable($data['processed_at'])
+            : null;
+
         return new OutboxEvent(
-            $data['id'],
-            $data['event_id'],
-            $data['event_type'],
-            $data['aggregate_id'],
-            $data['payload'],
-            new \DateTimeImmutable($data['created_at']),
-            isset($data['processed_at']) ? new \DateTimeImmutable($data['processed_at']) : null,
-            (bool) $data['is_processed'],
-            (int) $data['retry_count'],
-            $data['error']
+            is_scalar($data['id']) ? (string) $data['id'] : '',
+            is_scalar($data['event_id']) ? (string) $data['event_id'] : '',
+            is_scalar($data['event_type']) ? (string) $data['event_type'] : '',
+            is_scalar($data['aggregate_id']) ? (string) $data['aggregate_id'] : '',
+            is_scalar($data['payload']) ? (string) $data['payload'] : '',
+            new \DateTimeImmutable(is_scalar($data['created_at']) ? (string) $data['created_at'] : 'now'),
+            $processedAt,
+            (bool) ($data['is_processed'] ?? false),
+            isset($data['retry_count']) && is_numeric($data['retry_count']) ? (int) $data['retry_count'] : 0,
+            isset($data['error']) && is_scalar($data['error']) ? (string) $data['error'] : null
         );
     }
 }

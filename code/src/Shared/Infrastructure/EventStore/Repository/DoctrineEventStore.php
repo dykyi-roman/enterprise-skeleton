@@ -58,10 +58,17 @@ final readonly class DoctrineEventStore implements EventStoreInterface
     public function getEventsForAggregate(mixed $aggregateId): array
     {
         try {
+            $id = match (true) {
+                is_object($aggregateId) && method_exists($aggregateId, 'toString') => $aggregateId->toString(),
+                is_string($aggregateId) => $aggregateId,
+                is_int($aggregateId) => (string) $aggregateId,
+                default => throw new \InvalidArgumentException('Invalid aggregate ID type'),
+            };
+
             $stmt = $this->connection->executeQuery(
                 'SELECT * FROM event_store WHERE aggregate_id = :aggregateId ORDER BY occurred_at ASC',
                 [
-                    'aggregateId' => $aggregateId->toString(),
+                    'aggregateId' => $id,
                 ],
                 [
                     'aggregateId' => Types::STRING,
@@ -117,47 +124,49 @@ final readonly class DoctrineEventStore implements EventStoreInterface
     {
         try {
             $eventType = $row['event_type'] ?? null;
-            if (!$eventType || !class_exists($eventType)) {
-                throw new \RuntimeException(sprintf('Unknown or invalid event type: %s', $eventType));
+            if (!is_string($eventType) || !class_exists($eventType)) {
+                throw new \RuntimeException(sprintf('Unknown or invalid event type: %s', is_scalar($eventType) ? (string) $eventType : get_debug_type($eventType)));
             }
 
             if (!is_subclass_of($eventType, DomainEventInterface::class)) {
                 throw new \RuntimeException(sprintf('Event type %s must implement interface %s', $eventType, DomainEventInterface::class));
             }
 
-            if (!method_exists($eventType, 'fromArray')) {
-                throw new \RuntimeException(sprintf('Method fromArray not found in class %s', $eventType));
-            }
-
             $payload = $row['payload'] ?? null;
-            if (!$payload) {
+            if (!is_string($payload) || '' === $payload) {
                 throw new \RuntimeException('Payload missing in event record');
             }
 
             if (str_starts_with($payload, '"') && str_ends_with($payload, '"')) {
-                $payload = json_decode($payload, false, 512, JSON_THROW_ON_ERROR);
+                $decoded = json_decode($payload, false, 512, JSON_THROW_ON_ERROR);
+                $payload = is_string($decoded) ? $decoded : $payload;
             }
 
             try {
-                $data = json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
+                $decodedData = json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
+                if (!is_array($decodedData)) {
+                    throw new \RuntimeException('Event payload must be an array');
+                }
+                /** @var array<string, mixed> $data */
+                $data = $decodedData;
             } catch (\Throwable) {
                 $data = [
-                    'event_id' => $row['event_id'],
-                    'occurred_at' => $row['occurred_at'],
-                    'aggregate_id' => $row['aggregate_id'],
+                    'event_id' => isset($row['event_id']) && is_scalar($row['event_id']) ? (string) $row['event_id'] : '',
+                    'occurred_at' => isset($row['occurred_at']) && is_scalar($row['occurred_at']) ? (string) $row['occurred_at'] : '',
+                    'aggregate_id' => isset($row['aggregate_id']) && is_scalar($row['aggregate_id']) ? (string) $row['aggregate_id'] : '',
                 ];
             }
 
-            if (!isset($data['event_id']) && isset($row['event_id'])) {
-                $data['event_id'] = $row['event_id'];
+            if (!isset($data['event_id']) && isset($row['event_id']) && is_scalar($row['event_id'])) {
+                $data['event_id'] = (string) $row['event_id'];
             }
 
-            if (!isset($data['occurred_at']) && isset($row['occurred_at'])) {
-                $data['occurred_at'] = $row['occurred_at'];
+            if (!isset($data['occurred_at']) && isset($row['occurred_at']) && is_scalar($row['occurred_at'])) {
+                $data['occurred_at'] = (string) $row['occurred_at'];
             }
 
-            if (!isset($data['aggregate_id']) && isset($row['aggregate_id'])) {
-                $data['aggregate_id'] = $row['aggregate_id'];
+            if (!isset($data['aggregate_id']) && isset($row['aggregate_id']) && is_scalar($row['aggregate_id'])) {
+                $data['aggregate_id'] = (string) $row['aggregate_id'];
             }
 
             return $eventType::fromArray($data);

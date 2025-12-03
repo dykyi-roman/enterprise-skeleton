@@ -26,10 +26,9 @@ final class OutboxEvent
         private readonly string $payload,
         private readonly \DateTimeImmutable $createdAt,
         public ?\DateTimeImmutable $processedAt = null {
-            get
-    {
-        return $this->processedAt;
-    }
+            get {
+                return $this->processedAt;
+            }
         },
         public bool $isProcessed = false {
             get {
@@ -51,8 +50,11 @@ final class OutboxEvent
 
     public static function create(string $eventId, string $eventType, string $aggregateId, string $payload): self
     {
+        /** @var string $uuid */
+        $uuid = uuid_create();
+
         return new self(
-            uuid_create(),
+            $uuid,
             $eventId,
             $eventType,
             $aggregateId,

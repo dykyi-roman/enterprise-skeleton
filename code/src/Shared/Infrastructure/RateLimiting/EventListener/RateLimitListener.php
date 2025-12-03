@@ -47,6 +47,10 @@ final readonly class RateLimitListener implements EventSubscriberInterface
             $controllerObject = $controller[0];
             $controllerMethod = $controller[1];
 
+            if (!is_object($controllerObject) || !is_string($controllerMethod)) {
+                return;
+            }
+
             try {
                 $reflectionClass = new \ReflectionClass($controllerObject);
                 $reflectionMethod = $reflectionClass->getMethod($controllerMethod);
@@ -65,13 +69,16 @@ final readonly class RateLimitListener implements EventSubscriberInterface
             } catch (\ReflectionException $e) {
                 $this->logger->warning('RateLimit reflection error: '.$e->getMessage(), [
                     'exception' => $e,
-                    'controller' => get_class($controllerObject),
+                    'controller' => $controllerObject::class,
                     'method' => $controllerMethod,
                 ]);
             }
         }
     }
 
+    /**
+     * @param \ReflectionClass<object>|\ReflectionMethod $reflection
+     */
     private function applyRateLimit(
         RateLimit $rateLimit,
         \ReflectionClass|\ReflectionMethod $reflection,
@@ -95,6 +102,7 @@ final readonly class RateLimitListener implements EventSubscriberInterface
             $rateLimiter->check($key, $resource);
 
             $limitInfo = $rateLimiter->getLimitInfo($key, $resource);
+            /** @var array<string, mixed> $response */
             $response = $event->getRequest()->attributes->get('_rate_limit_headers', []);
             $response['X-RateLimit-Limit'] = $limitInfo['limit'];
             $response['X-RateLimit-Remaining'] = $limitInfo['remaining'];

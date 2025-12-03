@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Shared\DomainModel\ValueObject;
 
-final readonly class RequestId
+final readonly class RequestId implements \Stringable
 {
     private function __construct(
         private string $value,

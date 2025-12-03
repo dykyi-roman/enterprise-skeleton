@@ -59,9 +59,16 @@ final class ProcessOutboxEventsCommand extends AbstractConsoleCommand
 
     protected function executeCommand(InputInterface $input, OutputInterface $output): ConsoleOutput
     {
-        $batchSize = (int) $input->getOption('batch-size');
-        $iterations = (int) $input->getOption('iterations');
-        $delay = (int) $input->getOption('delay');
+        /** @var int|string $batchSizeOption */
+        $batchSizeOption = $input->getOption('batch-size');
+        /** @var int|string $iterationsOption */
+        $iterationsOption = $input->getOption('iterations');
+        /** @var int|string $delayOption */
+        $delayOption = $input->getOption('delay');
+
+        $batchSize = (int) $batchSizeOption;
+        $iterations = (int) $iterationsOption;
+        $delay = (int) $delayOption;
         $daemonMode = (bool) $input->getOption('daemon');
 
         // In daemon mode, we run indefinitely

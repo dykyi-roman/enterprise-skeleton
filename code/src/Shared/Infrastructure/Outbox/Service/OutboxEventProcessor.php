@@ -116,7 +116,7 @@ final readonly class OutboxEventProcessor
 
         // Convert to snake_case for use as routing key
         $routingKey = preg_replace('/(?<!^)[A-Z]/', '_$0', $shortName);
-        $routingKey = strtolower(str_replace('_event', '', $routingKey));
+        $routingKey = strtolower(str_replace('_event', '', $routingKey ?? ''));
 
         return 'order.'.$routingKey;
     }
