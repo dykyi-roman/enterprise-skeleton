@@ -1,66 +1,383 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Code - Enterprise Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This directory contains the main application source code built with **Laravel 12** and **PHP 8.5**, following **Domain-Driven Design (DDD)** principles and **Clean Architecture**.
 
-## About Laravel
+## Table of Contents
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- [Technology Stack](#technology-stack)
+- [Directory Structure](#directory-structure)
+- [Architecture](#architecture)
+- [Shared Module](#shared-module)
+- [Architectural Patterns](#architectural-patterns)
+- [Configuration](#configuration)
+- [Creating a New Domain](#creating-a-new-domain)
+- [Code Quality Tools](#code-quality-tools)
+- [Commands](#commands)
+- [Healthcheck Module](#healthcheck-module)
+- [License](#license)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Technology Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Component   | Version                      |
+|-------------|------------------------------|
+| PHP         | 8.5 (strict typing required) |
+| Laravel     | 12.0                         |
+| PHPUnit     | 11.0                         |
+| PHPStan     | 2.0 (via Larastan)           |
+| Psalm       | 5.18                         |
 
-## Learning Laravel
+## Directory Structure
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```
+code/
+├── artisan                 # Laravel CLI entry point
+├── bootstrap/              # Application bootstrap
+│   └── app.php             # Application configuration
+├── config/                 # Framework configuration
+│   ├── app.php             # Application providers & aliases
+│   ├── cache.php           # Cache configuration
+│   ├── database.php        # Database connections
+│   ├── logging.php         # Logging channels
+│   ├── mail.php            # Mail configuration
+│   ├── queue.php           # Queue connections
+│   └── session.php         # Session configuration
+├── docs/                   # Documentation
+│   └── api/                # API documentation (OpenAPI)
+├── public/                 # Web root (index.php)
+├── resources/              # Views and assets
+│   └── views/              # Blade templates
+├── src/                    # Application source code (DDD)
+├── storage/                # Runtime data (cache, logs, sessions)
+├── tests/                  # Test suite
+│   ├── Feature/            # Feature tests
+│   └── Unit/               # Unit tests
+└── vendor/                 # Composer dependencies
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Architecture
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+The application follows a **layered DDD architecture** with the following structure:
 
-## Laravel Sponsors
+```
+src/
+├── Shared/                 # Cross-cutting concerns (core foundation)
+├── CoreDomain/             # Example business domain (template)
+└── Healthcheck/            # Health monitoring domain
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Layer Responsibilities
 
-### Premium Partners
+| Layer              | Purpose                                        | Examples                               |
+|--------------------|------------------------------------------------|----------------------------------------|
+| **Presentation**   | Handles HTTP/CLI requests, maps input to DTOs  | Actions, Commands, Requests, Responses |
+| **Application**    | Business operations, orchestrates domain logic | UseCases, Application Services         |
+| **Domain**         | Core business logic, no external dependencies  | Entities, Value Objects, Domain Events |
+| **Infrastructure** | Technical implementations                      | Repositories, Clients, Persistence     |
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Domain Module Structure
 
-## Contributing
+Each domain follows a consistent structure:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
+src/YourDomain/
+├── Application/            # Use cases and application services
+│   └── UseCases/
+├── DomainModel/            # Core business logic
+│   ├── Model/              # Entities and Aggregates
+│   └── Repository/         # Repository interfaces
+├── Infrastructure/         # Technical implementations
+│   └── Persistence/        # Repository implementations
+├── Presentation/           # HTTP and CLI interfaces
+│   ├── Api/                # REST API actions
+│   │   └── Response/       # API responders
+│   ├── Console/            # Artisan commands
+│   └── Web/                # Web controllers
+│       ├── Request/        # Form requests
+│       └── Response/       # HTML responders
+├── Resources/              # Domain resources
+│   ├── Attribute/          # Route attributes
+│   ├── Config/             # Domain configuration
+│   └── Views/              # Blade templates
+└── Tests/                  # Domain tests
+    └── Unit/
+```
 
-## Code of Conduct
+## Shared Module
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+The `Shared/` module provides foundational components used across all domains:
 
-## Security Vulnerabilities
+### Presentation (`Shared/Presentation/`)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Component                     | Purpose                              |
+|-------------------------------|--------------------------------------|
+| `Api/AbstractApiAction`       | Base class for API actions           |
+| `Responder/ResponderInterface`| Response contract                    |
+| `Responder/JsonResponder`     | JSON response middleware             |
+| `Responder/HtmlResponder`     | HTML response middleware             |
+| `Responder/AbstractResponder` | Base responder implementation        |
+
+### Resources (`Shared/Resources/`)
+
+| Component                  | Purpose                          |
+|----------------------------|----------------------------------|
+| `ResponderServiceProvider` | Registers responder middlewares  |
+
+## Architectural Patterns
+
+### 1. ADR (Action-Domain-Responder)
+
+Presentation layer follows the ADR pattern for clean request handling:
+
+- **Action** - Receives HTTP request, calls use case (single responsibility)
+- **Domain** - Business logic (UseCase)
+- **Responder** - Formats and returns response (JSON/HTML/Template)
+
+```php
+#[ApiRoute('/api/test', ['GET'], 'api.test')]
+final class TestAction extends AbstractApiAction
+{
+    public function __invoke(TestJsonResponder $responder): ResponderInterface
+    {
+        return $responder->success('Success!')->respond();
+    }
+}
+```
+
+### 2. Attribute-Based Routing
+
+Routes are defined using PHP 8 attributes on action classes:
+
+```php
+// API routes
+#[ApiRoute('/api/users', ['GET', 'POST'], 'api.users')]
+
+// Web routes
+#[WebRoute('/dashboard', ['GET'], 'web.dashboard')]
+```
+
+Route attributes are automatically discovered and registered by `DomainServiceProvider`.
+
+### 3. Responder Pattern
+
+Responses are handled through dedicated responder classes:
+
+```php
+final class TestJsonResponder
+{
+    public function success(string $message): self
+    {
+        $this->payload = ['success' => true, 'message' => $message];
+        return $this;
+    }
+
+    public function error(string $message): self
+    {
+        $this->payload = ['success' => false, 'error' => $message];
+        return $this;
+    }
+}
+```
+
+### 4. Service Provider Pattern
+
+Each domain has its own `DomainServiceProvider` that:
+
+- Registers routes from Action classes with `#[Route]` attributes
+- Registers console commands with `#[AsCommand]` attributes
+- Loads domain-specific views and configuration
+
+## Configuration
+
+### Environment Files
+
+| File              | Purpose                       |
+|-------------------|-------------------------------|
+| `.env`            | Default environment variables |
+| `.env.local`      | Local overrides (gitignored)  |
+| `.env.testing`    | Test environment              |
+
+### Key Configuration Files (`config/`)
+
+| File              | Purpose                        |
+|-------------------|--------------------------------|
+| `app.php`         | Providers, aliases, timezone   |
+| `database.php`    | Database connections           |
+| `cache.php`       | Cache stores (file, redis)     |
+| `queue.php`       | Queue connections              |
+| `logging.php`     | Log channels                   |
+| `mail.php`        | Mail configuration             |
+| `session.php`     | Session handling               |
+
+### Registering Domain Providers
+
+Add your domain provider to `config/app.php`:
+
+```php
+'providers' => [
+    // ... Laravel providers
+    App\YourDomain\Resources\DomainServiceProvider::class,
+],
+```
+
+## Creating a New Domain
+
+1. Create domain directory structure:
+
+```
+src/YourDomain/
+├── Application/
+│   └── UseCases/
+├── DomainModel/
+│   ├── Model/
+│   └── Repository/
+├── Infrastructure/
+│   └── Persistence/
+├── Presentation/
+│   ├── Api/
+│   ├── Console/
+│   └── Web/
+├── Resources/
+│   ├── Attribute/
+│   └── Config/
+└── Tests/
+    └── Unit/
+```
+
+2. Create `DomainServiceProvider`:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\YourDomain\Resources;
+
+use Illuminate\Support\ServiceProvider;
+
+final class DomainServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        $this->registerRoutes();
+        $this->registerCommands();
+    }
+
+    // ... route and command registration logic
+}
+```
+
+3. Register provider in `config/app.php`:
+
+```php
+'providers' => [
+    App\YourDomain\Resources\DomainServiceProvider::class,
+],
+```
+
+4. Add namespace to `composer.json`:
+
+```json
+{
+    "autoload": {
+        "psr-4": {
+            "App\\YourDomain\\": "src/YourDomain/"
+        }
+    }
+}
+```
+
+5. Regenerate autoloader:
+
+```bash
+composer dump-autoload
+```
+
+## Code Quality Tools
+
+| Tool         | Configuration               | Purpose                 |
+|--------------|-----------------------------|-------------------------|
+| PHPStan      | `phpstan.dist.neon`         | Static analysis         |
+| Larastan     | via PHPStan                 | Laravel-specific rules  |
+| Deptrac      | `deptrac.yaml`              | Architecture validation |
+| PHP CS Fixer | `tools/.php-cs-fixer.php`   | Code standards (PSR-12) |
+| PHPUnit      | `phpunit.xml` / `tools/`    | Unit testing            |
+| Psalm        | `tools/psalm.xml`           | Type checking           |
+| Pint         | Built-in                    | Laravel code style      |
+
+## API Documentation
+
+OpenAPI specification located at `docs/api/openapi.yaml`.
+
+Generate documentation from code annotations:
+
+```bash
+./vendor/bin/openapi src -o docs/api/openapi.yaml
+```
+
+## Commands
+
+```bash
+# Run artisan commands
+php artisan list
+
+# Run tests
+php artisan test
+./vendor/bin/phpunit
+
+# Clear cache
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+
+# All caches at once
+php artisan optimize:clear
+
+# Run queue worker
+php artisan queue:work
+
+# Development server
+php artisan serve
+
+# Interactive REPL
+php artisan tinker
+```
+
+## Healthcheck Module
+
+Reference implementation with 16 health check commands for all supported services:
+
+| Command                        | Service       |
+|--------------------------------|---------------|
+| `healthcheck:amqp`             | RabbitMQ      |
+| `healthcheck:cassandra`        | Cassandra     |
+| `healthcheck:elasticsearch`    | Elasticsearch |
+| `healthcheck:grafana`          | Grafana       |
+| `healthcheck:graylog`          | Graylog       |
+| `healthcheck:kafka`            | Kafka         |
+| `healthcheck:log`              | Logging       |
+| `healthcheck:logstash`         | Logstash      |
+| `healthcheck:mail`             | Mail          |
+| `healthcheck:memcache`         | Memcached     |
+| `healthcheck:mongodb`          | MongoDB       |
+| `healthcheck:mysql`            | MySQL         |
+| `healthcheck:postgres`         | PostgreSQL    |
+| `healthcheck:redis`            | Redis         |
+| `healthcheck:solr`             | Solr          |
+| `healthcheck:zabbix`           | Zabbix        |
+
+Usage:
+
+```bash
+php artisan healthcheck:postgres
+php artisan healthcheck:redis
+php artisan healthcheck:elasticsearch
+```
+
+All commands return:
+- `0` (Success): Service is available and functioning
+- `1` (Failure): Connection issues or service malfunction
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+See the main project LICENSE file.
