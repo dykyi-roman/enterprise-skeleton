@@ -35,15 +35,13 @@
         "zircote/swagger-php": "^5.1"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.49",
-        "maglnet/composer-require-checker": "^4.14",
-        "phpmetrics/phpmetrics": "3.0.0-rc8",
+        "deptrac/deptrac": "^2.0",
+        "friendsofphp/php-cs-fixer": "^3.88",
+        "phpmetrics/phpmetrics": "^3.0@RC",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-symfony": "^2.0",
-        "phpunit/phpunit": "^12.1",
-        "psalm/plugin-symfony": "^5.2",
-        "qossmic/deptrac": "^2.0",
-        "vimeo/psalm": "dev-master"
+        "phpunit/phpunit": "^12.5",
+        "vimeo/psalm": "^6.0"
     },
     "config": {
         "allow-plugins": {
