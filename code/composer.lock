@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "70694e98414ab37b0e2c9711a73e0815",
+    "content-hash": "4f2232c7d591924745b38e0ec50ee46d",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -1111,6 +1111,95 @@
                 "source": "https://github.com/doctrine/sql-formatter/tree/1.5.3"
             },
             "time": "2025-10-26T09:35:14+00:00"
+        },
+        {
+            "name": "dykyi-roman/awesome-claude-code",
+            "version": "v2.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dykyi-roman/awesome-claude-code.git",
+                "reference": "3e22a9b6befa12e8b7d68ce9af8cbffc1d6cce20"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dykyi-roman/awesome-claude-code/zipball/3e22a9b6befa12e8b7d68ce9af8cbffc1d6cce20",
+                "reference": "3e22a9b6befa12e8b7d68ce9af8cbffc1d6cce20",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^2.0",
+                "php": ">=8.5"
+            },
+            "require-dev": {
+                "composer/composer": "^2.0"
+            },
+            "bin": [
+                "bin/acc"
+            ],
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Dykyi\\AwesomeClaudeCode\\ComposerPlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Dykyi\\AwesomeClaudeCode\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Dykyi",
+                    "email": "dykyi.roman@gmail.com",
+                    "homepage": "https://github.com/dykyi-roman",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Claude Code extension for PHP: audits (architecture, DDD, security, performance, PSR, design patterns, Docker, CI/CD, tests, docs), 3-level code review, automated bug fix, generators (DDD, CQRS, GoF patterns, PSR, tests, documentation, Docker, CI/CD), code explanation, refactoring. 26 commands, 57 agents, 242 skills.",
+            "homepage": "https://github.com/dykyi-roman/awesome-claude-code",
+            "keywords": [
+                "aggregate",
+                "ai",
+                "ai-assistant",
+                "ai-code-generation",
+                "anthropic",
+                "anti-corruption-layer",
+                "architecture",
+                "claude",
+                "claude-code",
+                "claude-code-extension",
+                "clean-architecture",
+                "code-generator",
+                "cqrs",
+                "ddd",
+                "domain-driven-design",
+                "entity",
+                "event-sourcing",
+                "hexagonal-architecture",
+                "hooks",
+                "mcp",
+                "model-context-protocol",
+                "outbox-pattern",
+                "php",
+                "php8",
+                "php85",
+                "repository",
+                "saga-pattern",
+                "value-object"
+            ],
+            "support": {
+                "issues": "https://github.com/dykyi-roman/awesome-claude-code/issues",
+                "source": "https://github.com/dykyi-roman/awesome-claude-code"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/dykyi-roman",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-02-09T17:07:44+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

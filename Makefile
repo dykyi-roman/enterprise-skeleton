@@ -86,7 +86,7 @@ show-config: ## Display current configuration
 .PHONY: install up down start stop restart build prune enter console ps
 
 install: ## Install project dependencies and set up Docker environment
-	$(call print_message,"Creating Docker network (if not exists)...")
+	$(call print_message,Creating Docker network if not exists...)
 	@docker network inspect $(network) --format {{.Id}} 2>/dev/null || docker network create $(network)
 	$(call print_message,"Starting containers...")
 	$(MAKE) up

@@ -1,2 +1,7 @@
 .idea/
 .DS_Store
+
+###> AI ###
+/code/.claude
+CLAUDE.md
+###> AI ###
